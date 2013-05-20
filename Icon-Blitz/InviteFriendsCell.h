@@ -10,9 +10,9 @@
 
 @interface InviteFriendsCell : UITableViewCell
 
-@property (nonatomic, retain) IBOutlet UIImageView *profilePic;
-@property (nonatomic, retain) IBOutlet UILabel *nameLabel;
-@property (nonatomic, retain) IBOutlet UILabel *lastPlayedLabel;
-@property (nonatomic, retain) IBOutlet UILabel *inviteNowLabel;
-@property (nonatomic, retain) IBOutlet UIButton *challengeButton;
+@property (nonatomic, strong) IBOutlet UIImageView *profilePic;
+@property (nonatomic, strong) IBOutlet UILabel *nameLabel;
+@property (nonatomic, strong) IBOutlet UILabel *lastPlayedLabel;
+@property (nonatomic, strong) IBOutlet UILabel *inviteNowLabel;
+@property (nonatomic, strong) IBOutlet UIButton *challengeButton;
 @end

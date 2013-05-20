@@ -8,38 +8,14 @@
 
 #import "ShopItemsCell.h"
 
-@implementation ShopItemsCell
+@implementation GoldCoinCell
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
+@end
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
+@implementation RubyCell
 
-    // Configure the view for the selected state
-}
+@end
 
-- (void)dealloc {
-  self.itemTitle = nil;
-  self.itemAmount = nil;
-  self.itemImage = nil;
-  self.itemCost = nil;
-  self.backGroundImage = nil;
-  
-  [self.itemTitle release];
-  [self.itemAmount release];
-  [self.itemImage release];
-  [self.itemCost  release];
-  [self.backGroundImage release];
-  
-  [super dealloc];
-}
+@implementation BlankCell
 
 @end

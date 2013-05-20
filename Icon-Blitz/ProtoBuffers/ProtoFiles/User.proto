@@ -1,0 +1,42 @@
+package proto;
+
+option java_package = "com.lvl6.pictures.noneventprotos";
+option java_outer_classname = "UserProto";
+
+//should be included in every request and response event
+//links the response to the person who sent the corresponding request
+message BasicUserProto {
+	optional string userId = 1;
+	optional string nameStrangersSee = 2; //name that non facebook users use
+	optional string nameFriendsSee = 3;   //name that facebook users use
+	optional string email = 4;
+	optional string password = 5; //only set in *RequestEvents and only if needed
+	optional string facebookId = 6;
+	
+	optional BasicAuthorizedDeviceProto badp = 7;
+}
+
+//this holds the login token and its expiration date (like an http cookie)
+message BasicAuthorizedDeviceProto {
+	optional string basicAuthorizedDeviceId = 5;
+	optional string userId = 1;
+	optional string loginToken = 2;
+	optional int64 expirationDate = 3;
+	optional string udid = 4;
+	optional string deviceId = 6;
+}
+
+
+message CompleteUserProto {
+	optional string userId = 1;
+	optional string nameStrangersSee = 2;
+	optional string	nameFriendsSee = 3;
+	optional string email = 4;
+	optional string password = 5; //will most likely never be set
+	optional string facebookId = 6;
+	optional BasicAuthorizedDeviceProto badp = 7;
+	optional int64 lastLogin = 8;
+	optional int32 signupDate = 9;
+	
+	//power up information, tokens/rubies/in game currency
+}

@@ -1,0 +1,9 @@
+package proto;
+
+option java_package = "com.lvl6.gamesuite.common.eventprotos";
+option java_outer_classname = "ForceLogoutProto";
+
+message ForceLogoutResponseProto {
+	//atm (2013-5-3), all gamesuite games will have this
+	optional string userId = 1; //not sure if this is even needed
+}

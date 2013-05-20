@@ -9,9 +9,15 @@
 #import "AppDelegate.h"
 #import "FacebookObject.h"
 #import "HomeViewController.h"
+#import "GameViewController.h"
+#import "Chartboost.h"
+#import "SignUpViewController.h"
+#import "HomeViewController.h"
 
 NSString *const FBSessionStateChangedNotification =
 @"com.bestfunfreegames.Icon-Blitz:FBSessionStateChangedNotification";
+
+#define kFirstTime @"FirstTime"
 
 @implementation AppDelegate
 
@@ -24,8 +30,8 @@ NSString *const FBSessionStateChangedNotification =
 {
   switch (state) {
     case FBSessionStateOpen:
-      if (!error) {
-        // We have a valid session
+      if ([self.delegate respondsToSelector:@selector(test)]) {
+        [self.delegate test];
       }
       break;
     case FBSessionStateClosed:
@@ -55,7 +61,8 @@ NSString *const FBSessionStateChangedNotification =
  * Opens a Facebook session and optionally shows the login UX.
  */
 - (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI {
-  return [FBSession openActiveSessionWithReadPermissions:nil
+  NSArray *permissions = [[NSArray alloc] initWithObjects:@"email", nil];
+  return [FBSession openActiveSessionWithReadPermissions:permissions
                                             allowLoginUI:allowLoginUI
                                        completionHandler:^(FBSession *session,
                                                            FBSessionState state,
@@ -77,23 +84,15 @@ NSString *const FBSessionStateChangedNotification =
 }
 
 
-- (void)dealloc
-{
-  [_window release];
-  [_viewController release];
-    [super dealloc];
-}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+  self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   // Override point for customization after application launch.
-    
-  self.viewController = [[[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil] autorelease];
+  
+  self.viewController = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
   [[self window] setRootViewController:self.navController];
   
-  self.window.rootViewController = self.navController;
-
   [self.window makeKeyAndVisible];
   return YES;
 }
@@ -118,6 +117,13 @@ NSString *const FBSessionStateChangedNotification =
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
   // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+  Chartboost *cb = [Chartboost sharedChartboost];
+  cb.appId = @"516c632616ba47e621000006";
+  cb.appSignature = @"880b5192eaa11e1e9ad617ee5bb55af22ebf31d0";
+  
+  [cb startSession];
+  [cb showInterstitial];
+  
   [FBSession.activeSession handleDidBecomeActive];
 
 }

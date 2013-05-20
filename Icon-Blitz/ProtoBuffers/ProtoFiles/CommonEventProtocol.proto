@@ -1,0 +1,26 @@
+package proto;
+
+option java_package = "com.lvl6.gamesuite.common.noneventprotos";
+option java_outer_classname = "CommonEventProtocolProto";
+
+enum CommonEventProtocolRequest {
+	//at time of writing (2013-04-11), range of values
+	//goes from [1-999] inclusive
+	C_CREATE_ACCOUNT_VIA_FACEBOOK_EVENT = 1;
+	C_CREATE_ACCOUNT_VIA_EMAIL_EVENT = 2;
+	C_CREATE_ACCOUNT_VIA_NO_CREDENTIALS_EVENT = 3;
+	C_LOGIN_EVENT = 4;
+}
+
+enum CommonEventProtocolResponse {
+	//at time of writing (2013-04-11), range of values
+	//goes from [1-999] inclusive
+	S_CREATE_ACCOUNT_VIA_FACEBOOK_EVENT = 1;
+	S_CREATE_ACCOUNT_VIA_EMAIL_EVENT = 2;
+	S_CREATE_ACCOUNT_VIA_NO_CREDENTIALS_EVENT = 3;
+	S_LOGIN_EVENT = 4;
+	
+	//the case where user has two devices tied to same account
+	//and tries logging on with both of them
+	S_FORCE_LOGOUT_EVENT = 50;
+}

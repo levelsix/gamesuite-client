@@ -10,11 +10,13 @@
 #import <FacebookSDK/FacebookSDK.h>
 
 @interface FacebookObject : NSObject {
-  dispatch_queue_t _asyncQueue;
+
 }
 
 - (void)facebookLogin;
-- (void)publish;
-- (void)getFriends;
-- (void)getFriendscompletion:(void (^) (void))completed;
+- (BOOL)fbDidLogin;
+- (void)signUpWithFacebook;
+- (UIView *)publishWithPostParams:(NSMutableDictionary *)postParams;
+- (void)publishWithoutUIAndParams:(NSMutableDictionary *)postParams;
+
 @end

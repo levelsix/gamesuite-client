@@ -1,0 +1,28 @@
+import "TriviaRoundFormat.proto";
+import "TriviaQuestionFormat.proto";
+import "User.proto";
+
+package proto;
+
+option java_package = "com.lvl6.pictures.noneventprotos";
+option java_outer_classname = "TriviaGameFormatProto";
+
+message OngoingGameProto {
+	optional GameResultsProto gameSoFar = 1;
+	
+	//if this is set, this implies user receiving it
+	//is 'secondPlayer' in GameResultsProto 'gameSoFar'
+	optional BasicRoundProto myNewRound = 2;
+}
+
+message GameResultsProto {
+	optional string gameId = 3;
+	optional PlayerGameResultsProto firstPlayer = 1;
+	optional PlayerGameResultsProto secondPlayer = 2;
+}
+
+message PlayerGameResultsProto {
+	//pertinent player information here
+	optional BasicUserProto bup = 1;
+	repeated BasicRoundResultsProto previousRoundsStats = 2;
+}

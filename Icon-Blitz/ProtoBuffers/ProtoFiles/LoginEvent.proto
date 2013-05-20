@@ -1,0 +1,73 @@
+import "TriviaGameFormat.proto";
+import "TriviaQuestionFormat.proto";
+import "User.proto";
+
+package proto;
+
+option java_package = "com.lvl6.pictures.eventprotos";
+option java_outer_classname = "LoginEventProto";
+
+message LoginRequestProto {
+	//udid should always be set
+	optional BasicUserProto sender = 1;
+	
+	//find out client's friends that play this game
+	repeated string facebookFriendIds = 2;
+	
+	optional LoginType loginType = 3;
+	
+	//this tells the server if this user's account needs to be initialized
+	//should be set to true only after user has just completed the tutorial
+	optional bool initializeAccount = 4;
+	
+	enum LoginType {
+		LOGIN_TOKEN = 1;
+		FACEBOOK = 2;
+		EMAIL_PASSWORD = 3;
+		//case where user didn't use facebook nor email
+		//in this case, nameStrangersSee should be set
+		NO_CREDENTIALS = 4; 
+	}
+}
+
+message LoginResponseProto {
+	optional CompleteUserProto recipient = 1;
+	repeated GameResultsProto completedGames = 2;
+	repeated OngoingGameProto myTurn = 3;
+	repeated OngoingGameProto notMyTurn = 4;
+	
+	//not sure if this should be returned in another
+	//response event; goal is to minimize wait time 
+	//when starting a game
+	repeated QuestionProto newQuestions = 5;
+	
+	optional LoginResponseStatus status = 6;
+	
+	//friends who are playing this game
+	repeated BasicUserProto facebookFriendsWithAccounts = 7;
+	
+	//the pictures that are in 'newQuestions' and in 'myTurn'
+	repeated string pictureNames = 8;
+	
+	optional LoginConstants loginConstants = 9;
+	
+	message LoginConstants {
+		optional int32 defaultInitialTokens = 1;
+		optional int32 defaultInitialRubies = 2;
+		optional int32 defaultRoundsPerGame = 3;
+		optional int32 defaultMinutesPerRound = 4;
+		optional int32 defaultQuestionsPerRound = 5;
+	}
+	
+	enum LoginResponseStatus {
+		SUCCESS_LOGIN_TOKEN = 1;
+		SUCCESS_FACEBOOK_ID = 2;
+		SUCCESS_EMAIL_PASSWORD = 3;
+		SUCCESS_NO_CREDENTIALS = 4;
+		INVALID_LOGIN_TOKEN = 5;
+		INVALID_FACEBOOK_ID = 6;
+		INVALID_EMAIL_PASSWORD = 7;
+		INVALID_NO_CREDENTIALS = 8;
+		FAIL_OTHER = 9;
+	}
+}

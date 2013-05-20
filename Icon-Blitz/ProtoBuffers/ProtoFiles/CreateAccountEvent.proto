@@ -1,0 +1,58 @@
+import "User.proto";
+
+package proto;
+
+option java_package = "com.lvl6.pictures.eventprotos";
+option java_outer_classname = "CreateAccountEventProto";
+
+
+message CreateAccountViaFacebookRequestProto {
+	optional string facebookId = 1;
+	optional string nameFriendsSee = 2; //required
+	optional string email = 3; //not really required
+	
+	optional string udid = 4; //record what device user created account with
+	optional string deviceId = 5; //for push notifications
+}
+
+message CreateAccountViaEmailRequestProto {
+	//all three required
+	optional string nameStrangersSee = 1;
+	//client should check this is valid email format, server will too
+	optional string email = 2;  
+	optional string password = 3;
+	
+	optional string udid = 4;
+	optional string deviceId = 5;
+}
+
+message CreateAccountViaNoCredentialsRequestProto {
+	optional string udid = 1;
+	optional string deviceId = 2;
+	//client will no longer have to send the name, keep it here in case
+	optional string nameStrangersSee = 3; 
+}
+
+message CreateAccountResponseProto {
+	optional BasicUserProto recipient = 1; 
+	
+	optional CreateAccountStatus status = 2;
+	
+	//this is for the future if we decide to suggest unique names to the user
+	//if the user provides a name already being used.
+	repeated string otherNames = 3;
+	
+	enum CreateAccountStatus {
+		SUCCESS_ACCOUNT_CREATED = 1;
+		FAIL_DUPLICATE_FACEBOOK_ID = 2;
+		FAIL_DUPLICATE_UDID = 3;
+		FAIL_MISSING_FACEBOOK_ID = 4;
+		FAIL_INVALID_NAME = 5;
+		FAIL_INVALID_UDID = 6;
+		FAIL_INVALID_PASSWORD = 7;
+		FAIL_OTHER = 8;
+		FAIL_DUPLICATE_EMAIL = 9;
+		FAIL_INVALID_EMAIL = 10;
+		FAIL_DUPLICATE_NAME = 11;
+	}
+}

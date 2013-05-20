@@ -13,21 +13,20 @@
 #import <FacebookSDK/FacebookSDK.h>
 #import <QuartzCore/QuartzCore.h>
 #import "GameViewController.h"
+#import "UINavigationController+PushPopRotated.h"
+#import "UserInfo.h"
 
 #define MaxSections 2
 #define NumberOfRows 2
 
-@interface InviteFriendsViewController ()
-
-@end
-
 @implementation InviteFriendsViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andFriendArray:(NSArray *)friendArray
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userInfo:(UserInfo *)userInfo andFriendArray:(NSArray *)friendArray
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
       self.friendsData = friendArray;
+      self.userInfo = userInfo;
       [SDWebImageManager.sharedManager.imageDownloader setValue:@"FriendsArray" forHTTPHeaderField:@"Friends"];
       SDWebImageManager.sharedManager.imageDownloader.queueMode = SDWebImageDownloaderLIFOQueueMode;
     }
@@ -37,23 +36,12 @@
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-  self.inviteTableView.tableFooterView = [[[UIView alloc] init] autorelease];
-}
-
-- (void)dealloc {
-  self.inviteTableView = nil;
-  self.inviteCell = nil;
-  self.friendsData = nil;
-
-  [self.inviteTableView release];
-  [self.inviteTableView release];
-  [self.friendsData release];
-  [super dealloc];
+  self.inviteTableView.tableFooterView = [[UIView alloc] init];
 }
 
 - (IBAction)back:(id)sender {
 
-  [self.navigationController popViewControllerAnimated:YES];
+  [self.navigationController popViewControllerRotated:YES];
 }
 
 - (IBAction)challengeFriend:(UIButton *)sender {
@@ -91,7 +79,7 @@
   titleLabel.font = [UIFont fontWithName:@"AvenirNextLTPro-Demi" size:titleLabel.font.pointSize-3];
   [headerView addSubview:imageView];
   [headerView addSubview:titleLabel];
-  return [headerView autorelease];
+  return headerView;
   
 }
 
@@ -144,14 +132,8 @@
 }
 
 - (void)pushViewController {
-  GameViewController *vc = [[GameViewController alloc] initWithNibName:@"GameViewController" bundle:nil];
+  GameViewController *vc = [[GameViewController alloc] initWithNibName:@"GameViewController" bundle:nil userData:self.userInfo];
   [self.navigationController pushViewController:vc animated:YES];
-  [vc release];
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  //UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-  [self pushViewController];
 }
 
 @end

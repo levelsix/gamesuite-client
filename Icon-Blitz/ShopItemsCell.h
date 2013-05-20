@@ -8,12 +8,22 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ShopItemsCell : UITableViewCell
+@interface GoldCoinCell : UITableViewCell
 
-@property (nonatomic, retain) IBOutlet UILabel *itemTitle;
-@property (nonatomic, retain) IBOutlet UILabel *itemAmount;
-@property (nonatomic, retain) IBOutlet UIImageView *itemImage;
-@property (nonatomic, retain) IBOutlet UILabel *itemCost;
-@property (nonatomic, retain) IBOutlet UIImageView *backGroundImage;
+@property (nonatomic, strong) IBOutlet UILabel *itemTitle;
+@property (nonatomic, strong) IBOutlet UILabel *itemAmount;
+@property (nonatomic, strong) IBOutlet UILabel *itemCost;
+
+@end
+
+@interface RubyCell : UITableViewCell
+
+@property (nonatomic, strong) IBOutlet UILabel *itemTitle;
+@property (nonatomic, strong) IBOutlet UILabel *itemAmount;
+@property (nonatomic, strong) IBOutlet UILabel *itemCost;
+
+@end
+
+@interface BlankCell : UITableViewCell
 
 @end

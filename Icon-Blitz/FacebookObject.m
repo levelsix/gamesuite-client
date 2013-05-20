@@ -8,46 +8,38 @@
 
 #import "FacebookObject.h"
 #import "AppDelegate.h"
+#import "PublishDataView.h"
 
 @implementation FacebookObject
+
 
 - (void)facebookLogin {
   AppDelegate *ad = [[UIApplication sharedApplication] delegate];
   if (FBSession.activeSession.isOpen) {
-    //[ad closeSession];
+    
   }
   else {
     [ad openSessionWithAllowLoginUI:YES];
   }
 }
 
-- (void)getFriends {
-  __block NSMutableArray *facebookData = [NSMutableArray array];
-  FBRequest* friendsRequest = [FBRequest requestForMyFriends];
-  [friendsRequest startWithCompletionHandler: ^(FBRequestConnection *connection,
-                                                NSDictionary* result,
-                                                NSError *error) {
-    facebookData = [result objectForKey:@"data"];
-    
-  }];
+- (BOOL)fbDidLogin {
+  return FBSession.activeSession.isOpen;
 }
 
-- (void)getFriendscompletion:(void (^) (void))completed {
-  __block NSMutableArray *facebookData = [NSMutableArray array];
-  dispatch_async(_asyncQueue, ^{
-    [self facebookLogin];
-    FBRequest* friendsRequest = [FBRequest requestForMyFriends];
-    [friendsRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-      facebookData = [result objectForKey:@"data"];
-    }];
-    dispatch_async(dispatch_get_main_queue(), ^(void) {
-    
-    });
-  });
+- (void)signUpWithFacebook {
+  [self facebookLogin];
 }
 
-- (void)publish {
-  
+- (UIView *)publishWithPostParams:(NSMutableDictionary *)postParams {
+  [[NSBundle mainBundle] loadNibNamed:@"PublishData" owner:self options:nil];
+  PublishDataView *view = [[PublishDataView alloc] initWithPostParams:postParams];
+  return view;
+}
+
+- (void)publishWithoutUIAndParams:(NSMutableDictionary *)postParams {
+  PublishDataView *view = [[PublishDataView alloc] initWithPostParams:postParams];
+  [view publishWithoutUI];
 }
 
 @end

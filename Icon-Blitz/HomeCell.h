@@ -10,14 +10,26 @@
 
 @interface StartGameCell : UITableViewCell
 
+@property (nonatomic, strong) IBOutlet UIButton *startButton;
+
 @end
 
 @interface TurnCells : UITableViewCell
 
-@property (nonatomic, retain) IBOutlet UILabel *nameLabel;
-@property (nonatomic, retain) IBOutlet UILabel *turnLabel;
-@property (nonatomic, retain) IBOutlet UILabel *timeLabel;
-@property (nonatomic, retain) IBOutlet UIImageView *playerPic;
-@property (nonatomic, retain) IBOutlet UIImageView *backgroundImage;
+@property (nonatomic, strong) IBOutlet UILabel *nameLabel;
+@property (nonatomic, strong) IBOutlet UILabel *turnLabel;
+@property (nonatomic, strong) IBOutlet UILabel *timeLabel;
+@property (nonatomic, strong) IBOutlet UIImageView *playerPic;
+@property (nonatomic, strong) IBOutlet UIButton *gameButton;
+
+@end
+
+@interface LastCell : UITableViewCell
+
+@property (nonatomic, strong) IBOutlet UILabel *nameLabel;
+@property (nonatomic, strong) IBOutlet UILabel *turnLabel;
+@property (nonatomic, strong) IBOutlet UILabel *timeLabel;
+@property (nonatomic, strong) IBOutlet UIImageView *playerPic;
+@property (nonatomic, strong) IBOutlet UIButton *gameButton;
 
 @end

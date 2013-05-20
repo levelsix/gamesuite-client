@@ -21,8 +21,7 @@ typedef enum {
 }NumberType;
 
 @class HomeViewController;
-@class FillInViewController;
-@class MultipleChoiceViewController;
+@class UserInfo;
 
 @interface GameViewController : UIViewController {
   NSTimer *gameTimer;
@@ -31,18 +30,23 @@ typedef enum {
 @property (nonatomic, assign) int currentQuestion;
 @property (nonatomic, assign) int timeLeft;
 @property (nonatomic, assign) int points;
-@property (nonatomic, retain) NSArray *gameData;
 @property (nonatomic, assign) QuestionType currentType;
-@property (nonatomic, retain) UIViewController *currentController;
+@property (nonatomic, strong) UIViewController *currentController;
+@property (nonatomic, strong) UserInfo *userData;
+@property (nonatomic, strong) NSMutableArray *questionsId;
 
-@property (nonatomic, retain) IBOutlet UILabel *timeLeftLabel;
-@property (nonatomic, retain) IBOutlet UILabel *pointsLabel;
-@property (nonatomic, retain) IBOutlet UIView *questionView;
-@property (nonatomic, retain) IBOutlet UIButton *freezeButton;
+@property (nonatomic, strong) IBOutlet UILabel *timeLeftLabel;
+@property (nonatomic, strong) IBOutlet UILabel *pointsLabel;
+@property (nonatomic, strong) IBOutlet UILabel *rubyLabel;
+@property (nonatomic, strong) IBOutlet UIView *questionView;
+@property (nonatomic, strong) IBOutlet UIButton *freezeButton;
 
 - (IBAction)skipSelected:(id)sender;
 - (IBAction)cheatOneClicked:(id)sender;
 - (IBAction)cheatTwoClicked:(id)sender;
+- (QuestionType)getQuestiontype;
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userData:(UserInfo *)userData;
 - (void)transitionWithConclusion:(BOOL)conclusion skipping:(BOOL)didSkip andNextQuestionType:(QuestionType)type;
+
 @end

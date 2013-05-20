@@ -1,0 +1,40 @@
+import "User.proto";
+import "TriviaRoundFormat.proto";
+
+package proto;
+
+option java_package = "com.lvl6.pictures.eventprotos";
+option java_outer_classname = "CompletedRoundEventProto";
+
+message CompletedRoundRequestProto {
+	optional BasicUserProto sender = 1;
+	optional string gameId = 2;
+	optional CompleteRoundResultsProto results = 3;
+}
+
+message CompletedRoundResponseProto {
+	optional BasicUserProto recipient = 1;
+	optional string gameId = 2;
+	optional BasicRoundResultsProto results = 3;
+	optional CompletedRoundResponseStatus status = 4;
+	
+	enum CompletedRoundResponseStatus {
+		SUCCESS = 1;
+		FAIL_GAME_DOES_NOT_EXIST = 2;
+		FAIL_GAME_ALREADY_COMPLETED = 3;
+		FAIL_INCORRECT_SCORE = 4; //client and server will both compute score
+		FAIL_OTHER = 5;
+		FAIL_CLIENT_TOO_APART_FROM_SERVER_TIME = 6;
+	}
+}
+
+message OtherUserCompletedRoundResponseProto {
+	optional BasicUserProto recipient = 1;
+	optional BasicUserProto userWhoCompletedRound = 2;
+	
+	//set when second player finishes a round
+	optional BasicRoundResultsProto roundUserCompletedBasic = 3;
+	
+	//set whenever first player finishes a round
+	optional CompleteRoundResultsProto roundUserCompleted = 4;
+}

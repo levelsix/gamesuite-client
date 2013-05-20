@@ -25,16 +25,4 @@
     // Configure the view for the selected state
 }
 
-- (void)dealloc {
-  self.profilePic = nil;
-  self.nameLabel = nil;
-  self.lastPlayedLabel = nil;
-  
-  [self.profilePic release];
-  [self.nameLabel release];
-  [self.lastPlayedLabel release];
-  [self.inviteNowLabel release];
-  [super dealloc];
-}
-
 @end

@@ -1,0 +1,51 @@
+package proto;
+
+option java_package = "com.lvl6.pictures.noneventprotos";
+option java_outer_classname = "TriviaQuestionFormatProto";
+
+message QuestionProto {
+	//mutually exclusive, if one is set the other is not set
+	optional MultipleChoiceQuestionProto multipleChoice = 1;
+	optional PictureQuestionProto pictures = 2;
+}
+
+message MultipleChoiceQuestionProto {
+	//uniquely identifies this MultipleChoiceQuestionProto
+	optional string id = 4;
+	
+	//question stored in the database
+	optional string question = 1;
+	
+	//references id property in MultipleChoiceAnswerProto
+	optional string answerId = 2;
+	
+	//bunch of answers (images or phrases) tied to this proto
+	repeated MultipleChoiceAnswerProto answers = 3;
+}
+
+message MultipleChoiceAnswerProto {
+	//uniquely identifies this MultipleChoiceAnswerProto
+	optional string id = 2;
+	
+	//a phrase/sentence or a picture
+	optional string answer = 3;
+	
+	//determines if answer property above is a phrase/sentence or
+	//a picture
+	optional AnswerType type = 1;
+	
+	enum AnswerType {
+		TEXT = 1;
+		PICTURE = 2;
+	}
+}
+
+message PictureQuestionProto {
+	optional string id = 4;
+	
+	//at the moment, either one image or 4 images
+	repeated string imageNames = 1;
+	
+	//could be one word string or multiple worded string
+	optional string answer = 2;
+}

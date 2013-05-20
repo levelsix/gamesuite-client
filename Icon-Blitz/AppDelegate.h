@@ -9,6 +9,12 @@
 #import <UIKit/UIKit.h>
 #import <FacebookSDK/FacebookSDK.h>
 
+@protocol TestingDelegate <NSObject>
+
+- (void)test;
+
+@end
+
 @class HomeViewController;
 
 extern NSString *const FBSessionStateChangedNotification;
@@ -16,9 +22,9 @@ extern NSString *const FBSessionStateChangedNotification;
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet UINavigationController *navController;
-@property (strong, nonatomic) HomeViewController *viewController;
-
+@property (nonatomic, strong) IBOutlet UINavigationController *navController;
+@property (strong, nonatomic) UIViewController *viewController;
+@property (nonatomic, weak) id delegate;
 - (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI;
 - (void) closeSession;
 

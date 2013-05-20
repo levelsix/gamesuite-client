@@ -47,10 +47,7 @@
   if (data) {
     success = [data writeToFile:filePath atomically:YES];
   }
-  [data release];
   
-  [url release];
-  [filePath autorelease];
   return success ? filePath : nil;
 }
 
@@ -112,8 +109,6 @@
 - (void) dealloc {
   dispatch_release(_syncQueue);
   dispatch_release(_asyncQueue);
-  [_cacheDir release];
-  [super dealloc];
 }
 
 

@@ -1,0 +1,23 @@
+import "User.proto";
+package proto;
+
+option java_package = "com.lvl6.pictures.eventprotos";
+option java_outer_classname = "RefillTokensByWaitingEventProto";
+
+message RefillTokensByWaitingRequestProto {
+	optional BasicUserProto sender = 1;
+	optional int64 curTime = 2;
+}
+
+message RefillTokensByWaitingResponseProto {
+	optional BasicUserProto recipient = 1;
+	optional RefillTokensByWaitingStatus status = 2;
+	
+	enum RefillTokensByWaitingStatus {
+		SUCCESS = 1;
+		FAIL_NOT_READY_YET = 2;
+		FAIL_ALREADY_MAX = 3;
+		FAIL_CLIENT_TOO_APART_FROM_SERVER_TIME = 4;
+		FAIL_OTHER_FAIL = 5;
+	}
+}

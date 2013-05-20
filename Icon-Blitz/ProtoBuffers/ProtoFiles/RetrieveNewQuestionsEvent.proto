@@ -1,0 +1,24 @@
+import "User.proto";
+import "TriviaQuestionFormat.proto";
+
+package proto;
+
+option java_package = "com.lvl6.pictures.eventprotos";
+option java_outer_classname = "RetrieveNewQuestionsEventProto";
+
+message RetrieveNewQuestionsRequestProto {
+	optional BasicUserProto sender = 1;
+	optional int32 numQuestionsWanted = 2;
+}
+
+message RetrieveNewQuestionsResponseProto {
+
+	//questions could be new or old (user may have already seen them)
+	optional BasicUserProto recipient = 1;
+	repeated QuestionProto newQuestions = 2;
+	
+	enum RetrieveNewQuestionsResponseStatus {
+		SUCCESS = 1;
+		FAIL_OTHER = 2;
+	}
+}

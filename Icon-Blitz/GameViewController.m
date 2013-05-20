@@ -9,6 +9,12 @@
 #import "GameViewController.h"
 #import "MultipleChoiceViewController.h"
 #import "FillInViewController.h"
+#import "FacebookObject.h"
+#import "ScoreViewController.h"
+#import "UINavigationController+PushPopRotated.h"
+#import "UserInfo.h"
+#import "ProtoHeaders.h"
+#import "FillInTypeViewController.h"
 
 #define kTagDisplayResultTag 1000
 
@@ -18,6 +24,9 @@
 
 @interface GameViewController () {
   int freezeCounter;
+  int pointsBefore;
+  int pointsAfter;
+  int timeAfter;
   NSTimer *freezeTimer;
   CGRect gameRect;
   BOOL freezeTimerStarted;
@@ -27,48 +36,128 @@
 
 @implementation GameViewController
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userData:(UserInfo *)userData {
+  if ((self = [super init])) {
+    self.userData = userData;
+    //[self updateRubyLabel];
+  }
+  return self;
+}
+
 - (void)viewDidLoad
 {
   [super viewDidLoad];
+  self.currentQuestion = 0;
   self.timeLeft = 120;
   self.points = 0;
+  pointsBefore = 0;
+  pointsAfter = 0;
+  
   self.timeLeftLabel.text = [NSString stringWithFormat:@"%d",self.timeLeft];
   self.pointsLabel.text = [NSString stringWithFormat:@"%d",self.points];
   
+  self.questionsId = [[NSMutableArray alloc] init];
+  
+//  if ([self getQuestiontype] == kMultipleChoice) {
+//    self.currentController = [FillInViewController gameWithController:self];
+//  }
+//  else {
+//    self.currentController = [MultipleChoiceViewController initWithGameInfo:self];
+//  }
+  
+  self.currentController = [[FillInTypeViewController alloc] initWithNibName:@"FillInTypeViewController" bundle:nil game:self];
   //self.currentController = [FillInViewController gameWithController:self];
-  self.currentController = [MultipleChoiceViewController initWithGameInfo:self];
   self.currentController.view.center = CGPointMake(self.currentController.view.center.x, self.currentController.view.center.y+56);
   [self.view addSubview:self.currentController.view];
-    
+
   gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
+//  gameTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countDown) userInfo:nil repeats:YES];
   
-  gameTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countDown) userInfo:nil repeats:YES];
-  
+}
+
+- (QuestionType)getQuestiontype {
+  QuestionType type;
+  if ([[self.userData.questions objectAtIndex:self.currentQuestion] isKindOfClass:[MultipleChoiceAnswerProto class]]) {
+    type = kMultipleChoice;
+  }
+  else {
+    type = kFillIn;
+  }
+  self.currentType = type;
+  return type;
 }
 
 - (void)countDown {
   self.timeLeft -= 1;
-  [self updateTimeLabel];
+  [self updateTimeLabelWithSkip:NO];
   if (self.timeLeft <= 0) {
-    [self youLose];
+    self.timeLeftLabel.text = [NSString stringWithFormat:@"%d",self.timeLeft];
+    self.view.userInteractionEnabled = NO;
     [gameTimer invalidate];
+    [self youLose];
   }
 }
 
-- (void)updateTimeLabel {
-  self.timeLeftLabel.text = [NSString stringWithFormat:@"%d",self.timeLeft];
+- (void)updateRubyLabel {
+  self.rubyLabel.text = [NSString stringWithFormat:@"%d",self.userData.rubies];
+}
+
+- (void)updateTimeLabelWithSkip:(BOOL)skip {
+  if (skip) {
+    [self performSelector:@selector(changeTime) withObject:nil afterDelay:0.05];
+  }
+  else {
+    self.timeLeftLabel.text = [NSString stringWithFormat:@"%d",self.timeLeft];    
+  }
 }
 
 - (void)updatePointsLabel {
-  self.pointsLabel.text = [NSString stringWithFormat:@"%d",self.points];
+  [self performSelector:@selector(changePoints) withObject:nil afterDelay:.05];
+}
+
+- (void)changeTime {
+  static float delay = .01;
+  self.timeLeft -= 1;
+  self.timeLeftLabel.text = [NSString stringWithFormat:@"%d",self.timeLeft];
+  if (self.timeLeft > timeAfter) {
+    [self performSelector:@selector(changeTime) withObject:nil afterDelay:.05];
+  }else if (self.timeLeft < timeAfter -5 && self.timeLeft < timeAfter - 10) {
+    [self performSelector:@selector(changeTime) withObject:nil afterDelay:.05 + delay];
+    delay += 0.01;
+  }
+}
+
+-(void)changePoints {
+  static float delay = .01;
+  pointsBefore += 1;
+  self.pointsLabel.text = [NSString stringWithFormat:@"%d",pointsBefore];
+  if (pointsBefore < pointsAfter) {
+    [self performSelector:@selector(changePoints) withObject:nil afterDelay:.05];
+  }else if (pointsBefore > pointsAfter -5 && pointsBefore < pointsAfter) {
+    [self performSelector:@selector(changePoints) withObject:nil afterDelay:.05 + delay];
+    delay += 0.01;
+  }
 }
 
 - (void)youLose {
-  [self.navigationController popToRootViewControllerAnimated:YES];
+  self.view.userInteractionEnabled = YES;
+  ScoreViewController *vc = [[ScoreViewController alloc] initWithNibName:@"ScoreViewController" bundle:nil];
+  [self.navigationController pushViewController:vc rotated:YES];
+}
+
+- (void)publish {
+  NSMutableDictionary *params = [NSMutableDictionary dictionary];
+  [params setObject:@"Trivia Blitz" forKey:@"name"];
+  [params setObject:[NSString stringWithFormat:@"Danny has scored %d in Trivia Blitz",self.points] forKey:@"caption"];
+  [params setObject:[NSString stringWithFormat:@"Danny has scored %d in Trivia Blitz",self.points] forKey:@"description"];
+  [params setObject:@"http://i.imgur.com/9KY7dLJ.jpg" forKey:@"picture"];
+  
+  FacebookObject *facebookObject = [[FacebookObject alloc] init];
+  [facebookObject publishWithoutUIAndParams:params];
 }
 
 - (void)fadeInLabelWithAmount:(int)amount add:(BOOL)add andNumberType:(NumberType)type{
-  UILabel *label = [[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)] autorelease];
+  UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
   NSString *prefixType;
   
   if (add) {
@@ -107,21 +196,23 @@
 }
 
 - (IBAction)skipSelected:(id)sender {
-  self.timeLeft -= 10;
-  [self updateTimeLabel];
-  //NSDictionary *currentQ = [self.gameData objectAtIndex:self.currentQuestion+1];
-  //QuestionType type = [[currentQ objectForKey:@"Type"] integerValue];
+  timeAfter = self.timeLeft - 10;
+  if (timeAfter <= 0) timeAfter = 0;
+  [self updateTimeLabelWithSkip:YES];
+  
   [self fadeInLabelWithAmount:10 add:NO andNumberType:kTimeType];
   [self transitionWithConclusion:NO skipping:NO andNextQuestionType:kFillIn];
 }
 
 - (IBAction)cheatOneClicked:(id)sender {
-//  self.currentType = kFillIn;
-//  if (self.currentType == kFillIn) {
-//    [self.fillInView removeOptions];
+//  self.currentType = kMultipleChoice;
+//  if (self.currentType = kFillIn) {
+//    FillInViewController *vc = (FillInViewController *)self.currentController;
+//    [vc removeOptions];
 //  }
-//  else if (self.currentType == kMultipleChoice) {
-//    [self.multipleChoiceView removeOptions];
+//  else {
+//    MultipleChoiceViewController *vc = (MultipleChoiceViewController *)self.currentController;
+//    [vc removeOptions];
 //  }
 }
 
@@ -151,7 +242,7 @@
   [newController.view layoutIfNeeded];
   
   CGRect newFrame = CGRectMake(self.view.bounds.size.width, gameRect.origin.y, gameRect.size.width, gameRect.size.height);
-  CGPoint offFrame = CGPointMake(-self.view.bounds.size.width, 0);
+  CGPoint offFrame = CGPointMake(-self.view.bounds.size.width, self.currentController.view.center.y);
   newController.view.frame = newFrame;
   
   [self.currentController willMoveToParentViewController:nil];
@@ -179,9 +270,7 @@
   self.view.userInteractionEnabled = NO;
   if(!didSkip) {
     if (conclusion) {
-      self.points += 10;
-      [self updatePointsLabel];
-
+      pointsAfter += 10;
       UIImage *right = [UIImage imageNamed:@"correct.png"];
       UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, right.size.width, right.size.height)];
       imageView.tag  = kTagDisplayResultTag;
@@ -190,9 +279,10 @@
       [self.view addSubview:imageView];
       [UIView animateWithDuration:0.4 animations:^{
         imageView.transform = CGAffineTransformMakeScale(2, 2);
-        imageView.transform = CGAffineTransformMakeRotation(-5.55);
-      }completion:^(BOOL finished) {
+        imageView.transform = CGAffineTransformMakeRotation(-5.85);
+        [self updatePointsLabel];
         [self fadeInLabelWithAmount:10 add:YES andNumberType:kPointType];
+      }completion:^(BOOL finished) {
         [self pushNewViewControllersWithType:kMultipleChoice];
         [imageView removeFromSuperview];
       }];
@@ -208,9 +298,8 @@
 
       [UIView animateWithDuration:0.4 animations:^{
         imageView.transform = CGAffineTransformMakeScale(2, 2);
-        imageView.transform = CGAffineTransformMakeRotation(-5.55);
+        imageView.transform = CGAffineTransformMakeRotation(-5.85);
       }completion:^(BOOL finished) {
-  
         [self pushNewViewControllersWithType:kFillIn];
         [imageView removeFromSuperview];
       }];
@@ -219,17 +308,6 @@
   else {
     [self pushNewViewControllersWithType:kFillIn];
   }
-}
-
-- (void)dealloc {
-  self.gameData = nil;
-  self.questionView = nil;
-  self.freezeButton = nil;
-  
-  [self.gameData release];
-  [self.questionView release];
-  [self.freezeButton release];
-  [super dealloc];
 }
 
 @end

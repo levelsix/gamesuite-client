@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "FontLabel.h"
-
-@class GameViewController;
+#import "ProtoHeaders.h"
+#import "GameViewController.h"
 
 typedef enum {
   kChoiceA = 1,
@@ -24,26 +24,31 @@ typedef enum {
   NSString *answerCString;
   NSString *answerDString;
   MultipleChoices selectedAnswer;
+  MultipleChoiceQuestionProto *question;
+
   BOOL selected;
 }
 
 + (id)initWithGameInfo:(GameViewController *)game;
 - (id)initWithGame:(GameViewController *)game;
 
-@property (nonatomic, retain) GameViewController *game;
-@property (nonatomic, retain) IBOutlet UIView *answerAView;
-@property (nonatomic, retain) IBOutlet UIView *answerBView;
-@property (nonatomic, retain) IBOutlet UIView *answerCView;
-@property (nonatomic, retain) IBOutlet UIView *answerDView;
-@property (nonatomic, retain) IBOutlet UILabel *answerALabel;
-@property (nonatomic, retain) IBOutlet UILabel *answerBLabel;
-@property (nonatomic, retain) IBOutlet UILabel *answerCLabel;
-@property (nonatomic, retain) IBOutlet UILabel *answerDLabel;
-@property (nonatomic, retain) IBOutlet UILabel *questionLabel;
 @property (nonatomic, assign) MultipleChoices correctChoice;
-@property (nonatomic, retain) NSDictionary *answerInfo;
+@property (nonatomic, strong) NSMutableArray *takenAwayAnswers;
+@property (nonatomic, strong) GameViewController *game;
+@property (nonatomic, strong) IBOutlet UIView *answerAView;
+@property (nonatomic, strong) IBOutlet UIView *answerBView;
+@property (nonatomic, strong) IBOutlet UIView *answerCView;
+@property (nonatomic, strong) IBOutlet UIView *answerDView;
+@property (nonatomic, strong) IBOutlet UILabel *answerALabel;
+@property (nonatomic, strong) IBOutlet UILabel *answerBLabel;
+@property (nonatomic, strong) IBOutlet UILabel *answerCLabel;
+@property (nonatomic, strong) IBOutlet UILabel *answerDLabel;
+@property (nonatomic, strong) IBOutlet UIImageView *answerABottom;
+@property (nonatomic, strong) IBOutlet UIImageView *answerBBottom;
+@property (nonatomic, strong) IBOutlet UIImageView *answerCBottom;
+@property (nonatomic, strong) IBOutlet UIImageView *answerDBottom;
+@property (nonatomic, strong) IBOutlet UILabel *questionLabel;
 
-- (void)implementInfo;
 - (void)removeOptions;
 
 @end

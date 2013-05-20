@@ -16,17 +16,9 @@ NSString *const kPlaceholderPostMessage = @"Say something about this...";
 @synthesize postParams;
 
 - (void)dealloc {
-  self.postMessageTextView = nil;
-  [self.postMessageTextView release];
-  self.postImageView = nil;
-  [self.postImageView release];
-  
   if (self.imageConnection) {
     [self.imageConnection cancel];
-    self.imageConnection = nil;
-  }
-  
-  [super dealloc];
+  }  
 }
 
 - (void)connection:(NSURLConnection*)connection
@@ -78,33 +70,30 @@ NSString *const kPlaceholderPostMessage = @"Say something about this...";
   [self removeFromSuperview];
 }
 
-- (id)init {
+- (void)publishWithoutUI {
+  [FBRequestConnection startWithGraphPath:@"me/feed" parameters:self.postParams HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    if (!error) {
+      NSLog(@"posted");
+    }
+    else {
+      NSLog(@"%@",error);
+    }
+  }];
+}
+
+- (id)initWithPostParams:(NSMutableDictionary *)postParam {
   if ((self = [super init])) {
-    self.postParams =
-    [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-     @"https://developers.facebook.com/ios", @"link",
-     @"http://i.imgur.com/zSqTQ8l.jpg", @"picture",
-     @"meep", @"name",
-     @"swag", @"caption",
-     @"yolo", @"description",
-     nil];
+    self.postParams = postParam;
     [self resetPostMessage];
     self.postNameLabel.text = [self.postParams objectForKey:@"name"];
-    self.postCaptionLabel.text = [self.postParams
-                                  objectForKey:@"caption"];
+    self.postCaptionLabel.text = [self.postParams objectForKey:@"caption"];
     [self.postCaptionLabel sizeToFit];
-    self.postDescriptionLabel.text = [self.postParams
-                                      objectForKey:@"description"];
+    self.postDescriptionLabel.text = [self.postParams objectForKey:@"description"];
     [self.postDescriptionLabel sizeToFit];
     
     self.imageData = [[NSMutableData alloc] init];
-    NSURLRequest *imageRequest = [NSURLRequest
-                                  requestWithURL:
-                                  [NSURL URLWithString:
-                                   [self.postParams objectForKey:@"picture"]]];
-    self.imageConnection = [[NSURLConnection alloc] initWithRequest:
-                            imageRequest delegate:self];
-    
+    NSURLRequest *imageRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:[self.postParams objectForKey:@"picture"]]];
+    self.imageConnection = [[NSURLConnection alloc] initWithRequest:imageRequest delegate:self];
   }
   return self;
 }
@@ -142,8 +131,7 @@ NSString *const kPlaceholderPostMessage = @"Say something about this...";
   }
 }
 
-- (void) alertView:(UIAlertView *)alertView
-didDismissWithButtonIndex:(NSInteger)buttonIndex
+- (void) alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
   NSLog(@"dismissed");
 }

@@ -13,11 +13,11 @@
 
 @interface ViewController : UIViewController
 
-@property (nonatomic, retain) IBOutlet UIButton *authButton;
-@property (nonatomic, retain) IBOutlet UIButton *queryButton;
-@property (nonatomic, retain) IBOutlet UIButton *multiQueryButton;
-@property (nonatomic, retain) IBOutlet PublishDataView *publishView;
-@property (nonatomic, retain) NSArray *facebookFriendsArray;
+@property (nonatomic, strong) IBOutlet UIButton *authButton;
+@property (nonatomic, strong) IBOutlet UIButton *queryButton;
+@property (nonatomic, strong) IBOutlet UIButton *multiQueryButton;
+@property (nonatomic, strong) IBOutlet PublishDataView *publishView;
+@property (nonatomic, strong) NSArray *facebookFriendsArray;
 
 - (IBAction)facebookLogin:(id)sender;
 - (IBAction)publish:(id)sender;

@@ -59,7 +59,7 @@
 
 - (void)publish:(id)sender {
   [[NSBundle mainBundle] loadNibNamed:@"PublishData" owner:self options:nil];
-  [self.publishView init];
+  //[self.publishView init];
   self.publishView.center = CGPointMake(160, 240);
   [self.view addSubview:self.publishView];
 }
@@ -100,16 +100,16 @@
 - (void) showFriends:(NSArray *)friendData
 {
   // Set up the view controller that will show friend information
-  InviteFriendsViewController *viewController =
-  [[InviteFriendsViewController alloc] initWithNibName:nil bundle:nil andFriendArray:self.facebookFriendsArray];
-  // Present view controller modally.
-  if ([self
-       respondsToSelector:@selector(presentViewController:animated:completion:)]) {
-    // iOS 5+
-    [self presentViewController:viewController animated:YES completion:nil];
-  } else {
-    [self presentModalViewController:viewController animated:YES];
-  }
+//  InviteFriendsViewController *viewController =
+//  [[InviteFriendsViewController alloc] initWithNibName:nil bundle:nil andFriendArray:self.facebookFriendsArray];
+//  // Present view controller modally.
+//  if ([self
+//       respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+//    // iOS 5+
+//    [self presentViewController:viewController animated:YES completion:nil];
+//  } else {
+//    [self presentModalViewController:viewController animated:YES];
+//  }
 }
 
 - (IBAction)queryButtonAction:(id)sender {

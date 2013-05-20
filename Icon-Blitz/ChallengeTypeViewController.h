@@ -8,12 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@class UserInfo;
+
 @interface ChallengeTypeViewController : UIViewController {
 
 }
 
-@property (nonatomic, retain) NSMutableArray *facebookData;
+@property (nonatomic, strong) NSMutableArray *facebookData;
 @property (nonatomic, assign) BOOL loaded;
+@property (nonatomic, strong) UserInfo *userInfo;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userInfo:(UserInfo *)userInfo;
 
 - (IBAction)facebookClicked:(UIButton *)sender;
 - (IBAction)twitterClicked:(UIButton *)sender;
