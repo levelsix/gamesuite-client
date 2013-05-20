@@ -14,6 +14,7 @@
 #define LOGIN_TOKEN_EXPIRATION_DATE @"TokenExpirationData"
 #define USER_ID @"UserId"
 #define EMAIL "@Email"
+#define IN_APP_PURCHASES @"In-App"
 
 #define HOST_NAME @"amqp.lvl6.com"
 #define HOST_PORT 5672

@@ -19,7 +19,6 @@
 #import "PicturesEventProtocol.pb.h"
 #import "TriviaRoundFormat.pb.h"
 #import "TriviaGameFormat.pb.h"
-#import "RefillTokensByWaiting.pb.h"
 #import "ForceLogout.pb.h"
 
 #endif

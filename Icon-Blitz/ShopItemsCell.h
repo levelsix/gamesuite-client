@@ -13,7 +13,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *itemTitle;
 @property (nonatomic, strong) IBOutlet UILabel *itemAmount;
 @property (nonatomic, strong) IBOutlet UILabel *itemCost;
-
+@property (nonatomic, strong) IBOutlet UIButton *buyButton;
 @end
 
 @interface RubyCell : UITableViewCell
@@ -21,7 +21,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *itemTitle;
 @property (nonatomic, strong) IBOutlet UILabel *itemAmount;
 @property (nonatomic, strong) IBOutlet UILabel *itemCost;
-
+@property (nonatomic, strong) IBOutlet UIButton *buyButton;
 @end
 
 @interface BlankCell : UITableViewCell

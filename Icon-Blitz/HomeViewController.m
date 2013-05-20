@@ -28,11 +28,16 @@
   int yourTurnAmt;
   int theirTurnAmt;
   int completedAmt;
+  int rubyBefore;
 }
 
 @end
 
-@implementation HomeViewController
+@implementation HomeViewController {
+  ADBannerView *_bannerView;
+  NSTimer *_timer;
+  CFTimeInterval _ticks;
+}
 
 - (id) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil event:(LoginResponseProto *)proto {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -58,12 +63,50 @@
   NSString *timeFormat = [NSString stringWithFormat:@"%0.2d:%0.2d",minute, leftOver];
   self.coinTimeLabel.text = timeFormat;
   amountOfGoldCoins = MAX_GOLD_COINS;
+  amountOfRubies = 15;
   if (amountOfGoldCoins != MAX_GOLD_COINS) {
     newCoinTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(coinCountDown) userInfo:nil repeats:YES];  
   }
-  
   [self coinManagement:YES];
   [self addArraysTogether];
+  
+  if ([ADBannerView instancesRespondToSelector:@selector(initWithAdType:)]) {
+    _bannerView = [[ADBannerView alloc] initWithAdType:ADAdTypeBanner];
+  }
+  else {
+    _bannerView = [[ADBannerView alloc] init];
+  }
+  _bannerView.delegate = self;
+  [self.view addSubview:_bannerView];
+  [self layoutAnimated:NO];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+  [super viewDidAppear:animated];
+}
+
+
+- (void)layoutAnimated:(BOOL)animated
+{
+  CGRect contentFrame = self.view.bounds;
+  if (contentFrame.size.width < contentFrame.size.height) {
+    _bannerView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
+  } else {
+    _bannerView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierLandscape;
+  }
+  
+  CGRect bannerFrame = _bannerView.frame;
+  if (_bannerView.bannerLoaded) {
+    contentFrame.size.height -= _bannerView.frame.size.height;
+    bannerFrame.origin.y = contentFrame.size.height;
+  } else {
+    bannerFrame.origin.y = contentFrame.size.height;
+  }
+  
+  [UIView animateWithDuration:animated ? 0.25 : 0.0 animations:^{
+    [self.view layoutIfNeeded];
+    _bannerView.frame = bannerFrame;
+  }];
 }
 
 - (void)addArraysTogether {
@@ -75,13 +118,36 @@
   yourTurnAmt = 2;
   theirTurnAmt = 5;
   completedAmt = 8;
-//  yourTurnAmt = self.myTurns.count;
-//  theirTurnAmt = self.notMyTurns.count + self.myTurns.count;
-//  completedAmt00 = self.myTurns.count + self.notMyTurns.count + self.completedGames.count;
 }
 
 - (void)updateUI {
   self.rubyLabel.text = [NSString stringWithFormat:@"%d",self.userInfo.rubies];
+}
+
+- (void)updateRuby:(int)value  {
+  rubyBefore = amountOfRubies;
+  amountOfRubies += value;
+  self.rubyLabel.text = [NSString stringWithFormat:@"%d",amountOfRubies];
+  [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(countUpRuby:) userInfo:nil repeats:YES];
+}
+
+- (void)countUpRuby:(NSTimer *)timer {
+  rubyBefore += 1;
+  self.rubyLabel.text = [NSString stringWithFormat:@"%d",rubyBefore];
+  if (rubyBefore >= amountOfRubies) {
+    [timer invalidate];
+  }
+}
+
+- (void)updateGoldCoin:(int)value {
+  amountOfGoldCoins = 15;
+  [self coinManagement:YES];
+  [self invalidateTimer];
+  addNewCoinTime = ADD_NEW_COIN_TIME;
+  NSInteger minute = addNewCoinTime/60;
+  NSInteger leftOver = addNewCoinTime % 60;
+  NSString *timeFormat = [NSString stringWithFormat:@"%0.2d:%0.2d",minute, leftOver];
+  self.coinTimeLabel.text = timeFormat;
 }
 
 - (void)coinCountDown {
@@ -146,10 +212,6 @@
   }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-  //[self updateUI];
-}
-
 - (IBAction)startNewGame:(id)sender {
   amountOfGoldCoins--;
   [self coinManagement:NO];
@@ -196,7 +258,7 @@
   [[NSBundle mainBundle] loadNibNamed:@"ShopMenu" owner:self options:nil];
   self.view.userInteractionEnabled = NO;
   self.shopMenu.center = CGPointMake(160, 240);
-  [self.shopMenu doAnimation];
+  [self.shopMenu getDataWithGame:self];
   self.shopMenu.alpha = 0.0f;
   [self.view addSubview:self.shopMenu];
   [UIView animateWithDuration:0.3f animations:^{
@@ -405,6 +467,37 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
     return cell;
   }
   return nil;
+}
+
+#pragma mark - iAd delegates
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+  return UIInterfaceOrientationMaskAll;
+}
+
+- (void)viewDidLayoutSubviews
+{
+  [self layoutAnimated:[UIView areAnimationsEnabled]];
+}
+
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner
+{
+  [self layoutAnimated:YES];
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+{
+  [self layoutAnimated:YES];
+}
+
+- (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave
+{
+  return YES;
+}
+
+- (void)bannerViewActionDidFinish:(ADBannerView *)banner
+{
 }
 
 @end

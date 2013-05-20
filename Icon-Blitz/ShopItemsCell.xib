@@ -130,7 +130,7 @@
 							<object class="IBUILabel" id="725148593">
 								<reference key="NSNextResponder" ref="686388281"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{49, 38}, {42, 21}}</string>
+								<string key="NSFrame">{{49, 38}, {148, 21}}</string>
 								<reference key="NSSuperview" ref="686388281"/>
 								<reference key="NSNextKeyView" ref="808884522"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -264,7 +264,7 @@
 							<object class="IBUILabel" id="220025624">
 								<reference key="NSNextResponder" ref="653479147"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{52, 38}, {42, 21}}</string>
+								<string key="NSFrame">{{52, 38}, {148, 21}}</string>
 								<reference key="NSSuperview" ref="653479147"/>
 								<reference key="NSNextKeyView" ref="436317401"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -400,6 +400,23 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">buyButton</string>
+						<reference key="source" ref="63055275"/>
+						<reference key="destination" ref="79196470"/>
+					</object>
+					<int key="connectionID">66</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">buyProduct:</string>
+						<reference key="source" ref="79196470"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">68</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">itemTitle</string>
 						<reference key="source" ref="581828009"/>
 						<reference key="destination" ref="348277848"/>
@@ -421,6 +438,23 @@
 						<reference key="destination" ref="220025624"/>
 					</object>
 					<int key="connectionID">57</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">buyButton</string>
+						<reference key="source" ref="581828009"/>
+						<reference key="destination" ref="678043766"/>
+					</object>
+					<int key="connectionID">67</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">buyProduct:</string>
+						<reference key="source" ref="678043766"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">69</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -527,7 +561,7 @@
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
-				<string key="-1.CustomClassName">ShopMenuViewController</string>
+				<string key="-1.CustomClassName">ShopMenu</string>
 				<string key="-1.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="-2.CustomClassName">UIResponder</string>
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -558,7 +592,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">65</int>
+			<int key="maxID">69</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

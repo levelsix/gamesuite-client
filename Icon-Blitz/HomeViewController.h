@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ProtoHeaders.h"
 #import "Utilities.h"
+#import <iAd/iAd.h>
 
 typedef enum {
   kNewGame = 0,
@@ -24,7 +25,7 @@ typedef enum {
 @class ShopMenu;
 @class UserInfo;
 
-@interface HomeViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate>
+@interface HomeViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, ADBannerViewDelegate>
 
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) IBOutlet StartGameCell *startCell;
@@ -41,10 +42,15 @@ typedef enum {
 @property (nonatomic, strong) LoginResponseProto *loginProto;
 @property (nonatomic, strong) UserInfo *userInfo;
 
+@property (nonatomic) BOOL inAppPurchasedLoaded;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil event:(LoginResponseProto *)proto;
 - (IBAction)startNewGame:(id)sender;
 - (IBAction)goToGame:(id)sender;
 - (IBAction)goToShop:(id)sender;
 - (IBAction)closeView:(id)sender;
+
+- (void)updateGoldCoin:(int)value;
+- (void)updateRuby:(int)value;
 
 @end

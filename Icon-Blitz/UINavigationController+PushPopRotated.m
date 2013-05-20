@@ -62,8 +62,6 @@ static char const* const animationStyleStackKey = "animationStyleStackKey";
 /* ================================================= Class Methods ================================================== */
 + (void) load {
     if (SWIZZLE_BACK) {
-        NSLog(@"JBCubeController: SWIZZLE_BACK is enabled. The back button will remember which style of animation was "
-                "used to display the view.");
         [[self class] jr_swizzleMethod:@selector(pushViewController:animated:)
                 withMethod:@selector(storeAnimationStyleAndPushViewController:animated:) error:nil];
         [[self class] jr_swizzleMethod:@selector(popViewControllerAnimated:)
@@ -251,7 +249,6 @@ static char const* const animationStyleStackKey = "animationStyleStackKey";
         [self popViewControllerAnimated:animated];
         [[self class] jr_swizzleMethod:@selector(popViewControllerAnimated:)
                 withMethod:@selector(retrieveAnimationStyleAndPopViewControllerAnimated:) error:nil];
-        NSLog(@"Swizzled back");
     }
 }
 

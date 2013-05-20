@@ -24,6 +24,7 @@
   BOOL userScoreLoaded;
   BOOL opponentScoreLoaded;
   int currentRound;
+  BOOL spinning;
 }
 
 @end
@@ -51,22 +52,26 @@
 {
   [super viewDidLoad];
   animationCounter = 9;
-  uScoreOne = 200;
-  uScoreTwo = 200;
-  uScoreThree = 200;
-  oScoreOne = 300;
-  oScoreTwo = 300;
-  oScoreThree = 300;
-  uTotalScore = 600;
-  oTotalScore = 900;
+  uScoreOne = 50;
+  uScoreTwo = 50;
+  uScoreThree = 50;
+  oScoreOne = 60;
+  oScoreTwo = 60;
+  oScoreThree = 60;
+  uTotalScore = 150;
+  oTotalScore = 180;
   for (int i = 14 ; i < 22; i++) {
     UILabel *label = (UILabel *)[self.view viewWithTag:i];
     label.text = [NSString stringWithFormat:@"0"];
   }
-  [self animateNameSection];
+  //test data
+  self.userImage.image = [UIImage imageNamed:@"testimage1.jpg"];
+  self.opponentImage.image = [UIImage imageNamed:@"testimage2.jpg"];
+  [self startSpin];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+  [self performSelector:@selector(animateNameSection) withObject:nil afterDelay:0.3f];
 }
 
 - (void)updateScores {
@@ -148,17 +153,58 @@
   [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
+- (void)spinWithOptions:(UIViewAnimationOptions)options {
+  [UIView animateWithDuration:5.0f delay:0.0f options:options animations:^{
+    self.spinningBackground.transform = CGAffineTransformRotate(self.spinningBackground.transform, M_PI / 2);
+  }completion:^(BOOL finished) {
+    if (finished) {
+      if (spinning) {
+        // if flag still set, keep spinning with constant speed
+        [self spinWithOptions: UIViewAnimationOptionCurveLinear];
+      } else if (options != UIViewAnimationOptionCurveEaseOut) {
+        // one last spin, with deceleration
+        [self spinWithOptions: UIViewAnimationOptionCurveEaseOut];
+      }
+    }
+  }];
+}
+
+- (void) startSpin {
+  if (!spinning) {
+    spinning = YES;
+    [self spinWithOptions: UIViewAnimationOptionCurveEaseIn];
+  }
+}
+
+- (void) stopSpin {
+  // set the flag to stop spinning after one last 90 degree increment
+  spinning = NO;
+}
+
+- (void)pulsingAnimationWithView:(UIView *)view {
+  CABasicAnimation *theAnimation;
+  
+  theAnimation=[CABasicAnimation animationWithKeyPath:@"transform.scale"];
+  theAnimation.duration= 0.7;
+  theAnimation.repeatCount = HUGE_VALF;
+  theAnimation.autoreverses =YES;
+  theAnimation.fromValue=[NSNumber numberWithFloat:1.0];
+  theAnimation.toValue=[NSNumber numberWithFloat:1.5];
+  [view.layer addAnimation:theAnimation forKey:@"animatePulse"];
+}
+
 #pragma mark - Animations
 //they are in order
 
 - (void)animateNameSection {
   for (int i = 1; i <= 3; i++) {
     UIView *view = [self.view viewWithTag:i];
+    view.hidden = NO;
     CGPoint originalPoint = view.center;
     view.center = CGPointMake(-view.center.x, view.center.y);
-    [UIView animateWithDuration:0.3f animations:^{
+    [UIView animateWithDuration:0.3f delay:0.3f options:UIViewAnimationTransitionNone animations:^{
       view.center = originalPoint;
-    }];
+    }completion:nil];
   }
 
   for (int i = 4; i <= 6; i++) {
@@ -182,15 +228,18 @@
 }
 
 - (void)animatePointBG {
-  UIView *view = [self.view viewWithTag:8];
-  view.transform = CGAffineTransformMakeScale(3, 3);
-  [UIView animateWithDuration:0.3f animations:^{
-    view.alpha = 1.0f;
-    view.transform = CGAffineTransformIdentity;
-  }completion:^(BOOL finished) {
-    [NSTimer scheduledTimerWithTimeInterval:0.2f target:self selector:@selector(animatePointDescriptions:) userInfo:nil repeats:YES];
-  }];
+  //UIView *view = [self.view viewWithTag:8];
+  //view.transform = CGAffineTransformMakeScale(3, 3);
+  //[UIView animateWithDuration:0.3f animations:^{
+    //view.alpha = 1.0f;
+    //view.transform = CGAffineTransformIdentity;
+  //}completion:^(BOOL finished) {
+    //[NSTimer scheduledTimerWithTimeInterval:0.2f target:self selector:@selector(animatePointDescriptions:) userInfo:nil repeats:YES];
+  //}];
+  [NSTimer scheduledTimerWithTimeInterval:0.2f target:self selector:@selector(animatePointDescriptions:) userInfo:nil repeats:YES];
 }
+
+
 
 - (void)animatePointDescriptions:(NSTimer *)timer {
   UIView *label = [self.view viewWithTag:animationCounter];
@@ -271,6 +320,7 @@
 }
 
 - (void)animateTurnAndDone {
+  [self pulsingAnimationWithView:self.opponentImage];
   UILabel *label = (UILabel *)[self.view viewWithTag:22];
   UIView *button = (UIView *)[self.view viewWithTag:23];
   UIView *doneLabel = (UIView *)[self.view viewWithTag:24];

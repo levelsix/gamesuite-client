@@ -23,7 +23,9 @@
 @interface FillInTypeViewController () {
   BOOL dragging;
   BOOL moving;
-  CGPoint homePosition;
+  BOOL filledSlotMoving;
+  BOOL isInMorethanOneRect;
+  CGRect homePosition;
   NSMutableArray *bottomBarArray;
   NSMutableArray *answerViews;
   UIView *dragObject;
@@ -32,6 +34,7 @@
   CGRect originalLetterLocations[14];
   NSArray *selectionSlots;
   NSString *correctAnswer;
+  int previousTag;
 }
 
 @end
@@ -54,25 +57,25 @@
   answerViews = [NSMutableArray array];
   selectedAnswerTags = [NSMutableArray array];
   selectedLetters = [NSMutableArray array];
-  correctLetterCount = 9;
+  correctLetterCount = 12;
   numberOfLines = 2;
-  firstLineCount = 5;
-  secondLineCount = 4;
+  firstLineCount = 6;
+  secondLineCount = 6;
   for (int i = 0 ; i < correctLetterCount; i++) {
     [selectedAnswerTags addObject:[NSNumber numberWithInt:-1]];
-    [selectedLetters addObject:[NSNumber numberWithInt:i]];
+    [selectedLetters addObject:[NSNumber numberWithInt:-1]];
   }
   selectionSlots = [[NSArray alloc] initWithObjects:@"L",@"E",@"V",@"E",@"L",@"6",@" ",@"R",@"O",@"C",@"K",@"S",@"!",@" ",nil];
   [self createAnswerSlots];
   [self createSelectionSlots];
   animationCounter = 1;
-  correctAnswer = @"LevelRock";
+  correctAnswer = @"LEVEL6ROCKS!";
   [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(animateSelectionSlots:) userInfo:nil repeats:YES];
 }
 
 - (void)createAnswerSlots {
   int tag = kUnfilledStartingTag;
-  if (numberOfLines != 1) {
+  if (numberOfLines == 2) {
     UIView *firstLine = [[UIView alloc] init];
     float lastSlotPosY;
     float lastSlotPosX;
@@ -118,26 +121,26 @@
     
   }
   else {
-    UIView *answerView = [[UIView alloc] init];
+    UIView *firstLine = [[UIView alloc] init];
     float lastSlotPosY;
     float lastSlotPosX;
-    for (int i = 0; i < correctLetterCount; i++) {
-      
+    for (int i = 0; i < firstLineCount; i++) {
       NSString *letterPath = [NSString stringWithFormat:@"unfilledblack.png"];
       UIImage *letters = [UIImage imageNamed:letterPath];
       UIImageView *view = [[UIImageView alloc] initWithFrame:CGRectMake(i * WidthDifference, 0, 37, 38)];
       view.image = letters;
       view.tag = tag;
-      if (i == correctLetterCount-1) {
+      tag++;
+      if (i == firstLineCount-1) {
         lastSlotPosX = view.center.x + view.frame.size.width/2;
         lastSlotPosY = view.frame.size.height;
       }
-      tag++;
-      [answerView addSubview:view];
+      [firstLine addSubview:view];
     }
-    answerView.frame = CGRectMake(0, 0, lastSlotPosX, lastSlotPosY);
-    answerView.center = CGPointMake(self.view.frame.size.width/2, 180);
-    [self.view addSubview:answerView];
+    firstLine.tag = kFirstLine;
+    firstLine.frame = CGRectMake(0, 0, lastSlotPosX, lastSlotPosY);
+    firstLine.center = CGPointMake(self.view.frame.size.width/2, 180);
+    [self.view addSubview:firstLine];
   }
   maxUnfilledSlot = tag;
   for (int i = kUnfilledStartingTag; i < maxUnfilledSlot; i++) {
@@ -236,27 +239,30 @@
   }
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event   {
   UITouch *touch = [[event allTouches] anyObject];
   CGPoint touchLocation = [touch locationInView:self.view];
+  
   for (UIView *view in self.view.subviews) {
     if (CGRectContainsPoint(view.frame, touchLocation)) {
-      if (view.tag > 0 && view.tag <= kAnswerSlotViewEndingTag) {
+      if (view.tag > 0 && view.tag <= kAnswerSlotBottomEndingTag) { //touching the selection slots
         dragObject = view;
-        int tag = 0;
-        for (NSNumber *used in selectedAnswerTags) {
-          tag++;
-          if ([used integerValue] == dragObject.tag) {
-            [self resetLetter];
-            [selectedAnswerTags replaceObjectAtIndex:tag-1 withObject:[NSNumber numberWithInt:-1]];
-            [selectedLetters replaceObjectAtIndex:tag-1 withObject:[NSNumber numberWithInt:-1]];
+        dragging = YES;
+        [self.view bringSubviewToFront:dragObject];
+        int tag = 0; //this tag is for locating the intersected tag in our selectedAnswerTag
+        for (NSNumber *ourAnswers in selectedAnswerTags) {
+          //check through our answer if we are clicking on the answers
+          if ([ourAnswers integerValue] == dragObject.tag) {
+            //if we do clicking on the answer we set the fillSlotMoving to 
+            filledSlotMoving = YES;
+            previousTag = tag;
+            homePosition = dragObject.frame;
             return;
           }
+          tag++;
         }
-        dragging = YES;
-        [UIView animateWithDuration:0.1 animations:^{
+        [UIView animateWithDuration:0.1f animations:^{
           dragObject.center = CGPointMake(dragObject.center.x, dragObject.center.y+4);
-        }completion:^(BOOL finished) {
           [self hideBottomBar];
         }];
       }
@@ -270,110 +276,365 @@
   if (dragging) {
     moving = YES;
     dragObject.center = touchLocation;
-    [self.view bringSubviewToFront:dragObject];
   }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-  if (dragging) {
-    [self replaceAnswerWithDragging];
+  //we clicked on an answer that we chose and we are not dragging it
+  if (filledSlotMoving && !moving) {
+    //we remove that letter from our answers and move it back to selection
+    dragging = NO;
+    [self resetLetter];
+    [selectedAnswerTags replaceObjectAtIndex:previousTag withObject:[NSNumber numberWithInt:-1]];
+    [selectedLetters replaceObjectAtIndex:previousTag withObject:[NSNumber numberWithInt:-1]];
   }
+  else if (filledSlotMoving && moving) {
+    //we are dragging our answer from before
+    dragging = NO;
+    [self draggingSelectedAnswer];
+  }
+  
+  if (dragging && moving) { //if user is dragging the selection slots
+    [self draggingPlacementAndAnimations];
+  }
+  else if (dragging && !moving){ // user is just clicking it
+    [self inputTouchedSlot];
+  }
+
   dragging = NO;
   moving = NO;
+  filledSlotMoving = NO;
+  NSLog(@"%d",filledSlotMoving);
+  //check if our answer is correct
+  BOOL full = YES;
+  for (NSNumber *num in selectedAnswerTags) {
+    if ([num integerValue] == -1) {
+      full = NO;
+    }
+  }
+  if (full) {
+    [self checkIfAnswerIsCorrect];
+  }
 }
 
-- (void)replaceAnswerWithDragging {
-  //dragging to answer slots
-  if (numberOfLines != 1 && moving) {
-    int tag = 0;
+
+//- (void)checkIfDragViewIsIntersectingMultipleRect {
+//  //loop through all of our view
+//  NSMutableArray *areas = [NSMutableArray array];
+//  NSMutableArray *intersectedTag = [NSMutableArray array];
+//  int tag = 0;
+//  UIView *firstLine = [self.view viewWithTag:kFirstLine];
+//  UIView *secondLine = [self.view viewWithTag:kSecondLine];
+//  if (numberOfLines == 2) {
+//    if (CGRectIntersectsRect(dragObject.frame, firstLine.frame) || CGRectIntersectsRect(dragObject.frame, secondLine.frame)) {
+//      for (UIView *view in answerViews) {
+//        CGRect firstRect = [firstLine convertRect:view.frame toView:self.view];
+//        if (CGRectIntersectsRect(dragObject.frame, firstRect)) {
+//          CGRect rect = CGRectIntersection(dragObject.frame, firstRect);
+//          float area = rect.size.width * rect.size.height;
+//          [areas addObject:[NSNumber numberWithFloat:area]];
+//          [intersectedTag addObject:[NSNumber numberWithInt:tag]];
+//          tag++;
+//        }
+//        CGRect secondRect = [secondLine convertRect:view.frame toView:self.view];
+//        if (CGRectIntersectsRect(dragObject.frame, secondRect)) {
+//          CGRect rect = CGRectIntersection(dragObject.frame, secondRect);
+//          float area = rect.size.width * rect.size.height;
+//          [areas addObject:[NSNumber numberWithFloat:area]];
+//          [intersectedTag addObject:[NSNumber numberWithInt:tag]];
+//          tag++;
+//        }
+//      }
+//    }
+//  }
+//  float previousArea = 0;
+//  int arrayCounter = 0;
+//  int actualTagInAnswerArray;
+//  for (int i = 0; i < tag; i+=2) {
+//    float area = [[areas objectAtIndex:i] floatValue];
+//    if (previousArea <= area) {
+//      previousArea = area;
+//      arrayCounter = i;
+//    }
+//  }
+//  NSLog(@"%f", previousArea);
+//  actualTagInAnswerArray = [[intersectedTag objectAtIndex:arrayCounter/2] integerValue];
+//  UIView *view = (UIView *)[answerViews objectAtIndex:actualTagInAnswerArray];
+//  CGRect newFrame;
+//  if (numberOfLines == 2) {
+//    if (actualTagInAnswerArray < firstLineCount) {
+//      newFrame = [firstLine convertRect:view.frame toView:self.view];
+//    }
+//    else {
+//      newFrame = [secondLine convertRect:view.frame fromView:self.view];
+//    }
+//  }
+//  else {
+//    newFrame = [firstLine convertRect:view.frame fromView:self.view];
+//  }
+//  dragObject.frame = newFrame;
+//  NSLog(@"%f",newFrame.size.width*newFrame.size.height);
+//}
+
+
+- (void)draggingSelectedAnswer {
+  if (numberOfLines == 2) { // if user is dragging our answer from before and the answer is a 2 lined answer
     UIView *firstLine = [self.view viewWithTag:kFirstLine];
     UIView *secondLine = [self.view viewWithTag:kSecondLine];
-    if (CGRectIntersectsRect(dragObject.frame, firstLine.frame) || CGRectIntersectsRect(dragObject.frame, secondLine.frame)) {
+    if (CGRectIntersectsRect(dragObject.frame, firstLine.frame) || CGRectIntersectsRect(dragObject.frame, secondLine.frame)) { //if dragobject is in the rect of line one or line two
+      int tag = 0;
       for (UIView *view in answerViews) {
         CGRect firstRect = [firstLine convertRect:view.frame toView:self.view];
         CGRect secondRect = [secondLine convertRect:view.frame toView:self.view];
-        tag++;
-        
-        if (CGRectIntersectsRect(dragObject.frame,firstRect)) {
-          dragObject.frame = firstRect;
-          [selectedAnswerTags replaceObjectAtIndex:tag-1 withObject:[NSNumber numberWithInt:dragObject.tag]];
-          for (UILabel *l in dragObject.subviews) {
-            [selectedLetters replaceObjectAtIndex:tag-1 withObject:l.text];
+        if (CGRectIntersectsRect(dragObject.frame, firstRect)) { // if it intersets with the first line
+          if ([[selectedAnswerTags objectAtIndex:tag] integerValue] == -1) {//if the slot that we drag to is not taken
+            [selectedAnswerTags replaceObjectAtIndex:tag withObject:[NSNumber numberWithInt:dragObject.tag]];
+            [selectedAnswerTags replaceObjectAtIndex:previousTag withObject:[NSNumber numberWithInt:-1]];
+            [selectedLetters replaceObjectAtIndex:previousTag withObject:[NSNumber numberWithInt:-1]];
+            [self addLetterToAnswer:tag];            
+            dragObject.frame = firstRect;
           }
-          break;
+          else if ([[selectedAnswerTags objectAtIndex:tag]integerValue] != -1) {
+            //do an animation swapping letters
+            UIView *droppedOnView = [self.view viewWithTag:[[selectedAnswerTags objectAtIndex:tag]integerValue]];
+            for (UIImageView *view in droppedOnView.subviews) {
+              for (UILabel *l in view.subviews) {
+                [selectedLetters replaceObjectAtIndex:previousTag withObject:l.text];
+              }
+            }
+            droppedOnView.frame = homePosition;
+            dragObject.frame = firstRect;
+            [selectedAnswerTags replaceObjectAtIndex:previousTag withObject:[NSNumber numberWithInt:droppedOnView.tag]];
+            [selectedAnswerTags replaceObjectAtIndex:tag withObject:[NSNumber numberWithInt:dragObject.tag]];
+            [self addLetterToAnswer:tag];
+          }
+          else {
+            [UIView animateWithDuration:0.1f animations:^{
+              dragObject.frame = homePosition;
+            }];
+          }
+          return;
         }
         else if (CGRectIntersectsRect(dragObject.frame, secondRect)) {
-          tag = firstLineCount + tag;
-          dragObject.frame = secondRect;
-          [selectedAnswerTags replaceObjectAtIndex:tag-1 withObject:[NSNumber numberWithInt:dragObject.tag]];
-          for (UIImageView *image in dragObject.subviews) {
-            for (UILabel *l in image.subviews) {
-              [selectedLetters replaceObjectAtIndex:tag-1 withObject:l.text];
-            }
+          if ([[selectedAnswerTags objectAtIndex:tag+firstLineCount] integerValue] == -1) {//if the slot that we drag to is not taken
+            [selectedAnswerTags replaceObjectAtIndex:tag+firstLineCount withObject:[NSNumber numberWithInt:dragObject.tag]];
+            [selectedAnswerTags replaceObjectAtIndex:previousTag withObject:[NSNumber numberWithInt:-1]];
+            [selectedLetters replaceObjectAtIndex:previousTag withObject:[NSNumber numberWithInt:-1]];
+            [self addLetterToAnswer:tag+firstLineCount];
+            dragObject.frame = secondRect;
           }
+          else if ([[selectedAnswerTags objectAtIndex:tag+firstLineCount] integerValue] != -1) {
+            //do an animation swapping letters
+            UIView *droppedOnView = [self.view viewWithTag:[[selectedAnswerTags objectAtIndex:tag+firstLineCount] integerValue]];
+            for (UIImageView *view in droppedOnView.subviews) {
+              for (UILabel *l in view.subviews) {
+                [selectedLetters replaceObjectAtIndex:previousTag withObject:l.text];
+              }
+            }
+            droppedOnView.frame = homePosition;
+            dragObject.frame = secondRect;
+            [selectedAnswerTags replaceObjectAtIndex:previousTag withObject:[NSNumber numberWithInt:droppedOnView.tag]];
+            [selectedAnswerTags replaceObjectAtIndex:tag+firstLineCount withObject:[NSNumber numberWithInt:dragObject.tag]];
+            [self addLetterToAnswer:tag+firstLineCount];
+
+          }
+          else {
+            [UIView animateWithDuration:0.1f animations:^{
+              dragObject.frame = homePosition;
+            }];
+          }
+          return;
+        }
+        tag++;
+      }
+    }
+    else {
+      NSLog(@"meep");
+      [self resetLetter];
+      for (int i = 0 ; i <selectedAnswerTags.count;i++) {
+        int answer = [[selectedAnswerTags objectAtIndex:0] integerValue];
+        if (answer == dragObject.tag) {
+          [selectedAnswerTags replaceObjectAtIndex:i withObject:[NSNumber numberWithInt:-1]];
+          [selectedLetters replaceObjectAtIndex:i withObject:[NSNumber numberWithInt:-1]];
           break;
         }
       }
     }
-    else if (numberOfLines == 1 && moving){
+  }
+  else if (numberOfLines == 1) {
+    UIView *firstLine = [self.view viewWithTag:kFirstLine];
+    if (CGRectIntersectsRect(dragObject.frame, firstLine.frame)) { //if dragobject is in the rect of line one or line two
       int tag = 0;
-      UIView *firstLine = [self.view viewWithTag:kFirstLine];
-      if (CGRectIntersectsRect(dragObject.frame, firstLine.frame)) {
-        for (UIView *view in answerViews) {
-          CGRect firstRect = [firstLine convertRect:view.frame toView:self.view];
-          tag++;
-          if (CGRectIntersectsRect(dragObject.frame,firstRect)) {
+      for (UIView *view in answerViews) {
+        CGRect firstRect = [firstLine convertRect:view.frame toView:self.view];
+        if (CGRectIntersectsRect(dragObject.frame, firstRect)) {
+          if ([[selectedAnswerTags objectAtIndex:tag] integerValue] == -1) {//if the slot that we drag to is not taken
+            [selectedAnswerTags replaceObjectAtIndex:tag withObject:[NSNumber numberWithInt:dragObject.tag]];
+            [selectedAnswerTags replaceObjectAtIndex:previousTag withObject:[NSNumber numberWithInt:-1]];
+            [selectedLetters replaceObjectAtIndex:previousTag withObject:[NSNumber numberWithInt:-1]];
+            [self addLetterToAnswer:tag];
             dragObject.frame = firstRect;
-            [selectedAnswerTags replaceObjectAtIndex:tag-1 withObject:[NSNumber numberWithInt:dragObject.tag]];
-            for (UIImageView *image in dragObject.subviews) {
-              for (UILabel *l in image.subviews) {
-                [selectedLetters replaceObjectAtIndex:tag-1 withObject:l.text];
+          }
+          else if ([[selectedAnswerTags objectAtIndex:tag]integerValue] != -1) {
+            //do an animation swapping letters
+            UIView *droppedOnView = [self.view viewWithTag:[[selectedAnswerTags objectAtIndex:tag]integerValue]];
+            for (UIImageView *view in droppedOnView.subviews) {
+              for (UILabel *l in view.subviews) {
+                [selectedLetters replaceObjectAtIndex:previousTag withObject:l.text];
               }
             }
+            droppedOnView.frame = homePosition;
+            dragObject.frame = firstRect;
+            [selectedAnswerTags replaceObjectAtIndex:previousTag withObject:[NSNumber numberWithInt:droppedOnView.tag]];
+            [selectedAnswerTags replaceObjectAtIndex:tag withObject:[NSNumber numberWithInt:dragObject.tag]];
+            [self addLetterToAnswer:tag];
           }
+          else {
+            [UIView animateWithDuration:0.1f animations:^{
+              dragObject.frame = homePosition;
+            }];
+          }
+          return;
         }
+        tag++;
+      }
+    }
+    else {
+      [self resetLetter];
+      for (int i = 0 ; i <selectedAnswerTags.count;i++) {
+        int answer = [[selectedAnswerTags objectAtIndex:i] integerValue];
+        if (answer == dragObject.tag) {
+          [selectedAnswerTags replaceObjectAtIndex:i withObject:[NSNumber numberWithInt:-1]];
+          [selectedLetters replaceObjectAtIndex:i withObject:[NSNumber numberWithInt:-1]];
+          break;
+        }
+      }
+    }
+  }
+}
+
+- (void)movePreviousAnswerBackToSelection:(int)tag {
+  UIView *previousView = [self.view viewWithTag:tag];
+  [UIView animateWithDuration:0.1f animations:^{
+    previousView.frame = originalLetterLocations[tag-1];
+    UIImageView *b = [bottomBarArray objectAtIndex:tag-1];
+    b.hidden = NO;
+  }completion:^(BOOL finished) {
+    UIImageView *b = [bottomBarArray objectAtIndex:tag-1];
+    b.hidden = NO;
+  }];
+}
+
+- (void)draggingPlacementAndAnimations {
+  if (numberOfLines == 2 && moving) { //if user is dragging the selection slots and its a 2 lined answer
+    UIView *firstLine = [self.view viewWithTag:kFirstLine];
+    UIView *secondLine = [self.view viewWithTag:kSecondLine];
+    if (CGRectIntersectsRect(dragObject.frame, firstLine.frame) || CGRectIntersectsRect(dragObject.frame, secondLine.frame)) { //if dragobject is in the rect of line one or line two
+      int tag = 0; // this tag is for locating the intersected tag in our selectedAnswerTag
+      for (UIView *view in answerViews) {
+        CGRect firstRect = [firstLine convertRect:view.frame toView:self.view];
+        CGRect secondRect = [secondLine convertRect:view.frame toView:self.view];
+        if (CGRectIntersectsRect(dragObject.frame, firstRect)) { // if it intersets with the first line
+          dragObject.frame = firstRect;
+          if ([[selectedAnswerTags objectAtIndex:tag]integerValue] != -1) { // if our answer slot is already taken
+            [self movePreviousAnswerBackToSelection:[[selectedAnswerTags objectAtIndex:tag]integerValue]];
+          }
+          [selectedAnswerTags replaceObjectAtIndex:tag withObject:[NSNumber numberWithInt:dragObject.tag]];
+          [self addLetterToAnswer:tag];
+          return;
+        }
+        else if (CGRectIntersectsRect(dragObject.frame, secondRect)) { // if it intersets with the second line
+          tag = firstLineCount + tag;
+          dragObject.frame = secondRect;
+          if ([[selectedAnswerTags objectAtIndex:tag]integerValue] != -1) { // if our answer slot is already taken
+            [self movePreviousAnswerBackToSelection:[[selectedAnswerTags objectAtIndex:tag]integerValue]];
+          }
+          [selectedAnswerTags replaceObjectAtIndex:tag withObject:[NSNumber numberWithInt:dragObject.tag]];
+          [self addLetterToAnswer:tag];
+          return;
+        }
+        tag++;
       }
     }
     else {
       [self resetLetter];
     }
   }
-  else if (!moving) {
-    [self replaceAnswerWithSelection];
+  else if (numberOfLines == 1 && moving) { // if user is dragging the selection slots and its a 1 lined answer
+    UIView *firstLine = [self.view viewWithTag:kFirstLine];
+    int tag = 0; // this tag is for locating the intersected tag in our selectedAnswerTag
+    if (CGRectIntersectsRect(dragObject.frame, firstLine.frame)) {
+      for (UIView *view in answerViews) {
+        CGRect firstRect = [firstLine convertRect:view.frame toView:self.view];
+        if (CGRectIntersectsRect(dragObject.frame, firstRect)) {
+          dragObject.frame = firstRect;
+          if ([[selectedAnswerTags objectAtIndex:tag]integerValue] != -1) { // if our answer slot is already taken
+            [self movePreviousAnswerBackToSelection:[[selectedAnswerTags objectAtIndex:tag]integerValue]];
+          }
+          [selectedAnswerTags replaceObjectAtIndex:tag withObject:[NSNumber numberWithInt:dragObject.tag]];
+          [self addLetterToAnswer:tag];
+          return;
+        }
+        tag++;
+      }
+    }
+    else {
+      [self resetLetter];
+    }
   }
 }
 
-- (void)replaceAnswerWithSelection {
-  //this is just pressing, not dragging
+- (void)addLetterToAnswer:(int)tag {
+  //add the letter to our selectedLetters
+  for (UIImageView *image in dragObject.subviews) {
+    for (UILabel *l in image.subviews) {
+      [selectedLetters replaceObjectAtIndex:tag withObject:l.text];
+    }
+  }
+}
 
+- (void)inputTouchedSlot {
+  //this is just pressing, not dragging
   int open = [self checkForOpenslot];
-  if (open == selectedAnswerTags.count) {
+  if (open == selectedAnswerTags.count) { // this means if all the slots are full, it does nothing
     return;
   }
   UIImageView *answerSlot = [answerViews objectAtIndex:open];
   if (numberOfLines == 1) {
+    //if answer is 1 lined and converts the view to self.view's point and replace the answer slot
     UIView *firstLine = [self.view viewWithTag:kFirstLine];
     CGRect newFrame = [firstLine convertRect:answerSlot.frame toView:self.view];
-    dragObject.frame = newFrame;
+    [UIView animateWithDuration:0.2f animations:^{
+      dragObject.frame = newFrame;
+    }];
   }
   else {
+    //if answer is 2 lined and converts the view to self.view's point and replace the answer slot
     if (open < firstLineCount) {
       UIView *firstLine = [self.view viewWithTag:kFirstLine];
       CGRect newFrame = [firstLine convertRect:answerSlot.frame toView:self.view];
-      dragObject.frame = newFrame;
+      [UIView animateWithDuration:0.2f animations:^{
+        dragObject.frame = newFrame;
+      }];
     }
     else {
       UIView *secondLine = [self.view viewWithTag:kSecondLine];
       CGRect newFrame = [secondLine convertRect:answerSlot.frame toView:self.view];
-      dragObject.frame = newFrame;
+      [UIView animateWithDuration:0.2f animations:^{
+        dragObject.frame = newFrame;
+      }];
     }
   }
+  //add the dragobject's tag to our answer
   [selectedAnswerTags replaceObjectAtIndex:open withObject:[NSNumber numberWithInt:dragObject.tag]];
+  
+  //add the letter inside the dragobject to our answer in letters
   for (UIImageView *image in dragObject.subviews) {
     for (UILabel *l in image.subviews) {
       [selectedLetters replaceObjectAtIndex:open withObject:l.text];
     }
   }
+  //if everything is full, we check if the answer is correct
   if (open == selectedAnswerTags.count-1) {
     [self checkIfAnswerIsCorrect];
   }
@@ -385,6 +646,7 @@
     NSString *letter =[selectedLetters objectAtIndex:i];
     answer = [NSString stringWithFormat:@"%@%@",answer,letter];
   }
+  //NSLog(@"%@",answer);
   if ([answer isEqualToString:correctAnswer]) {
     [self showCorrect];
   }
@@ -395,12 +657,35 @@
 
 - (void)showCorrect {
   for (int i = 0; i < selectedAnswerTags.count;i++) {
-    
+    int tag = [[selectedAnswerTags objectAtIndex:i] integerValue];
+    UIView *view = [self.view viewWithTag:tag];
+    for (UIImageView *v in view.subviews) {
+      for (UILabel *l in v.subviews) {
+        l.textColor = [UIColor greenColor];
+      }
+    }
   }
+  [self.game transitionWithConclusion:YES skipping:NO andNextQuestionType:kFillIn];
 }
 
 - (void)showError {
-  
+  for (int i = 0; i < selectedAnswerTags.count;i++) {
+    int tag = [[selectedAnswerTags objectAtIndex:i] integerValue];
+    UIView *view = [self.view viewWithTag:tag];
+    for (UIImageView *v in view.subviews) {
+      for (UILabel *l in v.subviews) {
+        [UIView animateWithDuration:0.1 delay:0.0 options:(UIViewAnimationOptionAutoreverse| UIViewAnimationOptionRepeat) animations:^{
+          [UIView setAnimationRepeatCount:5];
+          l.textColor = [UIColor redColor];
+          l.alpha = 0.0f;
+        }completion:^(BOOL finished) {
+          l.textColor = [UIColor blackColor];
+          l.alpha = 1.0f;
+        }];
+      }
+    }
+  }
+  [self.game transitionWithConclusion:NO skipping:NO andNextQuestionType:kFillIn];
 }
 
 - (int)checkForOpenslot {

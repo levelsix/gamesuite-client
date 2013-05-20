@@ -24,6 +24,7 @@
 @property (nonatomic, strong) UIActivityIndicatorView *spinner;
 @property (nonatomic, strong) IBOutlet UIImageView *userImage;
 @property (nonatomic, strong) IBOutlet UIImageView *opponentImage;
+@property (nonatomic, strong) IBOutlet UIImageView *spinningBackground;
 @property (nonatomic, strong) IBOutlet UILabel *userName;
 @property (nonatomic, strong) IBOutlet UILabel *opponentName;
 @property (nonatomic, strong) IBOutlet UILabel *userRoundOneScore;

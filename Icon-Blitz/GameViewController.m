@@ -18,10 +18,6 @@
 
 #define kTagDisplayResultTag 1000
 
-#define kPrevScreen 0
-#define kCurrentScreen 1
-#define kNextScren 2
-
 @interface GameViewController () {
   int freezeCounter;
   int pointsBefore;
@@ -71,7 +67,7 @@
   [self.view addSubview:self.currentController.view];
 
   gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
-//  gameTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countDown) userInfo:nil repeats:YES];
+  //gameTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countDown) userInfo:nil repeats:YES];
   
 }
 
@@ -236,7 +232,7 @@
 
 - (void)pushNewViewControllersWithType:(QuestionType)type {
   UIViewController *newController;
-  if (type == kFillIn) newController = [FillInViewController gameWithController:self];
+  if (type == kFillIn) newController = [[FillInTypeViewController alloc]initWithNibName:nil bundle:nil game:self];
   else if (type == kMultipleChoice) newController = [MultipleChoiceViewController initWithGameInfo:self];
   
   [newController.view layoutIfNeeded];

@@ -10,4 +10,6 @@
 
 @interface TriviaBlitzIAPHelper : IAPHelper
 
++ (TriviaBlitzIAPHelper *)sharedInstance;
+
 @end

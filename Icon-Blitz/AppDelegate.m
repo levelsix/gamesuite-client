@@ -13,6 +13,7 @@
 #import "Chartboost.h"
 #import "SignUpViewController.h"
 #import "HomeViewController.h"
+#import "TriviaBlitzIAPHelper.h"
 
 NSString *const FBSessionStateChangedNotification =
 @"com.bestfunfreegames.Icon-Blitz:FBSessionStateChangedNotification";
@@ -87,6 +88,7 @@ NSString *const FBSessionStateChangedNotification =
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [TriviaBlitzIAPHelper sharedInstance];
   self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   // Override point for customization after application launch.
   
