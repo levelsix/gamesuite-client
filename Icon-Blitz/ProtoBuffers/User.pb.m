@@ -822,6 +822,259 @@ static BasicAuthorizedDeviceProto* defaultBasicAuthorizedDeviceProtoInstance = n
 }
 @end
 
+@interface UserCurrencyProto ()
+@property int32_t numTokens;
+@property int64_t lastTokenRefillTime;
+@property int32_t numRubies;
+@end
+
+@implementation UserCurrencyProto
+
+- (BOOL) hasNumTokens {
+  return !!hasNumTokens_;
+}
+- (void) setHasNumTokens:(BOOL) value {
+  hasNumTokens_ = !!value;
+}
+@synthesize numTokens;
+- (BOOL) hasLastTokenRefillTime {
+  return !!hasLastTokenRefillTime_;
+}
+- (void) setHasLastTokenRefillTime:(BOOL) value {
+  hasLastTokenRefillTime_ = !!value;
+}
+@synthesize lastTokenRefillTime;
+- (BOOL) hasNumRubies {
+  return !!hasNumRubies_;
+}
+- (void) setHasNumRubies:(BOOL) value {
+  hasNumRubies_ = !!value;
+}
+@synthesize numRubies;
+- (void) dealloc {
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.numTokens = 0;
+    self.lastTokenRefillTime = 0L;
+    self.numRubies = 0;
+  }
+  return self;
+}
+static UserCurrencyProto* defaultUserCurrencyProtoInstance = nil;
++ (void) initialize {
+  if (self == [UserCurrencyProto class]) {
+    defaultUserCurrencyProtoInstance = [[UserCurrencyProto alloc] init];
+  }
+}
++ (UserCurrencyProto*) defaultInstance {
+  return defaultUserCurrencyProtoInstance;
+}
+- (UserCurrencyProto*) defaultInstance {
+  return defaultUserCurrencyProtoInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasNumTokens) {
+    [output writeInt32:1 value:self.numTokens];
+  }
+  if (self.hasLastTokenRefillTime) {
+    [output writeInt64:2 value:self.lastTokenRefillTime];
+  }
+  if (self.hasNumRubies) {
+    [output writeInt32:3 value:self.numRubies];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasNumTokens) {
+    size += computeInt32Size(1, self.numTokens);
+  }
+  if (self.hasLastTokenRefillTime) {
+    size += computeInt64Size(2, self.lastTokenRefillTime);
+  }
+  if (self.hasNumRubies) {
+    size += computeInt32Size(3, self.numRubies);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (UserCurrencyProto*) parseFromData:(NSData*) data {
+  return (UserCurrencyProto*)[[[UserCurrencyProto builder] mergeFromData:data] build];
+}
++ (UserCurrencyProto*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (UserCurrencyProto*)[[[UserCurrencyProto builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (UserCurrencyProto*) parseFromInputStream:(NSInputStream*) input {
+  return (UserCurrencyProto*)[[[UserCurrencyProto builder] mergeFromInputStream:input] build];
+}
++ (UserCurrencyProto*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (UserCurrencyProto*)[[[UserCurrencyProto builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (UserCurrencyProto*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (UserCurrencyProto*)[[[UserCurrencyProto builder] mergeFromCodedInputStream:input] build];
+}
++ (UserCurrencyProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (UserCurrencyProto*)[[[UserCurrencyProto builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (UserCurrencyProto_Builder*) builder {
+  return [[[UserCurrencyProto_Builder alloc] init] autorelease];
+}
++ (UserCurrencyProto_Builder*) builderWithPrototype:(UserCurrencyProto*) prototype {
+  return [[UserCurrencyProto builder] mergeFrom:prototype];
+}
+- (UserCurrencyProto_Builder*) builder {
+  return [UserCurrencyProto builder];
+}
+@end
+
+@interface UserCurrencyProto_Builder()
+@property (retain) UserCurrencyProto* result;
+@end
+
+@implementation UserCurrencyProto_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[UserCurrencyProto alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (UserCurrencyProto_Builder*) clear {
+  self.result = [[[UserCurrencyProto alloc] init] autorelease];
+  return self;
+}
+- (UserCurrencyProto_Builder*) clone {
+  return [UserCurrencyProto builderWithPrototype:result];
+}
+- (UserCurrencyProto*) defaultInstance {
+  return [UserCurrencyProto defaultInstance];
+}
+- (UserCurrencyProto*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (UserCurrencyProto*) buildPartial {
+  UserCurrencyProto* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (UserCurrencyProto_Builder*) mergeFrom:(UserCurrencyProto*) other {
+  if (other == [UserCurrencyProto defaultInstance]) {
+    return self;
+  }
+  if (other.hasNumTokens) {
+    [self setNumTokens:other.numTokens];
+  }
+  if (other.hasLastTokenRefillTime) {
+    [self setLastTokenRefillTime:other.lastTokenRefillTime];
+  }
+  if (other.hasNumRubies) {
+    [self setNumRubies:other.numRubies];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (UserCurrencyProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (UserCurrencyProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 8: {
+        [self setNumTokens:[input readInt32]];
+        break;
+      }
+      case 16: {
+        [self setLastTokenRefillTime:[input readInt64]];
+        break;
+      }
+      case 24: {
+        [self setNumRubies:[input readInt32]];
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasNumTokens {
+  return result.hasNumTokens;
+}
+- (int32_t) numTokens {
+  return result.numTokens;
+}
+- (UserCurrencyProto_Builder*) setNumTokens:(int32_t) value {
+  result.hasNumTokens = YES;
+  result.numTokens = value;
+  return self;
+}
+- (UserCurrencyProto_Builder*) clearNumTokens {
+  result.hasNumTokens = NO;
+  result.numTokens = 0;
+  return self;
+}
+- (BOOL) hasLastTokenRefillTime {
+  return result.hasLastTokenRefillTime;
+}
+- (int64_t) lastTokenRefillTime {
+  return result.lastTokenRefillTime;
+}
+- (UserCurrencyProto_Builder*) setLastTokenRefillTime:(int64_t) value {
+  result.hasLastTokenRefillTime = YES;
+  result.lastTokenRefillTime = value;
+  return self;
+}
+- (UserCurrencyProto_Builder*) clearLastTokenRefillTime {
+  result.hasLastTokenRefillTime = NO;
+  result.lastTokenRefillTime = 0L;
+  return self;
+}
+- (BOOL) hasNumRubies {
+  return result.hasNumRubies;
+}
+- (int32_t) numRubies {
+  return result.numRubies;
+}
+- (UserCurrencyProto_Builder*) setNumRubies:(int32_t) value {
+  result.hasNumRubies = YES;
+  result.numRubies = value;
+  return self;
+}
+- (UserCurrencyProto_Builder*) clearNumRubies {
+  result.hasNumRubies = NO;
+  result.numRubies = 0;
+  return self;
+}
+@end
+
 @interface CompleteUserProto ()
 @property (retain) NSString* userId;
 @property (retain) NSString* nameStrangersSee;
@@ -831,7 +1084,8 @@ static BasicAuthorizedDeviceProto* defaultBasicAuthorizedDeviceProtoInstance = n
 @property (retain) NSString* facebookId;
 @property (retain) BasicAuthorizedDeviceProto* badp;
 @property int64_t lastLogin;
-@property int32_t signupDate;
+@property int64_t signupDate;
+@property (retain) UserCurrencyProto* currency;
 @end
 
 @implementation CompleteUserProto
@@ -899,6 +1153,13 @@ static BasicAuthorizedDeviceProto* defaultBasicAuthorizedDeviceProtoInstance = n
   hasSignupDate_ = !!value;
 }
 @synthesize signupDate;
+- (BOOL) hasCurrency {
+  return !!hasCurrency_;
+}
+- (void) setHasCurrency:(BOOL) value {
+  hasCurrency_ = !!value;
+}
+@synthesize currency;
 - (void) dealloc {
   self.userId = nil;
   self.nameStrangersSee = nil;
@@ -907,6 +1168,7 @@ static BasicAuthorizedDeviceProto* defaultBasicAuthorizedDeviceProtoInstance = n
   self.password = nil;
   self.facebookId = nil;
   self.badp = nil;
+  self.currency = nil;
   [super dealloc];
 }
 - (id) init {
@@ -919,7 +1181,8 @@ static BasicAuthorizedDeviceProto* defaultBasicAuthorizedDeviceProtoInstance = n
     self.facebookId = @"";
     self.badp = [BasicAuthorizedDeviceProto defaultInstance];
     self.lastLogin = 0L;
-    self.signupDate = 0;
+    self.signupDate = 0L;
+    self.currency = [UserCurrencyProto defaultInstance];
   }
   return self;
 }
@@ -964,7 +1227,10 @@ static CompleteUserProto* defaultCompleteUserProtoInstance = nil;
     [output writeInt64:8 value:self.lastLogin];
   }
   if (self.hasSignupDate) {
-    [output writeInt32:9 value:self.signupDate];
+    [output writeInt64:9 value:self.signupDate];
+  }
+  if (self.hasCurrency) {
+    [output writeMessage:10 value:self.currency];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -1000,7 +1266,10 @@ static CompleteUserProto* defaultCompleteUserProtoInstance = nil;
     size += computeInt64Size(8, self.lastLogin);
   }
   if (self.hasSignupDate) {
-    size += computeInt32Size(9, self.signupDate);
+    size += computeInt64Size(9, self.signupDate);
+  }
+  if (self.hasCurrency) {
+    size += computeMessageSize(10, self.currency);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -1104,6 +1373,9 @@ static CompleteUserProto* defaultCompleteUserProtoInstance = nil;
   if (other.hasSignupDate) {
     [self setSignupDate:other.signupDate];
   }
+  if (other.hasCurrency) {
+    [self mergeCurrency:other.currency];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -1163,7 +1435,16 @@ static CompleteUserProto* defaultCompleteUserProtoInstance = nil;
         break;
       }
       case 72: {
-        [self setSignupDate:[input readInt32]];
+        [self setSignupDate:[input readInt64]];
+        break;
+      }
+      case 82: {
+        UserCurrencyProto_Builder* subBuilder = [UserCurrencyProto builder];
+        if (self.hasCurrency) {
+          [subBuilder mergeFrom:self.currency];
+        }
+        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
+        [self setCurrency:[subBuilder buildPartial]];
         break;
       }
     }
@@ -1314,17 +1595,47 @@ static CompleteUserProto* defaultCompleteUserProtoInstance = nil;
 - (BOOL) hasSignupDate {
   return result.hasSignupDate;
 }
-- (int32_t) signupDate {
+- (int64_t) signupDate {
   return result.signupDate;
 }
-- (CompleteUserProto_Builder*) setSignupDate:(int32_t) value {
+- (CompleteUserProto_Builder*) setSignupDate:(int64_t) value {
   result.hasSignupDate = YES;
   result.signupDate = value;
   return self;
 }
 - (CompleteUserProto_Builder*) clearSignupDate {
   result.hasSignupDate = NO;
-  result.signupDate = 0;
+  result.signupDate = 0L;
+  return self;
+}
+- (BOOL) hasCurrency {
+  return result.hasCurrency;
+}
+- (UserCurrencyProto*) currency {
+  return result.currency;
+}
+- (CompleteUserProto_Builder*) setCurrency:(UserCurrencyProto*) value {
+  result.hasCurrency = YES;
+  result.currency = value;
+  return self;
+}
+- (CompleteUserProto_Builder*) setCurrencyBuilder:(UserCurrencyProto_Builder*) builderForValue {
+  return [self setCurrency:[builderForValue build]];
+}
+- (CompleteUserProto_Builder*) mergeCurrency:(UserCurrencyProto*) value {
+  if (result.hasCurrency &&
+      result.currency != [UserCurrencyProto defaultInstance]) {
+    result.currency =
+      [[[UserCurrencyProto builderWithPrototype:result.currency] mergeFrom:value] buildPartial];
+  } else {
+    result.currency = value;
+  }
+  result.hasCurrency = YES;
+  return self;
+}
+- (CompleteUserProto_Builder*) clearCurrency {
+  result.hasCurrency = NO;
+  result.currency = [UserCurrencyProto defaultInstance];
   return self;
 }
 @end

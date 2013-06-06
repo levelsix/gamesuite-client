@@ -32,6 +32,8 @@
 @class PlayerGameResultsProto_Builder;
 @class QuestionProto;
 @class QuestionProto_Builder;
+@class UserCurrencyProto;
+@class UserCurrencyProto_Builder;
 
 @interface TriviaGameFormatRoot : NSObject {
 }

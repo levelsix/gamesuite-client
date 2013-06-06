@@ -15,11 +15,24 @@
 #import "GameViewController.h"
 #import "UINavigationController+PushPopRotated.h"
 #import "UserInfo.h"
+#import "SocketCommunication.h" 
+#import "ProtoHeaders.h"
 
 #define MaxSections 2
 #define NumberOfRows 2
 
 @implementation InviteFriendsViewController
+
+- (id)initWithQuestions:(NSArray *)questions userInfo:(UserInfo *)userInfo andFriendArray:(NSArray *)friendArray {
+  if ((self = [super init])) {
+    self.userInfo = userInfo;
+    self.friendsData = friendArray;
+    self.questions = questions;
+    [SDWebImageManager.sharedManager.imageDownloader setValue:@"FriendsArray" forHTTPHeaderField:@"Friends"];
+    SDWebImageManager.sharedManager.imageDownloader.queueMode = SDWebImageDownloaderLIFOQueueMode;
+  }
+  return self;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userInfo:(UserInfo *)userInfo andFriendArray:(NSArray *)friendArray
 {
@@ -40,12 +53,29 @@
 }
 
 - (IBAction)back:(id)sender {
-
   [self.navigationController popViewControllerRotated:YES];
 }
 
 - (IBAction)challengeFriend:(UIButton *)sender {
   [self pushViewController];
+}
+
+- (NSTimeInterval)getUsersTimeInSeconds {
+  NSTimeZone* local = [NSTimeZone localTimeZone];
+  NSInteger secondsOffset = [local secondsFromGMTForDate:[NSDate date]];
+  NSDate *date = [[NSDate alloc] init];
+  NSTimeInterval time = [date timeIntervalSince1970];
+  return time +secondsOffset;
+}
+
+#pragma mark Protocol Buffer Methods
+
+- (void)startRoundWithTag:(int)tag {
+  BasicUserProto *friendProto = (BasicUserProto* )[self.friendsData objectAtIndex:tag];
+  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+  NSTimeInterval time = [self getUsersTimeInSeconds];
+  int64_t startTime = (int64_t)time;
+  [sc sendStartRoundRequest:self.userInfo.basicProto isRandomPlayer:NO opponent:friendProto.userId gameId:nil roundNumber:1 isPlayerOne:YES startTime:startTime questions:self.questions];
 }
 
 #pragma mark TableView Delegates Methods

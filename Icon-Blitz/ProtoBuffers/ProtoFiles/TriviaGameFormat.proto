@@ -10,8 +10,9 @@ option java_outer_classname = "TriviaGameFormatProto";
 message OngoingGameProto {
 	optional GameResultsProto gameSoFar = 1;
 	
-	//if this is set, this implies user receiving it
-	//is 'secondPlayer' in GameResultsProto 'gameSoFar'
+	//if this is set, this implies:
+	//1) user receiving it is 'secondPlayer' in GameResultsProto 'gameSoFar'
+	//or 2) user was in the middle of a game and it crashed
 	optional BasicRoundProto myNewRound = 2;
 }
 

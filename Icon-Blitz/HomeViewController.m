@@ -16,6 +16,7 @@
 #import "UINavigationController+PushPopRotated.h"
 #import "ScoreViewController.h"
 #import "UserInfo.h"
+#import "SocketCommunication.h"
 
 #define MAX_GOLD_COINS 15
 #define ADD_NEW_COIN_TIME 1200
@@ -218,8 +219,7 @@
   if(![newCoinTimer isValid]) {
     newCoinTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(coinCountDown) userInfo:nil repeats:YES];    
   }
-  
-  //ChallengeTypeViewController *vc = [[ChallengeTypeViewController alloc] initWithNibName: @"ChallengeTypeViewController" bundle:nil userInfo:self.userInfo];
+//  ChallengeTypeViewController *vc = [[ChallengeTypeViewController alloc] initWithQuestions:self.loginProto.newQuestionsList facebookFriends:self.loginProto.facebookFriendsWithAccountsList userInfo:self.userInfo];
   ChallengeTypeViewController *vc = [[ChallengeTypeViewController alloc] initWithNibName:@"ChallengeTypeViewController" bundle:nil];
   [self.navigationController pushViewController:vc rotated:YES];
 }
@@ -229,10 +229,9 @@
 
   if (b.tag > theirTurnAmt && b.tag <= completedAmt) {
     //view completed games
-//    GameResultsProto *finishedData = [self.wholeArray objectAtIndex:b.tag];
-//    ScoreViewController *vc = [[ScoreViewController alloc] initWithNibName:@"ScoreViewController" bundle:nil gameResultProto:finishedData];
+//    GameResultsProto *finishedData = (GameResultsProto *)[self.wholeArray objectAtIndex:b.tag];
+//    ScoreViewController *vc = [[ScoreViewController alloc] initWithGameResultsProto:finishedData userInfo:self.userInfo];
 //    [self.navigationController pushViewController:vc rotated:YES];
-//    [vc release];
   }
   else if (b.tag <= yourTurnAmt) {
     //go into my turn
@@ -250,14 +249,13 @@
   else {
     // view your current round scores
     
-    
   }
 }
 
 - (IBAction)goToShop:(id)sender {
   [[NSBundle mainBundle] loadNibNamed:@"ShopMenu" owner:self options:nil];
   self.view.userInteractionEnabled = NO;
-  self.shopMenu.center = CGPointMake(160, 240);
+  self.shopMenu.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
   [self.shopMenu getDataWithGame:self];
   self.shopMenu.alpha = 0.0f;
   [self.view addSubview:self.shopMenu];
@@ -306,6 +304,28 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
   if (completionBlock) {
     [UIView animateWithDuration:0 delay:0.5 options:UIViewAnimationOptionTransitionNone animations:nil completion:completionBlock];
   }
+}
+
+#pragma mark Protocol Buffers methods
+
+- (void)receivedProtoResponse:(PBGeneratedMessage *)message {
+  
+}
+
+- (void)getNewQuestions {
+  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+  [sc sendRetrieveNewQuestions:self.userInfo.basicProto numQuestionsWanted:50];
+}
+
+- (void)startNewRoundWithTag:(int)tag {
+  OngoingGameProto *onGoingGame = (OngoingGameProto *)[self.wholeArray objectAtIndex:tag];
+  
+  if (onGoingGame.myNewRound) {
+    
+  }
+  
+  //SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+//  [sc sendStartRoundRequest:self.userInfo.basicProto isRandomPlayer:NO opponent: gameId:<#(NSString *)#> roundNumber:<#(int32_t)#> isPlayerOne:<#(BOOL)#> startTime:<#(int64_t)#> questions:<#(QuestionProto *)#> images:<#(NSArray *)#>]
 }
 
 #pragma mark UITableView Delegate Methods
@@ -498,6 +518,7 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 
 - (void)bannerViewActionDidFinish:(ADBannerView *)banner
 {
+  
 }
 
 @end

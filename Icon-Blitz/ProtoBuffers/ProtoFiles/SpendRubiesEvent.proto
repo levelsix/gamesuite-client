@@ -1,0 +1,23 @@
+import "User.proto";
+
+package proto;
+
+option java_package = "com.lvl6.pictures.eventprotos";
+option java_outer_classname = "SpendRubiesEventProto";
+
+message SpendRubiesRequestProto {
+	optional BasicUserProto sender = 1;
+	optional int32 amountSpent = 2;
+}
+
+message SpendRubiesResponseProto {
+	optional BasicUserProto recipient = 1;
+	optional SpendRubiesStatus status = 2;
+	optional UserCurrencyProto currentFunds = 3;
+	
+	enum SpendRubiesStatus {
+		SUCCESS = 1;
+		FAIL_NOT_ENOUGH_RUBIES = 2;
+		FAIL_OTHER = 3;
+	}
+}

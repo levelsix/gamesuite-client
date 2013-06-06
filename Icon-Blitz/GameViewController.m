@@ -8,15 +8,13 @@
 
 #import "GameViewController.h"
 #import "MultipleChoiceViewController.h"
-#import "FillInViewController.h"
 #import "FacebookObject.h"
 #import "ScoreViewController.h"
 #import "UINavigationController+PushPopRotated.h"
 #import "UserInfo.h"
-#import "ProtoHeaders.h"
 #import "FillInTypeViewController.h"
-
-#define kTagDisplayResultTag 1000
+#import "SocketCommunication.h" 
+#import "TutorialMultipleChoiceViewController.h"
 
 @interface GameViewController () {
   int freezeCounter;
@@ -25,17 +23,174 @@
   int timeAfter;
   NSTimer *freezeTimer;
   CGRect gameRect;
-  BOOL freezeTimerStarted;
 }
 - (void)youLose;
 @end
 
 @implementation GameViewController
 
+#pragma mark Tutorial Stuff
+
+- (id)initWithTutorial {
+  // if this is from tutorial;
+  if ((self = [super init])) {
+    NSMutableDictionary *tutorialQuestion = [NSMutableDictionary dictionary];
+    [tutorialQuestion setObject:[NSString stringWithFormat:@"Where was the 2008 Olympics held?"] forKey:@"question"];
+    [tutorialQuestion setObject:[NSString stringWithFormat:@"London"] forKey:@"answerA"];
+    [tutorialQuestion setObject:[NSString stringWithFormat:@"Japan"] forKey:@"answerB"];
+    [tutorialQuestion setObject:[NSString stringWithFormat:@"Beijing"] forKey:@"answerC"];
+    [tutorialQuestion setObject:[NSString stringWithFormat:@"Nanjing"] forKey:@"answerD"];
+    [tutorialQuestion setObject:[NSNumber numberWithInt:3] forKey:@"correctChoice"];
+    
+    self.currentController = [[MultipleChoiceViewController alloc] initWithTutorial:self question:[tutorialQuestion copy]];
+    self.currentController.view.center = CGPointMake(self.currentController.view.center.x, self.currentController.view.center.y+56);
+    [self.view addSubview:self.currentController.view];
+    self.isTutorial = YES;
+    gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
+  }
+  return self;
+}
+
+- (void)answerCallback:(BOOL)correct {
+  if ([self.delegate respondsToSelector:@selector(answerSelection:)]) {
+    [self.delegate answerSelection:correct];
+  }
+}
+
+- (void)showNextLetterCallBack {
+  if ([self.delegate respondsToSelector:@selector(nextLetterCallback)]) {
+    [self.delegate nextLetterCallback];
+  }
+}
+
+- (void)fillInFinished:(BOOL)correct {
+  if ([self.delegate respondsToSelector:@selector(fillInAnswerCallBack:)]) {
+    [self.delegate fillInAnswerCallBack:correct];
+  }
+}
+
+- (void)tutorialCheatUsed {
+  if ([self.delegate respondsToSelector:@selector(tutorialCheatClicked)]) {
+    [self.delegate tutorialCheatClicked];
+  }
+}
+
+- (void)tutorialCorrectionAnimationWithCorrect:(BOOL)isCorrect fromQuestionType:(QuestionType)type {
+  if (isCorrect){
+    UIImage *right = [UIImage imageNamed:@"correct.png"];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, right.size.width, right.size.height)];
+    imageView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
+    imageView.image = right;
+    [self.view addSubview:imageView];
+    [UIView animateWithDuration:0.4 animations:^{
+      imageView.transform = CGAffineTransformMakeScale(2, 2);
+      imageView.transform = CGAffineTransformMakeRotation(-5.85);
+    }completion:^(BOOL finished) {
+      [imageView removeFromSuperview];
+    }];
+  }
+  else {
+    UIImage *wrong = [UIImage imageNamed:@"wrong.png"];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, wrong.size.width, wrong.size.height)];
+    imageView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
+    imageView.image = wrong;
+    [self.view addSubview:imageView];
+    [UIView animateWithDuration:0.4 animations:^{
+      imageView.transform = CGAffineTransformMakeScale(2, 2);
+      imageView.transform = CGAffineTransformMakeRotation(-5.85);
+    }completion:^(BOOL finished) {
+      [imageView removeFromSuperview];
+    }];
+  }
+  if (type == kMultipleChoice) [self answerCallback:isCorrect];
+  if (type == kFillIn) [self fillInFinished:isCorrect];
+}
+
+- (void)animatePointsLabel {
+  pointsAfter += 10;
+  [self updatePointsLabel];
+  [self fadeInLabelWithAmount:10 add:YES andNumberType:kPointType];
+}
+
+- (void)pushToLyricsView {
+  NSMutableDictionary *question = [NSMutableDictionary dictionary];
+  [question setObject:[NSString stringWithFormat:@"I got 99 problems but a @#$%% ain't one"] forKey:@"question"];
+  [question setObject:[NSString stringWithFormat:@"Beyonce"] forKey:@"answerA"];
+  [question setObject:[NSString stringWithFormat:@"Jay Z"] forKey:@"answerB"];
+  [question setObject:[NSString stringWithFormat:@"Bruno Mars"] forKey:@"answerC"];
+  [question setObject:[NSString stringWithFormat:@"DJ SoundFX"] forKey:@"answerD"];
+  [question setObject:[NSNumber numberWithInt:2] forKey:@"correctChoice"];
+
+  UIViewController *newController = [[MultipleChoiceViewController alloc] initWithTutorial:self question:[question copy]];
+  
+  [newController.view layoutIfNeeded];
+  CGRect newFrame = CGRectMake(self.view.bounds.size.width, gameRect.origin.y, gameRect.size.width, gameRect.size.height);
+  CGPoint offFrame = CGPointMake(-self.view.bounds.size.width, self.currentController.view.center.y);
+  newController.view.frame = newFrame;
+  
+  [self.currentController willMoveToParentViewController:nil];
+  [self addChildViewController:newController];
+  
+  [self.view addSubview:newController.view];
+  
+  [self.currentController willMoveToParentViewController:nil];
+  
+  __weak __block GameViewController  *weakSelf = self;
+  [UIView animateWithDuration:0.4 animations:^{
+    self.currentController.view.center = offFrame;
+    newController.view.frame = gameRect;
+  }completion:^(BOOL finished) {
+    [weakSelf.currentController.view removeFromSuperview];
+    [weakSelf.currentController removeFromParentViewController];
+    [newController didMoveToParentViewController:weakSelf];
+    
+    weakSelf.currentController = newController;
+    self.view.userInteractionEnabled = YES;
+  }];
+}
+
+- (void)resetLettersOnTutorial {
+  FillInTypeViewController *vc = (FillInTypeViewController *)self.currentController;
+  [vc resetTutorialLetters];
+}
+
+#pragma mark Non-Tutorial Stuff
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userData:(UserInfo *)userData {
   if ((self = [super init])) {
     self.userData = userData;
     //[self updateRubyLabel];
+    
+    //  if ([self getQuestiontype] == kMultipleChoice) {
+    //    self.currentController = [FillInViewController gameWithController:self];
+    //  }
+    //  else {
+    //    self.currentController = [MultipleChoiceViewController initWithGameInfo:self];
+    //  }
+    
+    self.currentController = [[FillInTypeViewController alloc] initWithGame:self];
+    //self.currentController = [[MultipleChoiceViewController alloc] initWithGame:self];
+    self.currentController.view.center = CGPointMake(self.currentController.view.center.x, self.currentController.view.center.y+56);
+    [self.view addSubview:self.currentController.view];    
+    gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
+  }
+  return self;
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userData:(UserInfo *)userData gameId:(NSString *)gameId{
+  if ((self = [super init])) {
+    self.userData = userData;
+    self.gameId = gameId;
+    //[self updateRubyLabel];
+  }
+  return self;
+}
+
+- (id)initWithBasicRoundProto:(BasicRoundProto *)proto userInfo:(UserInfo *)userInfo {
+  if ((self = [super init])) {
+    self.questions = proto.questionsList;
+    self.proto = proto;
+    self.userData = userInfo;
   }
   return self;
 }
@@ -48,28 +203,14 @@
   self.points = 0;
   pointsBefore = 0;
   pointsAfter = 0;
-  
   self.timeLeftLabel.text = [NSString stringWithFormat:@"%d",self.timeLeft];
   self.pointsLabel.text = [NSString stringWithFormat:@"%d",self.points];
-  
-  self.questionsId = [[NSMutableArray alloc] init];
-  
-//  if ([self getQuestiontype] == kMultipleChoice) {
-//    self.currentController = [FillInViewController gameWithController:self];
-//  }
-//  else {
-//    self.currentController = [MultipleChoiceViewController initWithGameInfo:self];
-//  }
-  
-  self.currentController = [[FillInTypeViewController alloc] initWithNibName:@"FillInTypeViewController" bundle:nil game:self];
-  //self.currentController = [FillInViewController gameWithController:self];
-  self.currentController.view.center = CGPointMake(self.currentController.view.center.x, self.currentController.view.center.y+56);
-  [self.view addSubview:self.currentController.view];
+  self.gameTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countDown) userInfo:nil repeats:YES];
+  self.freezeCost.font = [UIFont fontWithName:@"Avenir Next Lt Pro" size:13];
+  self.optionCost.font = [UIFont fontWithName:@"Avenir Next Lt Pro" size:13];
 
-  gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
-  //gameTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countDown) userInfo:nil repeats:YES];
-  
 }
+
 
 - (QuestionType)getQuestiontype {
   QuestionType type;
@@ -89,7 +230,7 @@
   if (self.timeLeft <= 0) {
     self.timeLeftLabel.text = [NSString stringWithFormat:@"%d",self.timeLeft];
     self.view.userInteractionEnabled = NO;
-    [gameTimer invalidate];
+    [self.gameTimer invalidate];
     [self youLose];
   }
 }
@@ -201,39 +342,59 @@
 }
 
 - (IBAction)cheatOneClicked:(id)sender {
-//  self.currentType = kMultipleChoice;
-//  if (self.currentType = kFillIn) {
-//    FillInViewController *vc = (FillInViewController *)self.currentController;
-//    [vc removeOptions];
-//  }
-//  else {
-//    MultipleChoiceViewController *vc = (MultipleChoiceViewController *)self.currentController;
-//    [vc removeOptions];
-//  }
+  //need to check if user has enough rubies
+  
+  self.currentType = kMultipleChoice;
+  if (self.currentType = kFillIn) {
+    FillInTypeViewController *vc = (FillInTypeViewController *)self.currentController;
+    [vc removeOptions];
+  }
+  else {
+    MultipleChoiceViewController *vc = (MultipleChoiceViewController *)self.currentController;
+    [vc removeOptions];
+  }
+  if (self.isTutorial) {
+    [self tutorialCheatUsed];
+  }
 }
 
 - (IBAction)cheatTwoClicked:(id)sender {
+  //need to check if user has enough rubies  
   self.freezeButton.userInteractionEnabled = NO;
-  freezeCounter = 0;
-  if ([gameTimer isValid]) {
-    [gameTimer invalidate];
+  self.freezeButton.alpha = 0.5f;
+  freezeCounter = 10;
+  self.freezeCountDownLabel.text = [NSString stringWithFormat:@"%d",freezeCounter];
+  if ([self.gameTimer isValid]) {
+    [self.gameTimer invalidate];
   }
   freezeTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(freezeCountDown) userInfo:nil repeats:YES];
+  self.freezeCountDownLabel.hidden = NO;
 }
 
 - (void)freezeCountDown {
-  freezeCounter++;
-  if (freezeCounter >= 10) {
+  freezeCounter--;
+  self.freezeCountDownLabel.text = [NSString stringWithFormat:@"%d",freezeCounter];
+  if (freezeCounter <= 0) {
+    freezeCounter = 10;
+    self.freezeCountDownLabel.hidden = YES;
     [freezeTimer invalidate];
     self.freezeButton.userInteractionEnabled = YES;
-    gameTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countDown) userInfo:nil repeats:YES];
+    self.freezeButton.alpha = 1.0f;
+    self.gameTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countDown) userInfo:nil repeats:YES];
   }
 }
 
 - (void)pushNewViewControllersWithType:(QuestionType)type {
   UIViewController *newController;
-  if (type == kFillIn) newController = [[FillInTypeViewController alloc]initWithNibName:nil bundle:nil game:self];
-  else if (type == kMultipleChoice) newController = [MultipleChoiceViewController initWithGameInfo:self];
+  
+  if (type == kFillIn) newController = [[FillInTypeViewController alloc]initWithGame:self];
+  else if (type == kMultipleChoice) {
+    if (self.isTutorial) {
+
+    }
+    else
+      newController = [[MultipleChoiceViewController alloc] initWithGame:self];
+  }
   
   [newController.view layoutIfNeeded];
   
@@ -263,13 +424,13 @@
 }
 
 - (void)transitionWithConclusion:(BOOL)conclusion skipping:(BOOL)didSkip andNextQuestionType:(QuestionType)type {
+  self.removeCheatButon.userInteractionEnabled = NO;
   self.view.userInteractionEnabled = NO;
   if(!didSkip) {
     if (conclusion) {
       pointsAfter += 10;
       UIImage *right = [UIImage imageNamed:@"correct.png"];
       UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, right.size.width, right.size.height)];
-      imageView.tag  = kTagDisplayResultTag;
       imageView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
       imageView.image = right;
       [self.view addSubview:imageView];
@@ -282,12 +443,10 @@
         [self pushNewViewControllersWithType:kMultipleChoice];
         [imageView removeFromSuperview];
       }];
-      
     }
     else {
       UIImage *wrong = [UIImage imageNamed:@"wrong.png"];
       UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, wrong.size.width, wrong.size.height)];
-      imageView.tag  = kTagDisplayResultTag;
       imageView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
       imageView.image = wrong;
       [self.view addSubview:imageView];
@@ -304,6 +463,22 @@
   else {
     [self pushNewViewControllersWithType:kFillIn];
   }
+}
+
+#pragma mark Protocol Buffer Stuff
+
+- (void)receivedProtoResponse:(PBGeneratedMessage *)message {
+  
+}
+
+- (void)completRound {
+//  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+//  [sc sendStartRoundRequest:<#(BasicUserProto *)#> isRandomPlayer:<#(BOOL)#> opponent:<#(NSString *)#> gameId:<#(NSString *)#> roundNumber:<#(int32_t)#> isPlayerOne:<#(BOOL)#> startTime:<#(int64_t)#> questions:<#(QuestionProto *)#> images:<#(NSArray *)#>];
+}
+
+- (void)spendRubiesWithAmount:(int32_t)amount {
+  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+  [sc sendSpendRubies:self.userData.basicProto amountSpent:amount];
 }
 
 @end

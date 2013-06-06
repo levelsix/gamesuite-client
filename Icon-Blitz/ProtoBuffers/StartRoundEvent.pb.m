@@ -12,8 +12,8 @@ static PBExtensionRegistry* extensionRegistry = nil;
   if (self == [StartRoundEventRoot class]) {
     PBMutableExtensionRegistry* registry = [PBMutableExtensionRegistry registry];
     [self registerAllExtensions:registry];
-    [UserRoot registerAllExtensions:registry];
     [TriviaQuestionFormatRoot registerAllExtensions:registry];
+    [UserRoot registerAllExtensions:registry];
     extensionRegistry = [registry retain];
   }
 }
@@ -23,6 +23,8 @@ static PBExtensionRegistry* extensionRegistry = nil;
 
 @interface StartRoundRequestProto ()
 @property (retain) BasicUserProto* sender;
+@property BOOL isRandomPlayer;
+@property (retain) NSString* opponent;
 @property (retain) NSString* gameId;
 @property int32_t roundNumber;
 @property BOOL isPlayerOne;
@@ -39,6 +41,25 @@ static PBExtensionRegistry* extensionRegistry = nil;
   hasSender_ = !!value;
 }
 @synthesize sender;
+- (BOOL) hasIsRandomPlayer {
+  return !!hasIsRandomPlayer_;
+}
+- (void) setHasIsRandomPlayer:(BOOL) value {
+  hasIsRandomPlayer_ = !!value;
+}
+- (BOOL) isRandomPlayer {
+  return !!isRandomPlayer_;
+}
+- (void) setIsRandomPlayer:(BOOL) value {
+  isRandomPlayer_ = !!value;
+}
+- (BOOL) hasOpponent {
+  return !!hasOpponent_;
+}
+- (void) setHasOpponent:(BOOL) value {
+  hasOpponent_ = !!value;
+}
+@synthesize opponent;
 - (BOOL) hasGameId {
   return !!hasGameId_;
 }
@@ -75,6 +96,7 @@ static PBExtensionRegistry* extensionRegistry = nil;
 @synthesize mutableQuestionsList;
 - (void) dealloc {
   self.sender = nil;
+  self.opponent = nil;
   self.gameId = nil;
   self.mutableQuestionsList = nil;
   [super dealloc];
@@ -82,6 +104,8 @@ static PBExtensionRegistry* extensionRegistry = nil;
 - (id) init {
   if ((self = [super init])) {
     self.sender = [BasicUserProto defaultInstance];
+    self.isRandomPlayer = NO;
+    self.opponent = @"";
     self.gameId = @"";
     self.roundNumber = 0;
     self.isPlayerOne = NO;
@@ -115,20 +139,26 @@ static StartRoundRequestProto* defaultStartRoundRequestProtoInstance = nil;
   if (self.hasSender) {
     [output writeMessage:1 value:self.sender];
   }
+  if (self.hasIsRandomPlayer) {
+    [output writeBool:2 value:self.isRandomPlayer];
+  }
+  if (self.hasOpponent) {
+    [output writeString:3 value:self.opponent];
+  }
   if (self.hasGameId) {
-    [output writeString:2 value:self.gameId];
+    [output writeString:4 value:self.gameId];
   }
   if (self.hasRoundNumber) {
-    [output writeInt32:3 value:self.roundNumber];
+    [output writeInt32:5 value:self.roundNumber];
   }
   if (self.hasIsPlayerOne) {
-    [output writeBool:4 value:self.isPlayerOne];
+    [output writeBool:6 value:self.isPlayerOne];
   }
   if (self.hasStartTime) {
-    [output writeInt64:5 value:self.startTime];
+    [output writeInt64:7 value:self.startTime];
   }
   for (QuestionProto* element in self.questionsList) {
-    [output writeMessage:6 value:element];
+    [output writeMessage:8 value:element];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -142,20 +172,26 @@ static StartRoundRequestProto* defaultStartRoundRequestProtoInstance = nil;
   if (self.hasSender) {
     size += computeMessageSize(1, self.sender);
   }
+  if (self.hasIsRandomPlayer) {
+    size += computeBoolSize(2, self.isRandomPlayer);
+  }
+  if (self.hasOpponent) {
+    size += computeStringSize(3, self.opponent);
+  }
   if (self.hasGameId) {
-    size += computeStringSize(2, self.gameId);
+    size += computeStringSize(4, self.gameId);
   }
   if (self.hasRoundNumber) {
-    size += computeInt32Size(3, self.roundNumber);
+    size += computeInt32Size(5, self.roundNumber);
   }
   if (self.hasIsPlayerOne) {
-    size += computeBoolSize(4, self.isPlayerOne);
+    size += computeBoolSize(6, self.isPlayerOne);
   }
   if (self.hasStartTime) {
-    size += computeInt64Size(5, self.startTime);
+    size += computeInt64Size(7, self.startTime);
   }
   for (QuestionProto* element in self.questionsList) {
-    size += computeMessageSize(6, element);
+    size += computeMessageSize(8, element);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -235,6 +271,12 @@ static StartRoundRequestProto* defaultStartRoundRequestProtoInstance = nil;
   if (other.hasSender) {
     [self mergeSender:other.sender];
   }
+  if (other.hasIsRandomPlayer) {
+    [self setIsRandomPlayer:other.isRandomPlayer];
+  }
+  if (other.hasOpponent) {
+    [self setOpponent:other.opponent];
+  }
   if (other.hasGameId) {
     [self setGameId:other.gameId];
   }
@@ -283,23 +325,31 @@ static StartRoundRequestProto* defaultStartRoundRequestProtoInstance = nil;
         [self setSender:[subBuilder buildPartial]];
         break;
       }
-      case 18: {
+      case 16: {
+        [self setIsRandomPlayer:[input readBool]];
+        break;
+      }
+      case 26: {
+        [self setOpponent:[input readString]];
+        break;
+      }
+      case 34: {
         [self setGameId:[input readString]];
         break;
       }
-      case 24: {
+      case 40: {
         [self setRoundNumber:[input readInt32]];
         break;
       }
-      case 32: {
+      case 48: {
         [self setIsPlayerOne:[input readBool]];
         break;
       }
-      case 40: {
+      case 56: {
         [self setStartTime:[input readInt64]];
         break;
       }
-      case 50: {
+      case 66: {
         QuestionProto_Builder* subBuilder = [QuestionProto builder];
         [input readMessage:subBuilder extensionRegistry:extensionRegistry];
         [self addQuestions:[subBuilder buildPartial]];
@@ -336,6 +386,38 @@ static StartRoundRequestProto* defaultStartRoundRequestProtoInstance = nil;
 - (StartRoundRequestProto_Builder*) clearSender {
   result.hasSender = NO;
   result.sender = [BasicUserProto defaultInstance];
+  return self;
+}
+- (BOOL) hasIsRandomPlayer {
+  return result.hasIsRandomPlayer;
+}
+- (BOOL) isRandomPlayer {
+  return result.isRandomPlayer;
+}
+- (StartRoundRequestProto_Builder*) setIsRandomPlayer:(BOOL) value {
+  result.hasIsRandomPlayer = YES;
+  result.isRandomPlayer = value;
+  return self;
+}
+- (StartRoundRequestProto_Builder*) clearIsRandomPlayer {
+  result.hasIsRandomPlayer = NO;
+  result.isRandomPlayer = NO;
+  return self;
+}
+- (BOOL) hasOpponent {
+  return result.hasOpponent;
+}
+- (NSString*) opponent {
+  return result.opponent;
+}
+- (StartRoundRequestProto_Builder*) setOpponent:(NSString*) value {
+  result.hasOpponent = YES;
+  result.opponent = value;
+  return self;
+}
+- (StartRoundRequestProto_Builder*) clearOpponent {
+  result.hasOpponent = NO;
+  result.opponent = @"";
   return self;
 }
 - (BOOL) hasGameId {
@@ -436,6 +518,7 @@ static StartRoundRequestProto* defaultStartRoundRequestProtoInstance = nil;
 @interface StartRoundResponseProto ()
 @property (retain) BasicUserProto* recipient;
 @property (retain) NSString* gameId;
+@property StartRoundResponseProto_StartRoundStatus status;
 @end
 
 @implementation StartRoundResponseProto
@@ -454,6 +537,13 @@ static StartRoundRequestProto* defaultStartRoundRequestProtoInstance = nil;
   hasGameId_ = !!value;
 }
 @synthesize gameId;
+- (BOOL) hasStatus {
+  return !!hasStatus_;
+}
+- (void) setHasStatus:(BOOL) value {
+  hasStatus_ = !!value;
+}
+@synthesize status;
 - (void) dealloc {
   self.recipient = nil;
   self.gameId = nil;
@@ -463,6 +553,7 @@ static StartRoundRequestProto* defaultStartRoundRequestProtoInstance = nil;
   if ((self = [super init])) {
     self.recipient = [BasicUserProto defaultInstance];
     self.gameId = @"";
+    self.status = StartRoundResponseProto_StartRoundStatusSuccess;
   }
   return self;
 }
@@ -488,6 +579,9 @@ static StartRoundResponseProto* defaultStartRoundResponseProtoInstance = nil;
   if (self.hasGameId) {
     [output writeString:2 value:self.gameId];
   }
+  if (self.hasStatus) {
+    [output writeEnum:3 value:self.status];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -502,6 +596,9 @@ static StartRoundResponseProto* defaultStartRoundResponseProtoInstance = nil;
   }
   if (self.hasGameId) {
     size += computeStringSize(2, self.gameId);
+  }
+  if (self.hasStatus) {
+    size += computeEnumSize(3, self.status);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -536,11 +633,16 @@ static StartRoundResponseProto* defaultStartRoundResponseProtoInstance = nil;
 }
 @end
 
-BOOL StartRoundResponseProto_StartRoundResponseStatusIsValidValue(StartRoundResponseProto_StartRoundResponseStatus value) {
+BOOL StartRoundResponseProto_StartRoundStatusIsValidValue(StartRoundResponseProto_StartRoundStatus value) {
   switch (value) {
-    case StartRoundResponseProto_StartRoundResponseStatusSuccess:
-    case StartRoundResponseProto_StartRoundResponseStatusFailClientTooApartFromServerTime:
-    case StartRoundResponseProto_StartRoundResponseStatusFailOther:
+    case StartRoundResponseProto_StartRoundStatusSuccess:
+    case StartRoundResponseProto_StartRoundStatusFailClientTooApartFromServerTime:
+    case StartRoundResponseProto_StartRoundStatusFailOther:
+    case StartRoundResponseProto_StartRoundStatusFailNotEnoughTokens:
+    case StartRoundResponseProto_StartRoundStatusFailGameEnded:
+    case StartRoundResponseProto_StartRoundStatusFailNotUserTurn:
+    case StartRoundResponseProto_StartRoundStatusFailWrongOpponents:
+    case StartRoundResponseProto_StartRoundStatusFailWrongRoundNumber:
       return YES;
     default:
       return NO;
@@ -594,6 +696,9 @@ BOOL StartRoundResponseProto_StartRoundResponseStatusIsValidValue(StartRoundResp
   if (other.hasGameId) {
     [self setGameId:other.gameId];
   }
+  if (other.hasStatus) {
+    [self setStatus:other.status];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -626,6 +731,15 @@ BOOL StartRoundResponseProto_StartRoundResponseStatusIsValidValue(StartRoundResp
       }
       case 18: {
         [self setGameId:[input readString]];
+        break;
+      }
+      case 24: {
+        int32_t value = [input readEnum];
+        if (StartRoundResponseProto_StartRoundStatusIsValidValue(value)) {
+          [self setStatus:value];
+        } else {
+          [unknownFields mergeVarintField:3 value:value];
+        }
         break;
       }
     }
@@ -675,6 +789,22 @@ BOOL StartRoundResponseProto_StartRoundResponseStatusIsValidValue(StartRoundResp
 - (StartRoundResponseProto_Builder*) clearGameId {
   result.hasGameId = NO;
   result.gameId = @"";
+  return self;
+}
+- (BOOL) hasStatus {
+  return result.hasStatus;
+}
+- (StartRoundResponseProto_StartRoundStatus) status {
+  return result.status;
+}
+- (StartRoundResponseProto_Builder*) setStatus:(StartRoundResponseProto_StartRoundStatus) value {
+  result.hasStatus = YES;
+  result.status = value;
+  return self;
+}
+- (StartRoundResponseProto_Builder*) clearStatus {
+  result.hasStatus = NO;
+  result.status = StartRoundResponseProto_StartRoundStatusSuccess;
   return self;
 }
 @end

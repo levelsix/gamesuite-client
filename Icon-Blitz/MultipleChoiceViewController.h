@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FontLabel.h"
 #import "ProtoHeaders.h"
 #import "GameViewController.h"
 
@@ -29,11 +28,12 @@ typedef enum {
   BOOL selected;
 }
 
-+ (id)initWithGameInfo:(GameViewController *)game;
+@property (nonatomic, strong) NSDictionary *tutorialQuestion;
+
 - (id)initWithGame:(GameViewController *)game;
+- (id)initWithTutorial:(GameViewController *)game question:(NSDictionary *)tutorialQuestion;
 
 @property (nonatomic, assign) MultipleChoices correctChoice;
-@property (nonatomic, strong) NSMutableArray *takenAwayAnswers;
 @property (nonatomic, strong) GameViewController *game;
 @property (nonatomic, strong) IBOutlet UIView *answerAView;
 @property (nonatomic, strong) IBOutlet UIView *answerBView;

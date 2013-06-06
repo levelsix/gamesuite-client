@@ -25,6 +25,7 @@
     self.password = proto.password;
     self.facebookId = proto.facebookId;
     self.loginToken = proto.badp;
+    self.basicProto = proto;
   }
   return self;
 }

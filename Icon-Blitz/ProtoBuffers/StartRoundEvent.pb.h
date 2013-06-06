@@ -2,8 +2,8 @@
 
 #import "ProtocolBuffers.h"
 
-#import "User.pb.h"
 #import "TriviaQuestionFormat.pb.h"
+#import "User.pb.h"
 
 @class BasicAuthorizedDeviceProto;
 @class BasicAuthorizedDeviceProto_Builder;
@@ -23,13 +23,20 @@
 @class StartRoundRequestProto_Builder;
 @class StartRoundResponseProto;
 @class StartRoundResponseProto_Builder;
+@class UserCurrencyProto;
+@class UserCurrencyProto_Builder;
 typedef enum {
-  StartRoundResponseProto_StartRoundResponseStatusSuccess = 1,
-  StartRoundResponseProto_StartRoundResponseStatusFailClientTooApartFromServerTime = 2,
-  StartRoundResponseProto_StartRoundResponseStatusFailOther = 3,
-} StartRoundResponseProto_StartRoundResponseStatus;
+  StartRoundResponseProto_StartRoundStatusSuccess = 1,
+  StartRoundResponseProto_StartRoundStatusFailClientTooApartFromServerTime = 2,
+  StartRoundResponseProto_StartRoundStatusFailOther = 3,
+  StartRoundResponseProto_StartRoundStatusFailNotEnoughTokens = 4,
+  StartRoundResponseProto_StartRoundStatusFailGameEnded = 5,
+  StartRoundResponseProto_StartRoundStatusFailNotUserTurn = 6,
+  StartRoundResponseProto_StartRoundStatusFailWrongOpponents = 7,
+  StartRoundResponseProto_StartRoundStatusFailWrongRoundNumber = 8,
+} StartRoundResponseProto_StartRoundStatus;
 
-BOOL StartRoundResponseProto_StartRoundResponseStatusIsValidValue(StartRoundResponseProto_StartRoundResponseStatus value);
+BOOL StartRoundResponseProto_StartRoundStatusIsValidValue(StartRoundResponseProto_StartRoundStatus value);
 
 
 @interface StartRoundEventRoot : NSObject {
@@ -40,24 +47,32 @@ BOOL StartRoundResponseProto_StartRoundResponseStatusIsValidValue(StartRoundResp
 
 @interface StartRoundRequestProto : PBGeneratedMessage {
 @private
+  BOOL hasIsRandomPlayer_:1;
   BOOL hasIsPlayerOne_:1;
   BOOL hasStartTime_:1;
   BOOL hasRoundNumber_:1;
+  BOOL hasOpponent_:1;
   BOOL hasGameId_:1;
   BOOL hasSender_:1;
+  BOOL isRandomPlayer_:1;
   BOOL isPlayerOne_:1;
   int64_t startTime;
   int32_t roundNumber;
+  NSString* opponent;
   NSString* gameId;
   BasicUserProto* sender;
   NSMutableArray* mutableQuestionsList;
 }
 - (BOOL) hasSender;
+- (BOOL) hasIsRandomPlayer;
+- (BOOL) hasOpponent;
 - (BOOL) hasGameId;
 - (BOOL) hasRoundNumber;
 - (BOOL) hasIsPlayerOne;
 - (BOOL) hasStartTime;
 @property (readonly, retain) BasicUserProto* sender;
+- (BOOL) isRandomPlayer;
+@property (readonly, retain) NSString* opponent;
 @property (readonly, retain) NSString* gameId;
 @property (readonly) int32_t roundNumber;
 - (BOOL) isPlayerOne;
@@ -106,6 +121,16 @@ BOOL StartRoundResponseProto_StartRoundResponseStatusIsValidValue(StartRoundResp
 - (StartRoundRequestProto_Builder*) mergeSender:(BasicUserProto*) value;
 - (StartRoundRequestProto_Builder*) clearSender;
 
+- (BOOL) hasIsRandomPlayer;
+- (BOOL) isRandomPlayer;
+- (StartRoundRequestProto_Builder*) setIsRandomPlayer:(BOOL) value;
+- (StartRoundRequestProto_Builder*) clearIsRandomPlayer;
+
+- (BOOL) hasOpponent;
+- (NSString*) opponent;
+- (StartRoundRequestProto_Builder*) setOpponent:(NSString*) value;
+- (StartRoundRequestProto_Builder*) clearOpponent;
+
 - (BOOL) hasGameId;
 - (NSString*) gameId;
 - (StartRoundRequestProto_Builder*) setGameId:(NSString*) value;
@@ -138,13 +163,17 @@ BOOL StartRoundResponseProto_StartRoundResponseStatusIsValidValue(StartRoundResp
 @private
   BOOL hasGameId_:1;
   BOOL hasRecipient_:1;
+  BOOL hasStatus_:1;
   NSString* gameId;
   BasicUserProto* recipient;
+  StartRoundResponseProto_StartRoundStatus status;
 }
 - (BOOL) hasRecipient;
 - (BOOL) hasGameId;
+- (BOOL) hasStatus;
 @property (readonly, retain) BasicUserProto* recipient;
 @property (readonly, retain) NSString* gameId;
+@property (readonly) StartRoundResponseProto_StartRoundStatus status;
 
 + (StartRoundResponseProto*) defaultInstance;
 - (StartRoundResponseProto*) defaultInstance;
@@ -191,5 +220,10 @@ BOOL StartRoundResponseProto_StartRoundResponseStatusIsValidValue(StartRoundResp
 - (NSString*) gameId;
 - (StartRoundResponseProto_Builder*) setGameId:(NSString*) value;
 - (StartRoundResponseProto_Builder*) clearGameId;
+
+- (BOOL) hasStatus;
+- (StartRoundResponseProto_StartRoundStatus) status;
+- (StartRoundResponseProto_Builder*) setStatus:(StartRoundResponseProto_StartRoundStatus) value;
+- (StartRoundResponseProto_Builder*) clearStatus;
 @end
 

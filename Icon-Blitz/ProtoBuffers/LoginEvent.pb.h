@@ -38,6 +38,8 @@
 @class PlayerGameResultsProto_Builder;
 @class QuestionProto;
 @class QuestionProto_Builder;
+@class UserCurrencyProto;
+@class UserCurrencyProto_Builder;
 typedef enum {
   LoginRequestProto_LoginTypeLoginToken = 1,
   LoginRequestProto_LoginTypeFacebook = 2,

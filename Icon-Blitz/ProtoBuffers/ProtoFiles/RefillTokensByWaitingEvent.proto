@@ -1,4 +1,5 @@
 import "User.proto";
+
 package proto;
 
 option java_package = "com.lvl6.pictures.eventprotos";
@@ -18,6 +19,6 @@ message RefillTokensByWaitingResponseProto {
 		FAIL_NOT_READY_YET = 2;
 		FAIL_ALREADY_MAX = 3;
 		FAIL_CLIENT_TOO_APART_FROM_SERVER_TIME = 4;
-		FAIL_OTHER_FAIL = 5;
+		FAIL_OTHER = 5;
 	}
 }

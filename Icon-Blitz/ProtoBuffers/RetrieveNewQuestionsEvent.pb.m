@@ -12,8 +12,8 @@ static PBExtensionRegistry* extensionRegistry = nil;
   if (self == [RetrieveNewQuestionsEventRoot class]) {
     PBMutableExtensionRegistry* registry = [PBMutableExtensionRegistry registry];
     [self registerAllExtensions:registry];
-    [UserRoot registerAllExtensions:registry];
     [TriviaQuestionFormatRoot registerAllExtensions:registry];
+    [UserRoot registerAllExtensions:registry];
     extensionRegistry = [registry retain];
   }
 }
@@ -259,6 +259,8 @@ static RetrieveNewQuestionsRequestProto* defaultRetrieveNewQuestionsRequestProto
 @interface RetrieveNewQuestionsResponseProto ()
 @property (retain) BasicUserProto* recipient;
 @property (retain) NSMutableArray* mutableNewQuestionsList;
+@property (retain) NSMutableArray* mutablePictureNamesList;
+@property RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatus status;
 @end
 
 @implementation RetrieveNewQuestionsResponseProto
@@ -271,14 +273,24 @@ static RetrieveNewQuestionsRequestProto* defaultRetrieveNewQuestionsRequestProto
 }
 @synthesize recipient;
 @synthesize mutableNewQuestionsList;
+@synthesize mutablePictureNamesList;
+- (BOOL) hasStatus {
+  return !!hasStatus_;
+}
+- (void) setHasStatus:(BOOL) value {
+  hasStatus_ = !!value;
+}
+@synthesize status;
 - (void) dealloc {
   self.recipient = nil;
   self.mutableNewQuestionsList = nil;
+  self.mutablePictureNamesList = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
     self.recipient = [BasicUserProto defaultInstance];
+    self.status = RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatusSuccess;
   }
   return self;
 }
@@ -301,6 +313,13 @@ static RetrieveNewQuestionsResponseProto* defaultRetrieveNewQuestionsResponsePro
   id value = [mutableNewQuestionsList objectAtIndex:index];
   return value;
 }
+- (NSArray*) pictureNamesList {
+  return mutablePictureNamesList;
+}
+- (NSString*) pictureNamesAtIndex:(int32_t) index {
+  id value = [mutablePictureNamesList objectAtIndex:index];
+  return value;
+}
 - (BOOL) isInitialized {
   return YES;
 }
@@ -310,6 +329,12 @@ static RetrieveNewQuestionsResponseProto* defaultRetrieveNewQuestionsResponsePro
   }
   for (QuestionProto* element in self.newQuestionsList) {
     [output writeMessage:2 value:element];
+  }
+  for (NSString* element in self.mutablePictureNamesList) {
+    [output writeString:3 value:element];
+  }
+  if (self.hasStatus) {
+    [output writeEnum:4 value:self.status];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -325,6 +350,17 @@ static RetrieveNewQuestionsResponseProto* defaultRetrieveNewQuestionsResponsePro
   }
   for (QuestionProto* element in self.newQuestionsList) {
     size += computeMessageSize(2, element);
+  }
+  {
+    int32_t dataSize = 0;
+    for (NSString* element in self.mutablePictureNamesList) {
+      dataSize += computeStringSizeNoTag(element);
+    }
+    size += dataSize;
+    size += 1 * self.mutablePictureNamesList.count;
+  }
+  if (self.hasStatus) {
+    size += computeEnumSize(4, self.status);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -359,10 +395,10 @@ static RetrieveNewQuestionsResponseProto* defaultRetrieveNewQuestionsResponsePro
 }
 @end
 
-BOOL RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsResponseStatusIsValidValue(RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsResponseStatus value) {
+BOOL RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatusIsValidValue(RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatus value) {
   switch (value) {
-    case RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsResponseStatusSuccess:
-    case RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsResponseStatusFailOther:
+    case RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatusSuccess:
+    case RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatusFailOther:
       return YES;
     default:
       return NO;
@@ -419,6 +455,15 @@ BOOL RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsResponseStatusIsValid
     }
     [result.mutableNewQuestionsList addObjectsFromArray:other.mutableNewQuestionsList];
   }
+  if (other.mutablePictureNamesList.count > 0) {
+    if (result.mutablePictureNamesList == nil) {
+      result.mutablePictureNamesList = [NSMutableArray array];
+    }
+    [result.mutablePictureNamesList addObjectsFromArray:other.mutablePictureNamesList];
+  }
+  if (other.hasStatus) {
+    [self setStatus:other.status];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -453,6 +498,19 @@ BOOL RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsResponseStatusIsValid
         QuestionProto_Builder* subBuilder = [QuestionProto builder];
         [input readMessage:subBuilder extensionRegistry:extensionRegistry];
         [self addNewQuestions:[subBuilder buildPartial]];
+        break;
+      }
+      case 26: {
+        [self addPictureNames:[input readString]];
+        break;
+      }
+      case 32: {
+        int32_t value = [input readEnum];
+        if (RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatusIsValidValue(value)) {
+          [self setStatus:value];
+        } else {
+          [unknownFields mergeVarintField:4 value:value];
+        }
         break;
       }
     }
@@ -515,6 +573,53 @@ BOOL RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsResponseStatusIsValid
     result.mutableNewQuestionsList = [NSMutableArray array];
   }
   [result.mutableNewQuestionsList addObject:value];
+  return self;
+}
+- (NSArray*) pictureNamesList {
+  if (result.mutablePictureNamesList == nil) {
+    return [NSArray array];
+  }
+  return result.mutablePictureNamesList;
+}
+- (NSString*) pictureNamesAtIndex:(int32_t) index {
+  return [result pictureNamesAtIndex:index];
+}
+- (RetrieveNewQuestionsResponseProto_Builder*) replacePictureNamesAtIndex:(int32_t) index with:(NSString*) value {
+  [result.mutablePictureNamesList replaceObjectAtIndex:index withObject:value];
+  return self;
+}
+- (RetrieveNewQuestionsResponseProto_Builder*) addPictureNames:(NSString*) value {
+  if (result.mutablePictureNamesList == nil) {
+    result.mutablePictureNamesList = [NSMutableArray array];
+  }
+  [result.mutablePictureNamesList addObject:value];
+  return self;
+}
+- (RetrieveNewQuestionsResponseProto_Builder*) addAllPictureNames:(NSArray*) values {
+  if (result.mutablePictureNamesList == nil) {
+    result.mutablePictureNamesList = [NSMutableArray array];
+  }
+  [result.mutablePictureNamesList addObjectsFromArray:values];
+  return self;
+}
+- (RetrieveNewQuestionsResponseProto_Builder*) clearPictureNamesList {
+  result.mutablePictureNamesList = nil;
+  return self;
+}
+- (BOOL) hasStatus {
+  return result.hasStatus;
+}
+- (RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatus) status {
+  return result.status;
+}
+- (RetrieveNewQuestionsResponseProto_Builder*) setStatus:(RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatus) value {
+  result.hasStatus = YES;
+  result.status = value;
+  return self;
+}
+- (RetrieveNewQuestionsResponseProto_Builder*) clearStatus {
+  result.hasStatus = NO;
+  result.status = RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatusSuccess;
   return self;
 }
 @end

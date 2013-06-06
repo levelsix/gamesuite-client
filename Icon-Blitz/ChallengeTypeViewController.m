@@ -19,13 +19,13 @@
 
 @implementation ChallengeTypeViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userInfo:(UserInfo *)userInfo
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-      self.userInfo = userInfo;
-    }
-    return self;
+- (id)initWithQuestions:(NSArray *)questions facebookFriends:(NSArray *)facebookFriends userInfo:(UserInfo *)userInfo {
+  if ((self = [super init])) {
+    self.questions = questions;
+    self.facebookFriends = facebookFriends;
+    self.userInfo = userInfo;
+  }
+  return self;
 }
 
 - (void)viewDidLoad

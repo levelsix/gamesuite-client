@@ -17,9 +17,10 @@
 @property (nonatomic, strong) NSMutableArray *facebookData;
 @property (nonatomic, assign) BOOL loaded;
 @property (nonatomic, strong) UserInfo *userInfo;
+@property (nonatomic, strong) NSArray *questions;
+@property (nonatomic, strong) NSArray *facebookFriends;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userInfo:(UserInfo *)userInfo;
-
+- (id)initWithQuestions:(NSArray *)questions facebookFriends:(NSArray *)facebookFriends userInfo:(UserInfo *)userInfo;
 - (IBAction)facebookClicked:(UIButton *)sender;
 - (IBAction)twitterClicked:(UIButton *)sender;
 - (IBAction)userNameClicked:(UIButton *)sender;

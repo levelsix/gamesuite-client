@@ -22,6 +22,11 @@ static PBExtensionRegistry* extensionRegistry = nil;
 BOOL PicturesEventProtocolRequestIsValidValue(PicturesEventProtocolRequest value) {
   switch (value) {
     case PicturesEventProtocolRequestCRefillTokensByWaitingEvent:
+    case PicturesEventProtocolRequestCCompletedRoundEvent:
+    case PicturesEventProtocolRequestCRetrieveNewQuestionsEvent:
+    case PicturesEventProtocolRequestCStartRoundEvent:
+    case PicturesEventProtocolRequestCSpendRubiesEvent:
+    case PicturesEventProtocolRequestCSearchForUserEvent:
       return YES;
     default:
       return NO;
@@ -30,6 +35,11 @@ BOOL PicturesEventProtocolRequestIsValidValue(PicturesEventProtocolRequest value
 BOOL PicturesEventProtocolResponseIsValidValue(PicturesEventProtocolResponse value) {
   switch (value) {
     case PicturesEventProtocolResponseSRefillTokensByWaitingEvent:
+    case PicturesEventProtocolResponseSCompletedRoundEvent:
+    case PicturesEventProtocolResponseSRetrieveNewQuestionsEvent:
+    case PicturesEventProtocolResponseSStartRoundEvent:
+    case PicturesEventProtocolResponseSSpendRubiesEvent:
+    case PicturesEventProtocolResponseSSearchForUserEvent:
       return YES;
     default:
       return NO;

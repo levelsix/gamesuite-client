@@ -4,12 +4,22 @@
 
 typedef enum {
   PicturesEventProtocolRequestCRefillTokensByWaitingEvent = 1000,
+  PicturesEventProtocolRequestCCompletedRoundEvent = 1001,
+  PicturesEventProtocolRequestCRetrieveNewQuestionsEvent = 1002,
+  PicturesEventProtocolRequestCStartRoundEvent = 1003,
+  PicturesEventProtocolRequestCSpendRubiesEvent = 1004,
+  PicturesEventProtocolRequestCSearchForUserEvent = 1005,
 } PicturesEventProtocolRequest;
 
 BOOL PicturesEventProtocolRequestIsValidValue(PicturesEventProtocolRequest value);
 
 typedef enum {
   PicturesEventProtocolResponseSRefillTokensByWaitingEvent = 1000,
+  PicturesEventProtocolResponseSCompletedRoundEvent = 1001,
+  PicturesEventProtocolResponseSRetrieveNewQuestionsEvent = 1002,
+  PicturesEventProtocolResponseSStartRoundEvent = 1003,
+  PicturesEventProtocolResponseSSpendRubiesEvent = 1004,
+  PicturesEventProtocolResponseSSearchForUserEvent = 1005,
 } PicturesEventProtocolResponse;
 
 BOOL PicturesEventProtocolResponseIsValidValue(PicturesEventProtocolResponse value);

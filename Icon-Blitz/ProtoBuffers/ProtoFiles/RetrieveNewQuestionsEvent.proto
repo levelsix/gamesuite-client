@@ -1,5 +1,5 @@
-import "User.proto";
 import "TriviaQuestionFormat.proto";
+import "User.proto";
 
 package proto;
 
@@ -17,7 +17,12 @@ message RetrieveNewQuestionsResponseProto {
 	optional BasicUserProto recipient = 1;
 	repeated QuestionProto newQuestions = 2;
 	
-	enum RetrieveNewQuestionsResponseStatus {
+	//the pictures that are in newQuestions
+	repeated string pictureNames = 3;
+	
+	optional RetrieveNewQuestionsStatus status = 4;
+	
+	enum RetrieveNewQuestionsStatus {
 		SUCCESS = 1;
 		FAIL_OTHER = 2;
 	}

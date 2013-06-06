@@ -35,6 +35,7 @@ typedef enum {
 @property (nonatomic, assign) int64_t lastLogin;
 @property (nonatomic, assign) int32_t signupDate;
 @property (nonatomic, strong) NSArray *listOfFacebookFriends;
+@property (nonatomic, strong) BasicUserProto *basicProto;
 
 - (id)initWithBasicUserInfo:(BasicUserProto *)proto;
 - (id)initWithCompleteUserProto:(CompleteUserProto *)proto;

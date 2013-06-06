@@ -10,6 +10,7 @@
 #import "ProtoHeaders.h"
 #import "Utilities.h"
 #import <iAd/iAd.h>
+#import "ServerCallbackDelegate.h"
 
 typedef enum {
   kNewGame = 0,
@@ -25,7 +26,7 @@ typedef enum {
 @class ShopMenu;
 @class UserInfo;
 
-@interface HomeViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, ADBannerViewDelegate>
+@interface HomeViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, ADBannerViewDelegate, ServerCallbackDelegate>
 
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) IBOutlet StartGameCell *startCell;

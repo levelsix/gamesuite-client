@@ -14,12 +14,14 @@
 @class RefillTokensByWaitingRequestProto_Builder;
 @class RefillTokensByWaitingResponseProto;
 @class RefillTokensByWaitingResponseProto_Builder;
+@class UserCurrencyProto;
+@class UserCurrencyProto_Builder;
 typedef enum {
   RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusSuccess = 1,
   RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusFailNotReadyYet = 2,
   RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusFailAlreadyMax = 3,
   RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusFailClientTooApartFromServerTime = 4,
-  RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusFailOtherFail = 5,
+  RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusFailOther = 5,
 } RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatus;
 
 BOOL RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusIsValidValue(RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatus value);

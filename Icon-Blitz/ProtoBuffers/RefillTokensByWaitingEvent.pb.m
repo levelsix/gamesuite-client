@@ -363,7 +363,7 @@ BOOL RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusIsValidValue(
     case RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusFailNotReadyYet:
     case RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusFailAlreadyMax:
     case RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusFailClientTooApartFromServerTime:
-    case RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusFailOtherFail:
+    case RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusFailOther:
       return YES;
     default:
       return NO;

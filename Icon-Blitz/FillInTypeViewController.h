@@ -10,16 +10,14 @@
 
 @class GameViewController;
 
-@interface FillInTypeViewController : UIViewController {
-  int correctLetterCount;
-  int animationCounter;
-  int maxUnfilledSlot;
-  int numberOfLines;
-  int firstLineCount;
-  int secondLineCount;
-}
+@interface FillInTypeViewController : UIViewController
 
 @property (nonatomic, strong) GameViewController *game;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil game:(GameViewController *)game;
+@property (nonatomic, strong) IBOutlet UILabel *questionLabel;
+
+- (id)initWithGame:(GameViewController *)game;
+- (void)removeOptions;
+- (void)resetTutorialLetters;
+- (id)initWithTutorial:(GameViewController *)game question:(NSDictionary *)question;
 
 @end

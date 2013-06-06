@@ -102,6 +102,36 @@ static NSString *udid = nil;
   return [self sendData:req withMessageType:LoginRequestProto_LoginTypeNoCredentials];
 }
 
+- (int)sendRetrieveNewQuestions:(BasicUserProto *)sender numQuestionsWanted:(int32_t)numberWanted {
+  RetrieveNewQuestionsRequestProto *req = [[[[RetrieveNewQuestionsRequestProto builder] setSender:sender] setNumQuestionsWanted:numberWanted] build];
+  return [self sendData:req withMessageType:PicturesEventProtocolRequestCRetrieveNewQuestionsEvent];
+}
+
+- (int)sendCompleteRoundRequest:(BasicUserProto *)sender gameId:(NSString *)gameId results:(CompleteRoundResultsProto *)results {
+  CompletedRoundRequestProto *req = [[[[[CompletedRoundRequestProto builder]setSender:sender] setGameId:gameId] setResults:results]build];
+  return [self sendData:req withMessageType:PicturesEventProtocolRequestCCompletedRoundEvent];
+} 
+
+- (int)sendStartRoundRequest:(BasicUserProto *)sender isRandomPlayer:(BOOL)isRandomPlayer opponent:(NSString *)opponent gameId:(NSString *)gameId roundNumber:(int32_t)roundNumber isPlayerOne:(BOOL)isPlayerOne startTime:(int64_t)startTime questions:(NSArray *)questions{
+  StartRoundRequestProto *req = [[[[[[[[[[StartRoundRequestProto builder] setSender:sender] setIsRandomPlayer:isRandomPlayer] setOpponent:opponent] setGameId:gameId] setRoundNumber:roundNumber] setIsPlayerOne:isPlayerOne] setStartTime:startTime] addAllQuestions:questions] build];
+  return [self sendData:req withMessageType:PicturesEventProtocolRequestCStartRoundEvent];
+}
+
+- (int)sendRefillTokenByWaiting:(BasicUserProto *)sender currentTime:(int64_t)curTime {
+  RefillTokensByWaitingRequestProto *req = [[[[RefillTokensByWaitingRequestProto builder] setSender:sender] setCurTime:curTime] build];
+  return [self sendData:req withMessageType:PicturesEventProtocolRequestCRefillTokensByWaitingEvent];
+}
+
+- (int)sendSearchForUser:(BasicUserProto *)sender nameOfPerson:(NSString *)nameOfPerson {
+  SearchForUserRequestProto *req = [[[[SearchForUserRequestProto builder] setSender:sender] setNameOfPerson:nameOfPerson] build];
+  return [self sendData:req withMessageType:PicturesEventProtocolRequestCSearchForUserEvent];
+}
+
+- (int)sendSpendRubies:(BasicUserProto *)sender amountSpent:(int32_t)amountSpent {
+  SpendRubiesRequestProto *req = [[[[SpendRubiesRequestProto builder] setSender:sender] setAmountSpent:amountSpent] build];
+  return [self sendData:req withMessageType:PicturesEventProtocolRequestCSpendRubiesEvent];
+}
+
 - (void)amqpConsumerThreadReceivedNewMessage:(AMQPMessage *)theMessage {
   NSData *data = theMessage.body;
   uint8_t *header = (uint8_t *)[data bytes];
@@ -110,10 +140,14 @@ static NSString *udid = nil;
   int tag = *(int *)(header+4);
   NSData *payload = [data subdataWithRange:NSMakeRange(HEADER_SIZE, data.length-HEADER_SIZE)];
   
-  [self messageReceived:payload withType:nextMsgType tag:tag];
+  [self messageReceived:payload withCommonEventType:nextMsgType tag:tag];
 }
 
--(void) messageReceived:(NSData *)data withType:(CommonEventProtocolRequest)eventType tag:(int)tag {
+-(void) messageReceived:(NSData *)data withPictureEventType:(PicturesEventProtocolRequest)eventType tag:(int)tag {
+  
+}
+
+-(void) messageReceived:(NSData *)data withCommonEventType:(CommonEventProtocolRequest)eventType tag:(int)tag {
   Class typeClass = [self getClassForType:eventType];
 
   if ([self.delegate respondsToSelector:@selector(receivedProtoResponse:)]) {

@@ -12,6 +12,9 @@
 
 - (id)initWithImageName:(NSString *)imageName {
   if ((self = [super init])) {
+    
+    
+    
     UIImage *icon = [UIImage imageNamed:imageName];
     self.iconImage.image = icon;
   }

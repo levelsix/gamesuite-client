@@ -20,5 +20,11 @@
 #import "TriviaRoundFormat.pb.h"
 #import "TriviaGameFormat.pb.h"
 #import "ForceLogout.pb.h"
+#import "CompletedRoundEvent.pb.h"
+#import "RetrieveNewQuestionsEvent.pb.h"
+#import "StartRoundEvent.pb.h"
+#import "RefillTokensByWaitingEvent.pb.h"
+#import "SearchForUserEvent.pb.h"
+#import "SpendRubiesEvent.pb.h"
 
 #endif

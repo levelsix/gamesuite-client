@@ -10,9 +10,14 @@
 #import "UserInfo.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UINavigationController+PushPopRotated.h"
+#import <SDWebImage/UIImageView+WebCache.h>
+#import "GameViewController.h"
+
+#define RoundOne 1
+#define RoundTwo 2
+#define RoundThree 3
 
 @interface ScoreViewController () {
-  int animationCounter;
   int uScoreOneBefore;
   int uScoreTwoBefore;
   int uScoreThreeBefore;
@@ -21,10 +26,25 @@
   int oScoreThreeBefore;
   int uTotalScoreBefore;
   int oTotalScoreBefore;
+  
+  //user's score
+  int uScoreOne;
+  int uScoreTwo;
+  int uScoreThree;
+  int oScoreOne;
+  int oScoreTwo;
+  int oScoreThree;
+  int uTotalScore;
+  int oTotalScore;
+  
+  //this is just for animation, it starts at 0
+  int currentRound;
+  int animationCounter;
+
   BOOL userScoreLoaded;
   BOOL opponentScoreLoaded;
-  int currentRound;
   BOOL spinning;
+  BOOL myTurn;
 }
 
 @end
@@ -38,14 +58,217 @@
       self.proto = proto;
       self.userProto = userProto;
       currentRound = round;
-      if (completed) {
-        [self updateCompleteNameAndStats];
-      }
-      else {
-        [self updateScores];
-      }
     }
     return self;
+}
+
+- (id)initWithOngoingGameProto:(OngoingGameProto *)gameStats userInfo:(UserInfo *)userInfo myTurn:(BOOL)isMyTurn {
+  if ((self = [super init])) {
+    //non-completed games
+    uScoreOne = 0; uScoreTwo = 0; uScoreThree = 0;
+    oScoreOne = 0; oScoreTwo = 0; oScoreThree = 0;
+    self.userInfo = userInfo;
+    self.gameStats = gameStats;
+    myTurn = isMyTurn;
+    [self setupGameStats];
+  }
+  return self;
+}
+
+- (id)initWithGameResultsProto:(GameResultsProto *)completedGames userInfo:(UserInfo *)userInfo {
+  if ((self = [super init])) {
+    //completed games
+    self.userInfo = userInfo;
+    self.completedGameStats = completedGames;
+    myTurn = NO;
+    [self setUpCompletedGameStats];
+  }
+  return self;
+}
+
+- (void)setUpCompletedGameStats {
+  //USER IS FIRST PLAYER
+  if (self.completedGameStats.firstPlayer.bup.userId == self.userInfo.userId) {
+    BasicRoundResultsProto *userScore = [self.completedGameStats.firstPlayer.previousRoundsStatsList objectAtIndex:0];
+    BasicRoundResultsProto *opponentScore = [self.completedGameStats.secondPlayer.previousRoundsStatsList objectAtIndex:0];
+    
+    uScoreOne = userScore.score;
+    oScoreOne = opponentScore.score;
+    
+    userScore = [self.completedGameStats.firstPlayer.previousRoundsStatsList objectAtIndex:1];
+    opponentScore = [self.completedGameStats.secondPlayer.previousRoundsStatsList objectAtIndex:1];
+    
+    uScoreTwo = userScore.score;
+    oScoreTwo = opponentScore.score;
+    
+    userScore = [self.completedGameStats.firstPlayer.previousRoundsStatsList objectAtIndex:2];
+    opponentScore = [self.completedGameStats.secondPlayer.previousRoundsStatsList objectAtIndex:2];
+    
+    uScoreThree = userScore.score;
+    oScoreThree = opponentScore.score;
+    
+    if (self.completedGameStats.firstPlayer.bup.nameFriendsSee) {
+      self.userName.text = [NSString stringWithFormat:@"%@",self.completedGameStats.firstPlayer.bup.nameFriendsSee];
+    }
+    else {
+      self.userName.text = [NSString stringWithFormat:@"%@",self.completedGameStats.firstPlayer.bup.nameStrangersSee];
+    }
+    
+    if (self.completedGameStats.secondPlayer.bup.nameFriendsSee) {
+      self.opponentName.text = [NSString stringWithFormat:@"%@",self.completedGameStats.secondPlayer.bup.nameFriendsSee];
+    }
+    else {
+      self.opponentName.text = [NSString stringWithFormat:@"%@",self.completedGameStats.secondPlayer.bup.nameStrangersSee];
+    }
+  }
+  //user is second player
+  else if (self.completedGameStats.secondPlayer.bup.userId == self.userInfo.userId) {
+    BasicRoundResultsProto *userScore = [self.completedGameStats.secondPlayer.previousRoundsStatsList objectAtIndex:0];
+    BasicRoundResultsProto *opponentScore = [self.completedGameStats.firstPlayer.previousRoundsStatsList objectAtIndex:0];
+    
+    uScoreOne = userScore.score;
+    oScoreOne = opponentScore.score;
+    
+    userScore = [self.completedGameStats.secondPlayer.previousRoundsStatsList objectAtIndex:1];
+    opponentScore = [self.completedGameStats.firstPlayer.previousRoundsStatsList objectAtIndex:1];
+    
+    uScoreTwo = userScore.score;
+    oScoreTwo = opponentScore.score;
+    
+    userScore = [self.completedGameStats.secondPlayer.previousRoundsStatsList objectAtIndex:2];
+    opponentScore = [self.completedGameStats.firstPlayer.previousRoundsStatsList objectAtIndex:2];
+    
+    uScoreThree = userScore.score;
+    oScoreThree = opponentScore.score;
+    
+    if (self.completedGameStats.secondPlayer.bup.nameFriendsSee) {
+      self.userName.text = [NSString stringWithFormat:@"%@",self.completedGameStats.secondPlayer.bup.nameFriendsSee];
+    }
+    else {
+      self.userName.text = [NSString stringWithFormat:@"%@",self.completedGameStats.secondPlayer.bup.nameStrangersSee];
+    }
+    
+    if (self.completedGameStats.firstPlayer.bup.nameFriendsSee) {
+      self.opponentName.text = [NSString stringWithFormat:@"%@",self.completedGameStats.firstPlayer.bup.nameFriendsSee];
+    }
+    else {
+      self.opponentName.text = [NSString stringWithFormat:@"%@",self.completedGameStats.firstPlayer.bup.nameStrangersSee];
+    }
+  }
+  uTotalScore = uScoreOne + uScoreTwo + uScoreThree;
+  oTotalScore = oScoreOne + oScoreTwo + oScoreThree;
+}
+
+- (void)setupGameStats {
+  //if user is the first player meaning the one that started the game
+  if (self.gameStats.gameSoFar.firstPlayer.bup.userId == self.userInfo.userId) {
+    //the count total in previousroundsStatslist indicates how many rounds have passed
+    [self setUpFirstPlayerStatsByRound:self.gameStats.gameSoFar.firstPlayer.previousRoundsStatsList.count];
+  }
+  // if user is the second player, meaning the opponent started the game
+  else if (self.gameStats.gameSoFar.secondPlayer.bup.userId == self.userInfo.userId){
+    [self setUpSecondPlayerStatsByRound:self.gameStats.gameSoFar.secondPlayer.previousRoundsStatsList.count];
+  }
+  if (myTurn) {
+    self.doneLabel.text = [NSString stringWithFormat:@"PLAY"];
+    self.backButton.hidden = NO;
+    self.backLabel.hidden = NO;
+  }
+  uTotalScore = uScoreOne + uScoreTwo + uScoreThree;
+  oTotalScore = oScoreOne + oScoreTwo + oScoreThree;
+}
+
+- (void)setUpFirstPlayerStatsByRound:(int)roundTotal {
+  //if user is first player and if its the users turn
+  //its the user's turn to play, they see the opponenents score and the user's score should be 0
+  if (roundTotal + 1 == RoundOne) {
+    BasicRoundResultsProto *userRoundOne = [self.gameStats.gameSoFar.firstPlayer.previousRoundsStatsList objectAtIndex:0];
+    uScoreOne = userRoundOne.score;
+  }
+  
+  else if (roundTotal + 1 == RoundTwo) {
+    BasicRoundResultsProto *userRound = [self.gameStats.gameSoFar.firstPlayer.previousRoundsStatsList objectAtIndex:0];
+    BasicRoundResultsProto *opponentRound = [self.gameStats.gameSoFar.secondPlayer.previousRoundsStatsList objectAtIndex:0];
+    
+    uScoreOne = userRound.score;
+    oScoreOne = opponentRound.score;
+  }
+  
+  else if (roundTotal+ 1 == RoundThree) {
+    BasicRoundResultsProto *userRound = [self.gameStats.gameSoFar.firstPlayer.previousRoundsStatsList objectAtIndex:0];
+    BasicRoundResultsProto *opponentRound = [self.gameStats.gameSoFar.secondPlayer.previousRoundsStatsList objectAtIndex:0];
+    
+    uScoreOne = userRound.score;
+    oScoreOne = opponentRound.score;
+    
+    userRound = [self.gameStats.gameSoFar.firstPlayer.previousRoundsStatsList objectAtIndex:1];
+    opponentRound = [self.gameStats.gameSoFar.secondPlayer.previousRoundsStatsList objectAtIndex:1];
+    
+    uScoreTwo = userRound.score;
+    oScoreTwo = opponentRound.score;
+  }
+  
+  if (self.gameStats.gameSoFar.firstPlayer.bup.nameFriendsSee) {
+    self.userName.text = [NSString stringWithFormat:@"%@",self.gameStats.gameSoFar.firstPlayer.bup.nameFriendsSee];
+  }
+  else {
+    self.userName.text = [NSString stringWithFormat:@"%@",self.gameStats.gameSoFar.firstPlayer.bup.nameStrangersSee];
+  }
+  
+  if (self.gameStats.gameSoFar.secondPlayer.bup.nameFriendsSee) {
+    self.opponentName.text = [NSString stringWithFormat:@"%@",self.gameStats.gameSoFar.secondPlayer.bup.nameFriendsSee];
+  }
+  else {
+    self.opponentName.text = [NSString stringWithFormat:@"%@",self.gameStats.gameSoFar.secondPlayer.bup.nameStrangersSee];
+  }
+}
+
+- (void)setUpSecondPlayerStatsByRound:(int)roundTotal {
+  //if user is second player and its the user's turn
+  if (roundTotal + 1 == RoundOne) {
+    BasicRoundResultsProto *opponent = [self.gameStats.gameSoFar.firstPlayer.previousRoundsStatsList objectAtIndex:0];
+    oScoreOne = opponent.score;
+  }
+  else if (roundTotal + 1 == RoundTwo) {
+    BasicRoundResultsProto *opponent = [self.gameStats.gameSoFar.firstPlayer.previousRoundsStatsList objectAtIndex:0];
+    BasicRoundResultsProto *user = [self.gameStats.gameSoFar.secondPlayer.previousRoundsStatsList objectAtIndex:0];
+    
+    oScoreOne = opponent.score;
+    uScoreOne = user.score;
+    
+    opponent = [self.gameStats.gameSoFar.firstPlayer.previousRoundsStatsList objectAtIndex:1];
+    oScoreTwo = opponent.score;
+  }
+  else if (roundTotal + 1 == RoundThree) {
+    BasicRoundResultsProto *opponent = [self.gameStats.gameSoFar.firstPlayer.previousRoundsStatsList objectAtIndex:0];
+    BasicRoundResultsProto *user = [self.gameStats.gameSoFar.secondPlayer.previousRoundsStatsList objectAtIndex:0];
+    
+    oScoreOne = opponent.score;
+    uScoreOne = user.score;
+    
+    opponent = [self.gameStats.gameSoFar.firstPlayer.previousRoundsStatsList objectAtIndex:1];
+    user = [self.gameStats.gameSoFar.secondPlayer.previousRoundsStatsList objectAtIndex:1];
+    
+    oScoreTwo = opponent.score;
+    uScoreTwo = user.score;
+    
+    opponent = [self.gameStats.gameSoFar.firstPlayer.previousRoundsStatsList objectAtIndex:2];
+    oScoreThree = opponent.score;
+  }
+  
+  if (self.gameStats.gameSoFar.secondPlayer.bup.nameFriendsSee) {
+    self.userName.text = [NSString stringWithFormat:@"%@",self.gameStats.gameSoFar.secondPlayer.bup.nameFriendsSee];
+  }
+  else {
+    self.userName.text =  [NSString stringWithFormat:@"%@",self.gameStats.gameSoFar.secondPlayer.bup.nameStrangersSee];
+  }
+  
+  if (self.gameStats.gameSoFar.firstPlayer.bup.nameFriendsSee) {
+    self.opponentName.text = [NSString stringWithFormat:@"%@",self.gameStats.gameSoFar.firstPlayer.bup.nameFriendsSee];
+  }
+  else {
+    self.opponentName.text = [NSString stringWithFormat:@"%@",self.gameStats.gameSoFar.firstPlayer.bup.nameStrangersSee];
+  }
 }
 
 - (void)viewDidLoad
@@ -67,77 +290,28 @@
   //test data
   self.userImage.image = [UIImage imageNamed:@"testimage1.jpg"];
   self.opponentImage.image = [UIImage imageNamed:@"testimage2.jpg"];
+  [self updatePlayerPics];
   [self startSpin];
+}
+
+- (void)updatePlayerPics {
+  UIImage *maskImage = [UIImage imageNamed:@"fbblackcircle.png"];
+  CALayer *mask = [CALayer layer];
+  mask.contents = (id)[maskImage CGImage];
+  mask.frame = CGRectMake(0, 0, maskImage.size.width, maskImage.size.height);
+  self.userImage.layer.mask = mask;
+  self.userImage.contentMode = UIViewContentModeScaleAspectFill;
+  
+  CALayer *opponentMask = [CALayer layer];
+  opponentMask.contents = (id)[maskImage CGImage];
+  opponentMask.frame = CGRectMake(0, 0, maskImage.size.width, maskImage.size.height);
+  self.opponentImage.layer.mask = opponentMask;
+  self.opponentImage.contentMode = UIViewContentModeScaleAspectFill;
+  
 }
 
 - (void)viewDidAppear:(BOOL)animated {
   [self performSelector:@selector(animateNameSection) withObject:nil afterDelay:0.3f];
-}
-
-- (void)updateScores {
-  
-}
-
-- (void)updateCompleteNameAndStats {
-  if ([self.proto.firstPlayer.bup.nameFriendsSee isEqualToString:self.userProto.nameFriendsSee] || [self.proto.firstPlayer.bup.nameStrangersSee isEqualToString:self.userProto.nameStrangersSee]) {
-    //if user is first player
-    BasicRoundResultsProto *round = [self.proto.firstPlayer.previousRoundsStatsList objectAtIndex:0];
-    uScoreOne = round.score;
-    
-    round = [self.proto.firstPlayer.previousRoundsStatsList objectAtIndex:1];
-    uScoreTwo = round.score;
-    
-    round = [self.proto.firstPlayer.previousRoundsStatsList objectAtIndex:2];
-    uScoreThree = round.score;
-    
-    round = [self.proto.secondPlayer.previousRoundsStatsList objectAtIndex:0];
-    oScoreOne = round.score;
-    
-    round = [self.proto.secondPlayer.previousRoundsStatsList objectAtIndex:1];
-    oScoreTwo = round.score;
-    
-    round = [self.proto.secondPlayer.previousRoundsStatsList objectAtIndex:2];
-    oScoreThree = round.score;
-    
-    uTotalScore = uScoreOne + uScoreTwo + uScoreThree;
-    oTotalScore = oScoreOne + oScoreTwo + oScoreThree;
-    
-    if (self.proto.firstPlayer.bup.nameFriendsSee) self.userName.text = self.proto.firstPlayer.bup.nameFriendsSee;
-    else self.userName.text = self.proto.firstPlayer.bup.nameFriendsSee;
-    
-    if (self.proto.secondPlayer.bup.nameFriendsSee) self.opponentName.text = self.proto.secondPlayer.bup.nameFriendsSee;
-    else self.opponentName.text = self.proto.secondPlayer.bup.nameStrangersSee;
-    
-  }
-  else {
-    //if user is second player
-    BasicRoundResultsProto *round = [self.proto.secondPlayer.previousRoundsStatsList objectAtIndex:0];
-    uScoreOne = round.score;
-    
-    round = [self.proto.secondPlayer.previousRoundsStatsList objectAtIndex:1];
-    uScoreTwo = round.score;
-    
-    round = [self.proto.secondPlayer.previousRoundsStatsList objectAtIndex:2];
-    uScoreThree = round.score;
-    
-    round = [self.proto.firstPlayer.previousRoundsStatsList objectAtIndex:0];
-    oScoreOne = round.score;
-    
-    round = [self.proto.firstPlayer.previousRoundsStatsList objectAtIndex:1];
-    oScoreTwo = round.score;
-    
-    round = [self.proto.firstPlayer.previousRoundsStatsList objectAtIndex:2];
-    oScoreThree = round.score;
-    
-    uTotalScore = uScoreOne + uScoreTwo + uScoreThree;
-    oTotalScore = oScoreOne + oScoreTwo + oScoreThree;
-    
-    if (self.proto.secondPlayer.bup.nameFriendsSee) self.userName.text = self.proto.secondPlayer.bup.nameFriendsSee;
-    else self.userName.text = self.proto.secondPlayer.bup.nameStrangersSee;
-    
-    if (self.proto.firstPlayer.bup.nameFriendsSee) self.opponentName.text = self.proto.firstPlayer.bup.nameFriendsSee;
-    else self.opponentName.text = self.proto.firstPlayer.bup.nameStrangersSee;
-  }
 }
 
 - (void)receievedRetrieveScoreResponse:(Class)proto {
@@ -146,12 +320,21 @@
 }
 
 - (IBAction)done:(id)sender {
-  [self.navigationController popToRootViewControllerAnimated:YES];
+  if (myTurn) {
+    BasicRoundProto *proto = self.gameStats.myNewRound;
+    GameViewController *vc = [[GameViewController alloc] initWithBasicRoundProto:proto userInfo:self.userInfo];
+    [self.navigationController pushViewController:vc animated:YES];
+  }
+  else {
+    [self.navigationController popToRootViewControllerAnimated:YES];
+  }
 }
 
 - (IBAction)back:(id)sender {
   [self.navigationController popToRootViewControllerAnimated:YES];
 }
+
+#pragma mark - Animations
 
 - (void)spinWithOptions:(UIViewAnimationOptions)options {
   [UIView animateWithDuration:5.0f delay:0.0f options:options animations:^{
@@ -193,10 +376,60 @@
   [view.layer addAnimation:theAnimation forKey:@"animatePulse"];
 }
 
-#pragma mark - Animations
-//they are in order
+- (void) bounceView: (UIView *) view
+withCompletionBlock:(void(^)(BOOL))completionBlock
+{
+  view.layer.transform = CATransform3DMakeScale(0.3, 0.3, 1.0);
+  
+  CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+  bounceAnimation.values = [NSArray arrayWithObjects:
+                            [NSNumber numberWithFloat:0.3],
+                            [NSNumber numberWithFloat:1.1],
+                            [NSNumber numberWithFloat:0.95],
+                            [NSNumber numberWithFloat:1.0], nil];
+  
+  bounceAnimation.keyTimes = [NSArray arrayWithObjects:
+                              [NSNumber numberWithFloat:0],
+                              [NSNumber numberWithFloat:0.4],
+                              [NSNumber numberWithFloat:0.7],
+                              [NSNumber numberWithFloat:0.9],
+                              [NSNumber numberWithFloat:1.0], nil];
+  
+  bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
+                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut], nil];
+  
+  bounceAnimation.duration = 0.5;
+  [view.layer addAnimation:bounceAnimation forKey:@"bounce"];
+  
+  view.layer.transform = CATransform3DIdentity;
+  if (completionBlock) {
+    [UIView animateWithDuration:0 delay:0.5 options:UIViewAnimationOptionTransitionNone animations:nil completion:completionBlock];
+  }
+}
+
+
+#pragma mark - ANIMATIONS IN ORDER
 
 - (void)animateNameSection {
+  //tag 100 and 101 is the fbblackcircle
+  UIView *userBlackCircleView = [self.view viewWithTag:100];
+  UIView *opponentBlackCircleView = [self.view viewWithTag:101];
+  CGPoint userBlackCircleOriginalPoint = userBlackCircleView.center;
+  CGPoint opponentBlackCircleOriginalPoint = opponentBlackCircleView.center;
+  userBlackCircleView.center = CGPointMake(-userBlackCircleView.center.x, userBlackCircleView.center.y);
+  opponentBlackCircleView.center = CGPointMake(opponentBlackCircleView.center.x * 2, opponentBlackCircleView.center.y);
+  
+  userBlackCircleView.hidden = NO;
+  opponentBlackCircleView.hidden = NO;
+  
+  [UIView animateWithDuration:0.3f delay:0.3f options:UIViewAnimationTransitionNone animations:^{
+    userBlackCircleView.center = userBlackCircleOriginalPoint;
+    opponentBlackCircleView.center = opponentBlackCircleOriginalPoint;
+  }completion:nil];
+  
+  
   for (int i = 1; i <= 3; i++) {
     UIView *view = [self.view viewWithTag:i];
     view.hidden = NO;
@@ -228,18 +461,8 @@
 }
 
 - (void)animatePointBG {
-  //UIView *view = [self.view viewWithTag:8];
-  //view.transform = CGAffineTransformMakeScale(3, 3);
-  //[UIView animateWithDuration:0.3f animations:^{
-    //view.alpha = 1.0f;
-    //view.transform = CGAffineTransformIdentity;
-  //}completion:^(BOOL finished) {
-    //[NSTimer scheduledTimerWithTimeInterval:0.2f target:self selector:@selector(animatePointDescriptions:) userInfo:nil repeats:YES];
-  //}];
   [NSTimer scheduledTimerWithTimeInterval:0.2f target:self selector:@selector(animatePointDescriptions:) userInfo:nil repeats:YES];
 }
-
-
 
 - (void)animatePointDescriptions:(NSTimer *)timer {
   UIView *label = [self.view viewWithTag:animationCounter];
@@ -320,7 +543,6 @@
 }
 
 - (void)animateTurnAndDone {
-  [self pulsingAnimationWithView:self.opponentImage];
   UILabel *label = (UILabel *)[self.view viewWithTag:22];
   UIView *button = (UIView *)[self.view viewWithTag:23];
   UIView *doneLabel = (UIView *)[self.view viewWithTag:24];
@@ -330,6 +552,9 @@
     [UIView animateWithDuration:0.2f animations:^{
       button.alpha = 1.0f;
       doneLabel.alpha =1.0f;
+    }completion:^(BOOL finished) {
+      [self pulsingAnimationWithView:self.opponentTotalScore];
+      [self pulsingAnimationWithView:self.whosTurn];
     }];
     [self bounceView:button withCompletionBlock:nil];
     [self bounceView:doneLabel withCompletionBlock:nil];
@@ -339,44 +564,26 @@
 - (void)startTimerWithTag:(int)tag {
   switch (tag) {
     case 14:
-//      if (currentRound != 1) {
-//        break;
-//      }
       [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(changeUScoreOne:) userInfo:nil repeats:YES];
       break;
       
     case 15:
-//      if (currentRound != 1) {
-//        break;
-//      }
       [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(changeOScoreOne:) userInfo:nil repeats:YES];
       break;
       
     case 16:
-//      if (currentRound != 2) {
-//        break;
-//      }
       [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(changeUScoreTwo:) userInfo:nil repeats:YES];
       break;
       
     case 17:
-//      if (currentRound != 2) {
-//        break;
-//      }
       [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(changeOScoreTwo:) userInfo:nil repeats:YES];
       break;
       
     case 18:
-//      if (currentRound != 3) {
-//        break;
-//      }
       [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(changeUScoreThree:) userInfo:nil repeats:YES];
       break;
       
     case 19:
-//      if (currentRound != 3) {
-//        break;
-//      }
       [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(changeOScoreThree:) userInfo:nil repeats:YES];
       break;
       
@@ -455,7 +662,6 @@
     if (opponentScoreLoaded && userScoreLoaded) {
       [self animateFourthRow];
     }
-
     [timer invalidate];
   }
 }
@@ -496,39 +702,6 @@
       [self animateTurnAndDone];
     }
     [timer invalidate];
-  }
-}
-
-- (void) bounceView: (UIView *) view
-withCompletionBlock:(void(^)(BOOL))completionBlock
-{
-  view.layer.transform = CATransform3DMakeScale(0.3, 0.3, 1.0);
-  
-  CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
-  bounceAnimation.values = [NSArray arrayWithObjects:
-                            [NSNumber numberWithFloat:0.3],
-                            [NSNumber numberWithFloat:1.1],
-                            [NSNumber numberWithFloat:0.95],
-                            [NSNumber numberWithFloat:1.0], nil];
-  
-  bounceAnimation.keyTimes = [NSArray arrayWithObjects:
-                              [NSNumber numberWithFloat:0],
-                              [NSNumber numberWithFloat:0.4],
-                              [NSNumber numberWithFloat:0.7],
-                              [NSNumber numberWithFloat:0.9],
-                              [NSNumber numberWithFloat:1.0], nil];
-  
-  bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
-                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
-                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
-                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut], nil];
-  
-  bounceAnimation.duration = 0.5;
-  [view.layer addAnimation:bounceAnimation forKey:@"bounce"];
-  
-  view.layer.transform = CATransform3DIdentity;
-  if (completionBlock) {
-    [UIView animateWithDuration:0 delay:0.5 options:UIViewAnimationOptionTransitionNone animations:nil completion:completionBlock];
   }
 }
 

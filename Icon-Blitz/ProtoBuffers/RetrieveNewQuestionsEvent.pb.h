@@ -2,8 +2,8 @@
 
 #import "ProtocolBuffers.h"
 
-#import "User.pb.h"
 #import "TriviaQuestionFormat.pb.h"
+#import "User.pb.h"
 
 @class BasicAuthorizedDeviceProto;
 @class BasicAuthorizedDeviceProto_Builder;
@@ -23,12 +23,14 @@
 @class RetrieveNewQuestionsRequestProto_Builder;
 @class RetrieveNewQuestionsResponseProto;
 @class RetrieveNewQuestionsResponseProto_Builder;
+@class UserCurrencyProto;
+@class UserCurrencyProto_Builder;
 typedef enum {
-  RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsResponseStatusSuccess = 1,
-  RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsResponseStatusFailOther = 2,
-} RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsResponseStatus;
+  RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatusSuccess = 1,
+  RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatusFailOther = 2,
+} RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatus;
 
-BOOL RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsResponseStatusIsValidValue(RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsResponseStatus value);
+BOOL RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatusIsValidValue(RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatus value);
 
 
 @interface RetrieveNewQuestionsEventRoot : NSObject {
@@ -99,13 +101,20 @@ BOOL RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsResponseStatusIsValid
 @interface RetrieveNewQuestionsResponseProto : PBGeneratedMessage {
 @private
   BOOL hasRecipient_:1;
+  BOOL hasStatus_:1;
   BasicUserProto* recipient;
+  RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatus status;
+  NSMutableArray* mutablePictureNamesList;
   NSMutableArray* mutableNewQuestionsList;
 }
 - (BOOL) hasRecipient;
+- (BOOL) hasStatus;
 @property (readonly, retain) BasicUserProto* recipient;
+@property (readonly) RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatus status;
 - (NSArray*) newQuestionsList;
 - (QuestionProto*) newQuestionsAtIndex:(int32_t) index;
+- (NSArray*) pictureNamesList;
+- (NSString*) pictureNamesAtIndex:(int32_t) index;
 
 + (RetrieveNewQuestionsResponseProto*) defaultInstance;
 - (RetrieveNewQuestionsResponseProto*) defaultInstance;
@@ -154,5 +163,17 @@ BOOL RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsResponseStatusIsValid
 - (RetrieveNewQuestionsResponseProto_Builder*) addNewQuestions:(QuestionProto*) value;
 - (RetrieveNewQuestionsResponseProto_Builder*) addAllNewQuestions:(NSArray*) values;
 - (RetrieveNewQuestionsResponseProto_Builder*) clearNewQuestionsList;
+
+- (NSArray*) pictureNamesList;
+- (NSString*) pictureNamesAtIndex:(int32_t) index;
+- (RetrieveNewQuestionsResponseProto_Builder*) replacePictureNamesAtIndex:(int32_t) index with:(NSString*) value;
+- (RetrieveNewQuestionsResponseProto_Builder*) addPictureNames:(NSString*) value;
+- (RetrieveNewQuestionsResponseProto_Builder*) addAllPictureNames:(NSArray*) values;
+- (RetrieveNewQuestionsResponseProto_Builder*) clearPictureNamesList;
+
+- (BOOL) hasStatus;
+- (RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatus) status;
+- (RetrieveNewQuestionsResponseProto_Builder*) setStatus:(RetrieveNewQuestionsResponseProto_RetrieveNewQuestionsStatus) value;
+- (RetrieveNewQuestionsResponseProto_Builder*) clearStatus;
 @end
 

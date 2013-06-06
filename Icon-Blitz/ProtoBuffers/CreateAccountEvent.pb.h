@@ -18,6 +18,8 @@
 @class CreateAccountViaFacebookRequestProto_Builder;
 @class CreateAccountViaNoCredentialsRequestProto;
 @class CreateAccountViaNoCredentialsRequestProto_Builder;
+@class UserCurrencyProto;
+@class UserCurrencyProto_Builder;
 typedef enum {
   CreateAccountResponseProto_CreateAccountStatusSuccessAccountCreated = 1,
   CreateAccountResponseProto_CreateAccountStatusFailDuplicateFacebookId = 2,

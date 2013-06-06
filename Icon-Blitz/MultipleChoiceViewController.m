@@ -9,38 +9,88 @@
 #import "MultipleChoiceViewController.h"
 #import "UserInfo.h"
 
+#define Fade_Out_Duration 0.5f
+
 @interface MultipleChoiceViewController () {
   CGPoint originalCenter;
   UIView *touchedView;
   BOOL dragging;
   int usedCount;
+  NSMutableArray *cheatArray;
+  BOOL selecteNewAnswer;
+  BOOL isTutorialView;
 }
 
 @end
 
 @implementation MultipleChoiceViewController
 
-+ (id)initWithGameInfo:(GameViewController *)game {
-  return [[self alloc] initWithGame:game];
-}
-
-- (id)initWithGame:(GameViewController *)game {
-  if ((self = [super init])) {
-    self.game = game;
-    self.correctChoice = kChoiceA;
-    self.takenAwayAnswers = [[NSMutableArray alloc] init];
-    question = (MultipleChoiceQuestionProto *)[self.game.userData.questions objectAtIndex:self.game.currentQuestion];
-    //[self implementInfo];
+- (id)initWithTutorial:(GameViewController *)game question:(NSDictionary *)tutorialQuestion {
+  if (self == [super init]) {
+    self.game = game ;
+    isTutorialView = YES;
+    self.tutorialQuestion = tutorialQuestion;
   }
   return self;
 }
 
+- (id)initWithGame:(GameViewController *)game {
+  if (self == [super init]) {
+    self.game = game;
+    self.correctChoice = kChoiceA;
+    [self setUpCheatArray];
+    question = (MultipleChoiceQuestionProto *)[self.game.userData.questions objectAtIndex:self.game.currentQuestion];
+  }
+  return self;
+}
+
+- (void)setUpTutorialQuestion {
+  self.correctChoice = [[self.tutorialQuestion objectForKey:@"correctChoice"]integerValue];
+  self.questionLabel.text = [self.tutorialQuestion objectForKey:@"question"];
+  self.answerALabel.text = [self.tutorialQuestion objectForKey:@"answerA"];
+  self.answerBLabel.text = [self.tutorialQuestion objectForKey:@"answerB"];
+  self.answerCLabel.text = [self.tutorialQuestion objectForKey:@"answerC"];
+  self.answerDLabel.text = [self.tutorialQuestion objectForKey:@"answerD"];
+  [self setUpCheatArray];
+}
+
+- (void)viewDidLoad {
+  if (isTutorialView) {
+    [self setUpTutorialQuestion];
+  }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+  self.game.removeCheatButon.userInteractionEnabled = YES;
+}
+
+- (void)setUpCheatArray {
+  switch (self.correctChoice) {
+    case kChoiceA:
+      cheatArray = [[NSMutableArray alloc] initWithObjects:[NSNumber numberWithInt:kChoiceB], [NSNumber numberWithInt:kChoiceC], [NSNumber numberWithInt:kChoiceD], nil];
+      break;
+      
+    case kChoiceB:
+      cheatArray = [[NSMutableArray alloc] initWithObjects:[NSNumber numberWithInt:kChoiceA], [NSNumber numberWithInt:kChoiceC], [NSNumber numberWithInt:kChoiceD], nil];
+      break;
+      
+    case kChoiceC:
+      cheatArray = [[NSMutableArray alloc] initWithObjects:[NSNumber numberWithInt:kChoiceB], [NSNumber numberWithInt:kChoiceA], [NSNumber numberWithInt:kChoiceD], nil];
+      break;
+      
+    case kChoiceD:
+      cheatArray = [[NSMutableArray alloc] initWithObjects:[NSNumber numberWithInt:kChoiceB], [NSNumber numberWithInt:kChoiceC], [NSNumber numberWithInt:kChoiceA], nil];
+      break;
+      
+    default:
+      break;
+  }
+}
+
 - (void)implementInfo {
   self.questionLabel.text = question.question;
-  [self.game.questionsId addObject:question.id];
-  
-  //looks like bad practice, but i have to do it this way
-    
+  //[self.game.questionsId addObject:question.id];
+      
   MultipleChoiceAnswerProto *answer = [question.answersList objectAtIndex:0];
   self.answerALabel.text = answer.answer;
   
@@ -73,25 +123,28 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
   UITouch *touch = [[event allTouches] anyObject];
   CGPoint touchLocation = [touch locationInView:self.view];
-  selected  = YES;
   if (CGRectContainsPoint(self.answerAView.frame, touchLocation)) {
     selectedAnswer = kChoiceA;
     originalCenter = self.answerAView.center;
     touchedView = self.answerAView;
+    selected  = YES;
   }else if (CGRectContainsPoint(self.answerBView.frame, touchLocation)) {
     selectedAnswer = kChoiceB;
     originalCenter = self.answerBView.center;
     touchedView = self.answerBView;
+    selected  = YES;
   }
   else if (CGRectContainsPoint(self.answerCView.frame, touchLocation)) {
     selectedAnswer = kChoiceC;
     originalCenter = self.answerCView.center;
     touchedView = self.answerCView;
+    selected  = YES;
   }
   else if (CGRectContainsPoint(self.answerDView.frame, touchLocation)) {
     selectedAnswer = kChoiceD;
     originalCenter = self.answerDView.center;
     touchedView = self.answerDView;
+    selected  = YES;
   }
   [self moveTouchedView];
 }
@@ -122,84 +175,79 @@
     [self resumeTouchedView];
     dragging = NO;
   }
+  if (self.game.isTutorial) return;
+  else touchedView = nil;
+}
+
+- (void)resetAnswer {
+  [UIView animateWithDuration:0.05 animations:^{
+    touchedView.center = originalCenter;
+  }];
   touchedView = nil;
 }
 
 - (void)checkCorrectAnswer {
   //QuestionType type = [self.game getQuestiontype];
-
   if (selectedAnswer == self.correctChoice) {
-    [self.game transitionWithConclusion:YES skipping:NO andNextQuestionType:kFillIn];
-  }else {
-    [self.game transitionWithConclusion:NO skipping:NO andNextQuestionType:kMultipleChoice];
+    if (self.game.isTutorial) {
+      [self.game tutorialCorrectionAnimationWithCorrect:YES fromQuestionType:kMultipleChoice];
+      [self performSelector:@selector(resetAnswer) withObject:nil afterDelay:0.5f];
+    }
+    else {
+      [self.game transitionWithConclusion:YES skipping:NO andNextQuestionType:kFillIn];    
+    }
+  }
+  else {
+    if (self.game.isTutorial) {
+      [self.game tutorialCorrectionAnimationWithCorrect:NO fromQuestionType:kMultipleChoice];
+      [self performSelector:@selector(resetAnswer) withObject:nil afterDelay:0.5f];
+    }
+    else {
+      [self.game transitionWithConclusion:NO skipping:NO andNextQuestionType:kMultipleChoice];
+    }
   }
 }
 
 - (void)removeOptions {
-  if (usedCount == 3) {
+  if (cheatArray.count < 1){
     return;
   }
-  int random;
-  int tag = 0;
-  if (self.takenAwayAnswers.count == 0) {
-    do {
-      random = 1 + arc4random() % 4;
-      tag++;
-      NSLog(@"%d",self.correctChoice);
-      NSLog(@"%d",random);
-      [self.takenAwayAnswers addObject:[NSNumber numberWithInt:random]];
-      [self takeAwayOptionsWithTag:random];
-    } while (random != self.correctChoice);
-  }
-  else {
-    BOOL repeated;
-    do {
-      random = 1 + arc4random() % 4;
-      for (NSNumber *removed in self.takenAwayAnswers) {
-        if ([removed integerValue] == random) {
-          repeated = YES;
-        }
-      }
-      tag++;
-      if (tag == 1) {
-        usedCount++;
-        [self.takenAwayAnswers addObject:[NSNumber numberWithInt:random]];
-        [self takeAwayOptionsWithTag:random];
-        break;
-      }
-    } while (random != self.correctChoice || !repeated);
-  }
+  int random = arc4random() % cheatArray.count;
+  int selectionTakenAway = [[cheatArray objectAtIndex:random] integerValue];
+  [self takeAwayOptionsWithTag:selectionTakenAway];
+  [cheatArray removeObjectAtIndex:random];
 }
 
 - (void)takeAwayOptionsWithTag:(int)tag {
-  switch (tag) {
-    case kChoiceA:
-      self.answerAView.hidden = YES;
-      self.answerALabel.hidden = YES;
-      self.answerABottom.hidden = YES;
-      break;
-      
-    case kChoiceB:
-      self.answerBView.hidden = YES;
-      self.answerBLabel.hidden = YES;
-      self.answerBBottom.hidden = YES;
-      break;
-      
-    case kChoiceC:
-      self.answerCView.hidden = YES;
-      self.answerCLabel.hidden = YES;
-      self.answerCBottom.hidden = YES;
-      break;
-      
-    case kChoiceD:
-      self.answerDView.hidden = YES;
-      self.answerDLabel.hidden = YES;
-      self.answerDBottom.hidden = YES;
+  if (tag == kChoiceA) {
+    [UIView animateWithDuration:Fade_Out_Duration animations:^{
+      self.answerAView.alpha = 0.0;;
+      self.answerALabel.alpha = 0.0f;
+      self.answerABottom.alpha = 0.0f;
+    }];
+  }
+  else if (tag == kChoiceB) {
+    [UIView animateWithDuration:Fade_Out_Duration animations:^{
+      self.answerBView.alpha = 0.0f;
+      self.answerBLabel.alpha = 0.0f;
+      self.answerBBottom.alpha = 0.0f;
+    }];
+  }
+  
+  else if (tag == kChoiceC) {
+    [UIView animateWithDuration:Fade_Out_Duration animations:^{
+      self.answerCView.alpha = 0.0f;
+      self.answerCLabel.alpha = 0.0f;
+      self.answerCBottom.alpha = 0.0f;
+    }];
+  }
+  else if (tag == kChoiceD) {
+    [UIView animateWithDuration:Fade_Out_Duration animations:^{
+      self.answerDView.alpha = 0.0f;
+      self.answerDLabel.alpha = 0.0f;
+      self.answerDBottom.alpha = 0.0f;
+    }];
 
-      break;
-      
-    default:
-      break;
   }
 }
 

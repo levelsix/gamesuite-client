@@ -20,12 +20,20 @@ static PBExtensionRegistry* extensionRegistry = nil;
 @end
 
 @interface QuestionProto ()
+@property (retain) NSString* id;
 @property (retain) MultipleChoiceQuestionProto* multipleChoice;
 @property (retain) PictureQuestionProto* pictures;
 @end
 
 @implementation QuestionProto
 
+- (BOOL) hasId {
+  return !!hasId_;
+}
+- (void) setHasId:(BOOL) value {
+  hasId_ = !!value;
+}
+@synthesize id;
 - (BOOL) hasMultipleChoice {
   return !!hasMultipleChoice_;
 }
@@ -41,12 +49,14 @@ static PBExtensionRegistry* extensionRegistry = nil;
 }
 @synthesize pictures;
 - (void) dealloc {
+  self.id = nil;
   self.multipleChoice = nil;
   self.pictures = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
+    self.id = @"";
     self.multipleChoice = [MultipleChoiceQuestionProto defaultInstance];
     self.pictures = [PictureQuestionProto defaultInstance];
   }
@@ -68,11 +78,14 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
   return YES;
 }
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasId) {
+    [output writeString:1 value:self.id];
+  }
   if (self.hasMultipleChoice) {
-    [output writeMessage:1 value:self.multipleChoice];
+    [output writeMessage:2 value:self.multipleChoice];
   }
   if (self.hasPictures) {
-    [output writeMessage:2 value:self.pictures];
+    [output writeMessage:3 value:self.pictures];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -83,11 +96,14 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
   }
 
   size = 0;
+  if (self.hasId) {
+    size += computeStringSize(1, self.id);
+  }
   if (self.hasMultipleChoice) {
-    size += computeMessageSize(1, self.multipleChoice);
+    size += computeMessageSize(2, self.multipleChoice);
   }
   if (self.hasPictures) {
-    size += computeMessageSize(2, self.pictures);
+    size += computeMessageSize(3, self.pictures);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -164,6 +180,9 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
   if (other == [QuestionProto defaultInstance]) {
     return self;
   }
+  if (other.hasId) {
+    [self setId:other.id];
+  }
   if (other.hasMultipleChoice) {
     [self mergeMultipleChoice:other.multipleChoice];
   }
@@ -192,6 +211,10 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
         break;
       }
       case 10: {
+        [self setId:[input readString]];
+        break;
+      }
+      case 18: {
         MultipleChoiceQuestionProto_Builder* subBuilder = [MultipleChoiceQuestionProto builder];
         if (self.hasMultipleChoice) {
           [subBuilder mergeFrom:self.multipleChoice];
@@ -200,7 +223,7 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
         [self setMultipleChoice:[subBuilder buildPartial]];
         break;
       }
-      case 18: {
+      case 26: {
         PictureQuestionProto_Builder* subBuilder = [PictureQuestionProto builder];
         if (self.hasPictures) {
           [subBuilder mergeFrom:self.pictures];
@@ -211,6 +234,22 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
       }
     }
   }
+}
+- (BOOL) hasId {
+  return result.hasId;
+}
+- (NSString*) id {
+  return result.id;
+}
+- (QuestionProto_Builder*) setId:(NSString*) value {
+  result.hasId = YES;
+  result.id = value;
+  return self;
+}
+- (QuestionProto_Builder*) clearId {
+  result.hasId = NO;
+  result.id = @"";
+  return self;
 }
 - (BOOL) hasMultipleChoice {
   return result.hasMultipleChoice;
@@ -275,7 +314,6 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
 @end
 
 @interface MultipleChoiceQuestionProto ()
-@property (retain) NSString* id;
 @property (retain) NSString* question;
 @property (retain) NSString* answerId;
 @property (retain) NSMutableArray* mutableAnswersList;
@@ -283,13 +321,6 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
 
 @implementation MultipleChoiceQuestionProto
 
-- (BOOL) hasId {
-  return !!hasId_;
-}
-- (void) setHasId:(BOOL) value {
-  hasId_ = !!value;
-}
-@synthesize id;
 - (BOOL) hasQuestion {
   return !!hasQuestion_;
 }
@@ -306,7 +337,6 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
 @synthesize answerId;
 @synthesize mutableAnswersList;
 - (void) dealloc {
-  self.id = nil;
   self.question = nil;
   self.answerId = nil;
   self.mutableAnswersList = nil;
@@ -314,7 +344,6 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
 }
 - (id) init {
   if ((self = [super init])) {
-    self.id = @"";
     self.question = @"";
     self.answerId = @"";
   }
@@ -352,9 +381,6 @@ static MultipleChoiceQuestionProto* defaultMultipleChoiceQuestionProtoInstance =
   for (MultipleChoiceAnswerProto* element in self.answersList) {
     [output writeMessage:3 value:element];
   }
-  if (self.hasId) {
-    [output writeString:4 value:self.id];
-  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -372,9 +398,6 @@ static MultipleChoiceQuestionProto* defaultMultipleChoiceQuestionProtoInstance =
   }
   for (MultipleChoiceAnswerProto* element in self.answersList) {
     size += computeMessageSize(3, element);
-  }
-  if (self.hasId) {
-    size += computeStringSize(4, self.id);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -451,9 +474,6 @@ static MultipleChoiceQuestionProto* defaultMultipleChoiceQuestionProtoInstance =
   if (other == [MultipleChoiceQuestionProto defaultInstance]) {
     return self;
   }
-  if (other.hasId) {
-    [self setId:other.id];
-  }
   if (other.hasQuestion) {
     [self setQuestion:other.question];
   }
@@ -501,28 +521,8 @@ static MultipleChoiceQuestionProto* defaultMultipleChoiceQuestionProtoInstance =
         [self addAnswers:[subBuilder buildPartial]];
         break;
       }
-      case 34: {
-        [self setId:[input readString]];
-        break;
-      }
     }
   }
-}
-- (BOOL) hasId {
-  return result.hasId;
-}
-- (NSString*) id {
-  return result.id;
-}
-- (MultipleChoiceQuestionProto_Builder*) setId:(NSString*) value {
-  result.hasId = YES;
-  result.id = value;
-  return self;
-}
-- (MultipleChoiceQuestionProto_Builder*) clearId {
-  result.hasId = NO;
-  result.id = @"";
-  return self;
 }
 - (BOOL) hasQuestion {
   return result.hasQuestion;
@@ -645,14 +645,14 @@ static MultipleChoiceAnswerProto* defaultMultipleChoiceAnswerProtoInstance = nil
   return YES;
 }
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
-  if (self.hasType) {
-    [output writeEnum:1 value:self.type];
-  }
   if (self.hasId) {
-    [output writeString:2 value:self.id];
+    [output writeString:1 value:self.id];
   }
   if (self.hasAnswer) {
-    [output writeString:3 value:self.answer];
+    [output writeString:2 value:self.answer];
+  }
+  if (self.hasType) {
+    [output writeEnum:3 value:self.type];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -663,14 +663,14 @@ static MultipleChoiceAnswerProto* defaultMultipleChoiceAnswerProtoInstance = nil
   }
 
   size = 0;
-  if (self.hasType) {
-    size += computeEnumSize(1, self.type);
-  }
   if (self.hasId) {
-    size += computeStringSize(2, self.id);
+    size += computeStringSize(1, self.id);
   }
   if (self.hasAnswer) {
-    size += computeStringSize(3, self.answer);
+    size += computeStringSize(2, self.answer);
+  }
+  if (self.hasType) {
+    size += computeEnumSize(3, self.type);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -786,21 +786,21 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
         }
         break;
       }
-      case 8: {
+      case 10: {
+        [self setId:[input readString]];
+        break;
+      }
+      case 18: {
+        [self setAnswer:[input readString]];
+        break;
+      }
+      case 24: {
         int32_t value = [input readEnum];
         if (MultipleChoiceAnswerProto_AnswerTypeIsValidValue(value)) {
           [self setType:value];
         } else {
-          [unknownFields mergeVarintField:1 value:value];
+          [unknownFields mergeVarintField:3 value:value];
         }
-        break;
-      }
-      case 18: {
-        [self setId:[input readString]];
-        break;
-      }
-      case 26: {
-        [self setAnswer:[input readString]];
         break;
       }
     }
@@ -857,20 +857,12 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
 @end
 
 @interface PictureQuestionProto ()
-@property (retain) NSString* id;
 @property (retain) NSMutableArray* mutableImageNamesList;
 @property (retain) NSString* answer;
 @end
 
 @implementation PictureQuestionProto
 
-- (BOOL) hasId {
-  return !!hasId_;
-}
-- (void) setHasId:(BOOL) value {
-  hasId_ = !!value;
-}
-@synthesize id;
 @synthesize mutableImageNamesList;
 - (BOOL) hasAnswer {
   return !!hasAnswer_;
@@ -880,14 +872,12 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
 }
 @synthesize answer;
 - (void) dealloc {
-  self.id = nil;
   self.mutableImageNamesList = nil;
   self.answer = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
-    self.id = @"";
     self.answer = @"";
   }
   return self;
@@ -921,9 +911,6 @@ static PictureQuestionProto* defaultPictureQuestionProtoInstance = nil;
   if (self.hasAnswer) {
     [output writeString:2 value:self.answer];
   }
-  if (self.hasId) {
-    [output writeString:4 value:self.id];
-  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -943,9 +930,6 @@ static PictureQuestionProto* defaultPictureQuestionProtoInstance = nil;
   }
   if (self.hasAnswer) {
     size += computeStringSize(2, self.answer);
-  }
-  if (self.hasId) {
-    size += computeStringSize(4, self.id);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -1022,9 +1006,6 @@ static PictureQuestionProto* defaultPictureQuestionProtoInstance = nil;
   if (other == [PictureQuestionProto defaultInstance]) {
     return self;
   }
-  if (other.hasId) {
-    [self setId:other.id];
-  }
   if (other.mutableImageNamesList.count > 0) {
     if (result.mutableImageNamesList == nil) {
       result.mutableImageNamesList = [NSMutableArray array];
@@ -1063,28 +1044,8 @@ static PictureQuestionProto* defaultPictureQuestionProtoInstance = nil;
         [self setAnswer:[input readString]];
         break;
       }
-      case 34: {
-        [self setId:[input readString]];
-        break;
-      }
     }
   }
-}
-- (BOOL) hasId {
-  return result.hasId;
-}
-- (NSString*) id {
-  return result.id;
-}
-- (PictureQuestionProto_Builder*) setId:(NSString*) value {
-  result.hasId = YES;
-  result.id = value;
-  return self;
-}
-- (PictureQuestionProto_Builder*) clearId {
-  result.hasId = NO;
-  result.id = @"";
-  return self;
 }
 - (NSArray*) imageNamesList {
   if (result.mutableImageNamesList == nil) {

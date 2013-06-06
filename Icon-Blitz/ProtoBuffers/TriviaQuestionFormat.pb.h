@@ -26,13 +26,17 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
 
 @interface QuestionProto : PBGeneratedMessage {
 @private
+  BOOL hasId_:1;
   BOOL hasMultipleChoice_:1;
   BOOL hasPictures_:1;
+  NSString* id;
   MultipleChoiceQuestionProto* multipleChoice;
   PictureQuestionProto* pictures;
 }
+- (BOOL) hasId;
 - (BOOL) hasMultipleChoice;
 - (BOOL) hasPictures;
+@property (readonly, retain) NSString* id;
 @property (readonly, retain) MultipleChoiceQuestionProto* multipleChoice;
 @property (readonly, retain) PictureQuestionProto* pictures;
 
@@ -70,6 +74,11 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
 - (QuestionProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
 - (QuestionProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 
+- (BOOL) hasId;
+- (NSString*) id;
+- (QuestionProto_Builder*) setId:(NSString*) value;
+- (QuestionProto_Builder*) clearId;
+
 - (BOOL) hasMultipleChoice;
 - (MultipleChoiceQuestionProto*) multipleChoice;
 - (QuestionProto_Builder*) setMultipleChoice:(MultipleChoiceQuestionProto*) value;
@@ -87,18 +96,14 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
 
 @interface MultipleChoiceQuestionProto : PBGeneratedMessage {
 @private
-  BOOL hasId_:1;
   BOOL hasQuestion_:1;
   BOOL hasAnswerId_:1;
-  NSString* id;
   NSString* question;
   NSString* answerId;
   NSMutableArray* mutableAnswersList;
 }
-- (BOOL) hasId;
 - (BOOL) hasQuestion;
 - (BOOL) hasAnswerId;
-@property (readonly, retain) NSString* id;
 @property (readonly, retain) NSString* question;
 @property (readonly, retain) NSString* answerId;
 - (NSArray*) answersList;
@@ -137,11 +142,6 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
 - (MultipleChoiceQuestionProto_Builder*) mergeFrom:(MultipleChoiceQuestionProto*) other;
 - (MultipleChoiceQuestionProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
 - (MultipleChoiceQuestionProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-
-- (BOOL) hasId;
-- (NSString*) id;
-- (MultipleChoiceQuestionProto_Builder*) setId:(NSString*) value;
-- (MultipleChoiceQuestionProto_Builder*) clearId;
 
 - (BOOL) hasQuestion;
 - (NSString*) question;
@@ -229,15 +229,11 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
 
 @interface PictureQuestionProto : PBGeneratedMessage {
 @private
-  BOOL hasId_:1;
   BOOL hasAnswer_:1;
-  NSString* id;
   NSString* answer;
   NSMutableArray* mutableImageNamesList;
 }
-- (BOOL) hasId;
 - (BOOL) hasAnswer;
-@property (readonly, retain) NSString* id;
 @property (readonly, retain) NSString* answer;
 - (NSArray*) imageNamesList;
 - (NSString*) imageNamesAtIndex:(int32_t) index;
@@ -275,11 +271,6 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
 - (PictureQuestionProto_Builder*) mergeFrom:(PictureQuestionProto*) other;
 - (PictureQuestionProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
 - (PictureQuestionProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-
-- (BOOL) hasId;
-- (NSString*) id;
-- (PictureQuestionProto_Builder*) setId:(NSString*) value;
-- (PictureQuestionProto_Builder*) clearId;
 
 - (NSArray*) imageNamesList;
 - (NSString*) imageNamesAtIndex:(int32_t) index;

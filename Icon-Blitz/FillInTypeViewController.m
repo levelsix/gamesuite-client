@@ -21,30 +21,112 @@
 #define kSecondLine 101
 
 @interface FillInTypeViewController () {
+  NSMutableArray *bottomBarArray;
+  NSMutableArray *answerViews;
+  NSMutableArray *selectedAnswerTags;
+  NSMutableArray *selectedLetters;
+  NSMutableArray *cheatArray;
+  NSMutableArray *selectionSlots;
+  NSMutableArray *usedCheatArray;
+  NSMutableArray *cheatCountArray;
+  NSString *correctAnswer;
+  UIView *dragObject;
+  CGRect originalLetterLocations[14];
+  CGRect homePosition;
+  
   BOOL dragging;
   BOOL moving;
   BOOL filledSlotMoving;
   BOOL isInMorethanOneRect;
-  CGRect homePosition;
-  NSMutableArray *bottomBarArray;
-  NSMutableArray *answerViews;
-  UIView *dragObject;
-  NSMutableArray *selectedAnswerTags;
-  NSMutableArray *selectedLetters;
-  CGRect originalLetterLocations[14];
-  NSArray *selectionSlots;
-  NSString *correctAnswer;
   int previousTag;
+  int correctLetterCount;
+  int animationCounter;
+  int maxUnfilledSlot;
+  int numberOfLines;
+  int firstLineCount;
+  int secondLineCount;
+  int cheatCount;
 }
 
 @end
 
 @implementation FillInTypeViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil game:(GameViewController *)game {
-  self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-  if (self) {
+#pragma mark - Tutorial Methods
+
+- (id)initWithTutorial:(GameViewController *)game question:(NSDictionary *)question {
+  if ((self= [super init])) {
     self.game = game;
+    self.questionLabel.text = [question objectForKey:@"question"];
+    correctLetterCount = [[question objectForKey:@"letterCount"] integerValue];
+    numberOfLines = [[question objectForKey:@"numberOfLines"] integerValue];
+    firstLineCount = [[question objectForKey:@"firstLineCount"] integerValue];
+    secondLineCount = [[question objectForKey:@"secondLineCount"] integerValue];
+    correctAnswer = [question objectForKey:@"correctAnswer"];
+    selectionSlots = [question objectForKey:@"selectionSlots"];
+    
+    bottomBarArray = [NSMutableArray array];
+    answerViews = [NSMutableArray array];
+    selectedAnswerTags = [NSMutableArray array];
+    selectedLetters = [NSMutableArray array];
+    cheatArray = [NSMutableArray array];
+    usedCheatArray = [NSMutableArray array];
+    for (int i = 0 ; i < correctLetterCount; i++) {
+      [selectedAnswerTags addObject:[NSNumber numberWithInt:-1]];
+      [selectedLetters addObject:[NSNumber numberWithInt:-1]];
+    }
+
+  }
+  return self;
+}
+
+- (void)resetTutorialLetters {
+  for (int i = 0; i < selectedAnswerTags.count; i++) {
+    int tag = [[selectedAnswerTags objectAtIndex:i]integerValue];
+    UIView *view = [self.view viewWithTag:tag];
+    [UIView animateWithDuration:0.3f animations:^{
+      view.frame = originalLetterLocations[tag-1];
+    }completion:^(BOOL finished) {
+      [self showBottomBarByTag:tag];
+    }];
+  }
+  for (int i = 0 ; i < correctLetterCount; i++) {
+    [selectedAnswerTags replaceObjectAtIndex:i withObject:[NSNumber numberWithInt:-1]];
+    [selectedLetters replaceObjectAtIndex:i withObject:[NSNumber numberWithInt:-1]];
+  }
+  dragging = NO;
+  dragObject = nil;
+  filledSlotMoving = NO;
+  isInMorethanOneRect = NO;
+}
+
+- (void)showBottomBarByTag:(int)tag {
+  UIImageView *b = [bottomBarArray objectAtIndex:tag-1];
+  b.hidden = NO;
+}
+
+#pragma mark - Non-Tutorial Methods
+
+- (id)initWithGame:(GameViewController *)game {
+  if (self = [super init]) {
+    self.game = game;
+    correctLetterCount = 12;
+    numberOfLines = 2;
+    firstLineCount = 6;
+    secondLineCount = 6;
+    correctAnswer = @"LEVEL6ROCKS!";
+    
+    bottomBarArray = [NSMutableArray array];
+    answerViews = [NSMutableArray array];
+    selectedAnswerTags = [NSMutableArray array];
+    selectedLetters = [NSMutableArray array];
+    cheatArray = [NSMutableArray array];
+    usedCheatArray = [NSMutableArray array];
+    for (int i = 0 ; i < correctLetterCount; i++) {
+      [selectedAnswerTags addObject:[NSNumber numberWithInt:-1]];
+      [selectedLetters addObject:[NSNumber numberWithInt:-1]];
+    }
+    selectionSlots = [[NSMutableArray alloc] initWithObjects:@"L",@"E",@"V",@"E",@"L",@"6",@" ",@"R",@"O",@"C",@"K",@"S",@"!",@" ",nil];
   }
   return self;
 }
@@ -53,24 +135,35 @@
 {
   [super viewDidLoad];
   self.view.userInteractionEnabled = NO;
-  bottomBarArray = [NSMutableArray array];
-  answerViews = [NSMutableArray array];
-  selectedAnswerTags = [NSMutableArray array];
-  selectedLetters = [NSMutableArray array];
-  correctLetterCount = 12;
-  numberOfLines = 2;
-  firstLineCount = 6;
-  secondLineCount = 6;
-  for (int i = 0 ; i < correctLetterCount; i++) {
-    [selectedAnswerTags addObject:[NSNumber numberWithInt:-1]];
-    [selectedLetters addObject:[NSNumber numberWithInt:-1]];
-  }
-  selectionSlots = [[NSArray alloc] initWithObjects:@"L",@"E",@"V",@"E",@"L",@"6",@" ",@"R",@"O",@"C",@"K",@"S",@"!",@" ",nil];
   [self createAnswerSlots];
   [self createSelectionSlots];
+  [self generatePreCheatList];
+  [self fillInCheatArray];
   animationCounter = 1;
-  correctAnswer = @"LEVEL6ROCKS!";
   [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(animateSelectionSlots:) userInfo:nil repeats:YES];
+}
+
+- (void)generatePreCheatList {
+  cheatCountArray = [NSMutableArray array];
+  int ar[correctLetterCount],i,d,tmp;
+  for(i = 0; i < correctLetterCount; i++) ar[i] = i;
+  for(i = 0; i < correctLetterCount; i++) {
+    d = i + (arc4random()%(correctLetterCount-i));
+    tmp = ar[i];
+    ar[i] = ar[d];
+    ar[d] = tmp;
+  }
+  for (int i = 0; i <correctLetterCount; i++) {
+    [cheatCountArray addObject:[NSNumber numberWithInt:ar[i]]];
+  }
+}
+
+- (void)fillInCheatArray {
+  for (int i = 0; i < correctLetterCount; i++) {
+    char letter = [correctAnswer characterAtIndex:i];
+    NSString *letterString = [NSString stringWithFormat:@"%c",letter];
+    [cheatArray addObject:letterString];
+  }
 }
 
 - (void)createAnswerSlots {
@@ -169,8 +262,7 @@
         
     slotView.tag = counter;
     bottomView.tag = bottomStartingTag;
-    bottomStartingTag++;
-    counter++;
+
     NSString *letter = [selectionSlots objectAtIndex:arrayCounter];
     UILabel *letterLabel = [[UILabel alloc] initWithFrame:CGRectMake(9.5, 5, 37, 37)];
     letterLabel.font = [UIFont fontWithName:@"Avenir Next Lt Pro" size:23];
@@ -183,8 +275,10 @@
 
     [self.view addSubview:slotView];
     arrayCounter++;
-    
+    bottomStartingTag++;
+    counter++;
     slotView.transform = CGAffineTransformMakeScale(0.01, 0.01);
+    slotView.alpha = 0.0f;
   }
   
   for (int i = 0; i < MaxOneLineSlots; i++) {
@@ -203,8 +297,6 @@
     
     slotView.tag = counter;
     bottomView.tag = bottomStartingTag;
-    bottomStartingTag++;
-    counter++;
     
     NSString *letter = [selectionSlots objectAtIndex:arrayCounter];
     UILabel *letterLabel = [[UILabel alloc] initWithFrame:CGRectMake(9.5, 5, 37, 37)];
@@ -217,9 +309,12 @@
     originalLetterLocations[arrayCounter] = slotView.frame;
     
     arrayCounter++;
+    bottomStartingTag++;
+    counter++;
     
     [self.view addSubview:slotView];
     slotView.transform = CGAffineTransformMakeScale(0.01, 0.01);
+    slotView.alpha = 0.0f;
   }
   for (int i = kAnswerSlotBottomStartingTag; i < kAnswerSlotBottomEndingTag;i++) {
     UIImageView *image = (UIImageView*)[self.view viewWithTag:i];
@@ -231,10 +326,12 @@
   UIImageView *topView = (UIImageView *)[self.view viewWithTag:animationCounter];
   [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
     topView.transform = CGAffineTransformIdentity;
+    topView.alpha = 1.0f;
   }completion:nil];
   animationCounter++;
   if (animationCounter > 14) {
     self.view.userInteractionEnabled = YES;
+    self.game.removeCheatButon.userInteractionEnabled = YES;
     [timer invalidate];
   }
 }
@@ -247,9 +344,14 @@
     if (CGRectContainsPoint(view.frame, touchLocation)) {
       if (view.tag > 0 && view.tag <= kAnswerSlotBottomEndingTag) { //touching the selection slots
         dragObject = view;
-        dragging = YES;
         [self.view bringSubviewToFront:dragObject];
         int tag = 0; //this tag is for locating the intersected tag in our selectedAnswerTag
+        for (NSNumber *usedCheat in usedCheatArray) {
+          if ([usedCheat integerValue] == dragObject.tag) {
+            return;
+          }
+        }
+        dragging = YES;
         for (NSNumber *ourAnswers in selectedAnswerTags) {
           //check through our answer if we are clicking on the answers
           if ([ourAnswers integerValue] == dragObject.tag) {
@@ -304,7 +406,6 @@
   dragging = NO;
   moving = NO;
   filledSlotMoving = NO;
-  NSLog(@"%d",filledSlotMoving);
   //check if our answer is correct
   BOOL full = YES;
   for (NSNumber *num in selectedAnswerTags) {
@@ -449,10 +550,9 @@
       }
     }
     else {
-      NSLog(@"meep");
       [self resetLetter];
       for (int i = 0 ; i <selectedAnswerTags.count;i++) {
-        int answer = [[selectedAnswerTags objectAtIndex:0] integerValue];
+        int answer = [[selectedAnswerTags objectAtIndex:i] integerValue];
         if (answer == dragObject.tag) {
           [selectedAnswerTags replaceObjectAtIndex:i withObject:[NSNumber numberWithInt:-1]];
           [selectedLetters replaceObjectAtIndex:i withObject:[NSNumber numberWithInt:-1]];
@@ -634,9 +734,9 @@
       [selectedLetters replaceObjectAtIndex:open withObject:l.text];
     }
   }
-  //if everything is full, we check if the answer is correct
-  if (open == selectedAnswerTags.count-1) {
-    [self checkIfAnswerIsCorrect];
+  
+  if (self.game.isTutorial) {
+    [self.game showNextLetterCallBack];
   }
 }
 
@@ -646,12 +746,17 @@
     NSString *letter =[selectedLetters objectAtIndex:i];
     answer = [NSString stringWithFormat:@"%@%@",answer,letter];
   }
-  //NSLog(@"%@",answer);
   if ([answer isEqualToString:correctAnswer]) {
     [self showCorrect];
+    if (self.game.isTutorial) {
+      dragObject = nil;
+    }
   }
   else {
     [self showError];
+    if (self.game.isTutorial) {
+      dragObject = nil;
+    }
   }
 }
 
@@ -665,7 +770,10 @@
       }
     }
   }
-  [self.game transitionWithConclusion:YES skipping:NO andNextQuestionType:kFillIn];
+  if (self.game.isTutorial)
+    [self.game tutorialCorrectionAnimationWithCorrect:YES fromQuestionType:kFillIn];
+  else
+    [self.game transitionWithConclusion:YES skipping:NO andNextQuestionType:kFillIn];
 }
 
 - (void)showError {
@@ -685,7 +793,8 @@
       }
     }
   }
-  [self.game transitionWithConclusion:NO skipping:NO andNextQuestionType:kFillIn];
+  if (self.game.isTutorial) [self.game tutorialCorrectionAnimationWithCorrect:NO fromQuestionType:kFillIn];
+  else [self.game transitionWithConclusion:NO skipping:NO andNextQuestionType:kFillIn];
 }
 
 - (int)checkForOpenslot {
@@ -719,6 +828,56 @@
 - (void)hideBottomBar {
   UIImageView *b = [bottomBarArray objectAtIndex:dragObject.tag-1];
   b.hidden = YES;
+}
+
+- (void)removeOptions {
+  if (cheatCount >= correctLetterCount) {
+    return;
+  }
+  int cheatIndex = [[cheatCountArray objectAtIndex:cheatCount] integerValue];
+  
+  NSString *letterToTakeOut = [cheatArray objectAtIndex:cheatIndex];
+  for (int i = 0; i < selectionSlots.count; i++) {
+    NSString *fromSelection = [NSString stringWithFormat:@"%@",[selectionSlots objectAtIndex:i]];
+    if ([fromSelection isEqualToString:letterToTakeOut]) {
+      UIView *selectionLetter = [self.view viewWithTag:i+1];
+      [selectionSlots replaceObjectAtIndex:i withObject:[NSNumber numberWithInt:-1]];
+      [self addCheatViewtoAnswerView:selectionLetter tagInArray:cheatIndex letterToTakeOut:letterToTakeOut];
+      break;
+    }
+  }
+  cheatCount++;
+  if (cheatCount == correctLetterCount) {
+    [self performSelector:@selector(checkIfAnswerIsCorrect) withObject:nil afterDelay:0.3f];
+  }
+}
+
+
+- (void)addCheatViewtoAnswerView:(UIView *)cheatView tagInArray:(int)tag letterToTakeOut:(NSString *)letter{
+  UIView *view = (UIView *)[answerViews objectAtIndex:tag];
+  [usedCheatArray addObject:[NSNumber numberWithInt:cheatView.tag]];
+  dragObject = cheatView;
+  if (numberOfLines == 2) {
+    UIView *firstLine = [self.view viewWithTag:kFirstLine];
+    UIView *secondLine = [self.view viewWithTag:kSecondLine];
+    CGRect newFrame;
+    if (tag < firstLineCount) newFrame = [firstLine convertRect:view.frame toView:self.view];
+    else newFrame = [secondLine convertRect:view.frame toView:self.view];
+    [UIView animateWithDuration:0.3f animations:^{
+      cheatView.frame = newFrame;
+    }];
+    [self hideBottomBar];
+  }
+  else {
+    UIView *firstLine = [self.view viewWithTag:kFirstLine];
+    CGRect newFrame = [firstLine convertRect:view.frame toView:self.view];
+    [UIView animateWithDuration:0.3f animations:^{
+      cheatView.frame = newFrame;
+    }];
+    [self hideBottomBar];
+  }
+  [selectedAnswerTags replaceObjectAtIndex:tag withObject:[NSNumber numberWithInt:view.tag]];
+  [selectedLetters replaceObjectAtIndex:tag withObject:letter];
 }
 
 @end

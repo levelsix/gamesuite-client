@@ -4,14 +4,18 @@ option java_package = "com.lvl6.pictures.noneventprotos";
 option java_outer_classname = "TriviaQuestionFormatProto";
 
 message QuestionProto {
+	//uniquely identifies this question (id string used in the db)
+	optional string id = 1;
+
 	//mutually exclusive, if one is set the other is not set
-	optional MultipleChoiceQuestionProto multipleChoice = 1;
-	optional PictureQuestionProto pictures = 2;
+	optional MultipleChoiceQuestionProto multipleChoice = 2;
+	optional PictureQuestionProto pictures = 3;
+	
 }
 
 message MultipleChoiceQuestionProto {
 	//uniquely identifies this MultipleChoiceQuestionProto
-	optional string id = 4;
+	//optional string id = 4; //moved to QuestionProto
 	
 	//question stored in the database
 	optional string question = 1;
@@ -25,14 +29,14 @@ message MultipleChoiceQuestionProto {
 
 message MultipleChoiceAnswerProto {
 	//uniquely identifies this MultipleChoiceAnswerProto
-	optional string id = 2;
+	optional string id = 1; 
 	
 	//a phrase/sentence or a picture
-	optional string answer = 3;
+	optional string answer = 2;
 	
 	//determines if answer property above is a phrase/sentence or
 	//a picture
-	optional AnswerType type = 1;
+	optional AnswerType type = 3;
 	
 	enum AnswerType {
 		TEXT = 1;
@@ -41,7 +45,7 @@ message MultipleChoiceAnswerProto {
 }
 
 message PictureQuestionProto {
-	optional string id = 4;
+	//optional string id = 4; //moved to QuestionProto
 	
 	//at the moment, either one image or 4 images
 	repeated string imageNames = 1;

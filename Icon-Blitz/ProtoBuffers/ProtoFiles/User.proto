@@ -26,6 +26,11 @@ message BasicAuthorizedDeviceProto {
 	optional string deviceId = 6;
 }
 
+message UserCurrencyProto {
+	optional int32 numTokens = 1;
+	optional int64 lastTokenRefillTime = 2;
+	optional int32 numRubies = 3;
+}
 
 message CompleteUserProto {
 	optional string userId = 1;
@@ -36,7 +41,8 @@ message CompleteUserProto {
 	optional string facebookId = 6;
 	optional BasicAuthorizedDeviceProto badp = 7;
 	optional int64 lastLogin = 8;
-	optional int32 signupDate = 9;
+	optional int64 signupDate = 9;
 	
 	//power up information, tokens/rubies/in game currency
+	optional UserCurrencyProto currency = 10;
 }

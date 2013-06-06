@@ -39,7 +39,7 @@
 					<object class="IBUILabel" id="329042263">
 						<reference key="NSNextResponder" ref="230827286"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{123, 17}, {75, 21}}</string>
+						<string key="NSFrame">{{123, 20}, {75, 21}}</string>
 						<reference key="NSSuperview" ref="230827286"/>
 						<reference key="NSNextKeyView" ref="87670753"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -666,12 +666,6 @@
 						<reference key="parent" ref="230827286"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">14</int>
-						<reference key="object" ref="329042263"/>
-						<array class="NSMutableArray" key="children"/>
-						<reference key="parent" ref="230827286"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">15</int>
 						<reference key="object" ref="765946187"/>
 						<reference key="parent" ref="390800961"/>
@@ -739,6 +733,11 @@
 						<reference key="object" ref="2899548"/>
 						<reference key="parent" ref="687347063"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">14</int>
+						<reference key="object" ref="329042263"/>
+						<reference key="parent" ref="230827286"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -751,7 +750,7 @@
 				<string key="12.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="13.CustomClassName">FontLabel2</string>
 				<string key="13.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="14.CustomClassName">FontLabel2</string>
+				<string key="14.CustomClassName">FontLabel</string>
 				<string key="14.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="15.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="16.CustomClassName">FontLabel</string>

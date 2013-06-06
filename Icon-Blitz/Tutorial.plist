@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Multiple Choice</key>
+	<array>
+		<array>
+			<string>In Trivia Blitz, you battle other players in a 2 minute battle.</string>
+			<integer>15</integer>
+		</array>
+		<array>
+			<string>Let&apos;s play a trial round!</string>
+			<integer>17</integer>
+		</array>
+		<array>
+			<string>Opps that&apos;s not right, try this</string>
+			<integer>17</integer>
+			<string>Nice job, each right answer gives you points.</string>
+			<integer>17</integer>
+		</array>
+		<array>
+			<string>Let&apos;s try a different type of question. Who is this?</string>
+			<integer>17</integer>
+		</array>
+		<array>
+			<string>Thats not correct, here are right letters!</string>
+			<integer>17</integer>
+			<string>Right-o, if you need help answering a question, you can use the eliminate option.</string>
+			<integer>13</integer>
+		</array>
+		<array>
+			<string>Correct! If you want a little more time you can freeze the clock.</string>
+			<integer>15</integer>
+		</array>
+		<array/>
+	</array>
+</dict>
+</plist>

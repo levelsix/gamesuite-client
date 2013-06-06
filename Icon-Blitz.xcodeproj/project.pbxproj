@@ -27,7 +27,31 @@
 		0628CCA916F2783100AE97A0 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0628CCA816F2783100AE97A0 /* ImageIO.framework */; };
 		0628CCB716F284BA00AE97A0 /* FriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0628CCB516F284BA00AE97A0 /* FriendsViewController.m */; };
 		0628CCB816F284BA00AE97A0 /* FriendsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0628CCB616F284BA00AE97A0 /* FriendsViewController.xib */; };
-		063BC1E8173AFA2600330E98 /* ForceLogout.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 063BC1E7173AFA2600330E98 /* ForceLogout.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		062AD080174EE0360021D892 /* CommonEventProtocol.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 062AD073174EE0350021D892 /* CommonEventProtocol.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		062AD081174EE0360021D892 /* CompletedRoundEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 062AD075174EE0350021D892 /* CompletedRoundEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		062AD082174EE0360021D892 /* CreateAccountEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 062AD077174EE0350021D892 /* CreateAccountEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		062AD083174EE0360021D892 /* Example.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 062AD079174EE0360021D892 /* Example.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		062AD084174EE0360021D892 /* ForceLogout.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 062AD07B174EE0360021D892 /* ForceLogout.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		062AD085174EE0360021D892 /* LoginEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 062AD07D174EE0360021D892 /* LoginEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		062AD086174EE0360021D892 /* PicturesEventProtocol.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 062AD07F174EE0360021D892 /* PicturesEventProtocol.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		062AD097174EE05B0021D892 /* CommonEventProtocol.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD087174EE05B0021D892 /* CommonEventProtocol.proto */; };
+		062AD098174EE05B0021D892 /* CompletedRoundEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD088174EE05B0021D892 /* CompletedRoundEvent.proto */; };
+		062AD099174EE05B0021D892 /* CreateAccountEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD089174EE05B0021D892 /* CreateAccountEvent.proto */; };
+		062AD09A174EE05B0021D892 /* Example.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD08A174EE05B0021D892 /* Example.proto */; };
+		062AD09B174EE05B0021D892 /* ForceLogout.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD08B174EE05B0021D892 /* ForceLogout.proto */; };
+		062AD09C174EE05B0021D892 /* LoginEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD08C174EE05B0021D892 /* LoginEvent.proto */; };
+		062AD09D174EE05B0021D892 /* PicturesEventProtocol.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD08D174EE05B0021D892 /* PicturesEventProtocol.proto */; };
+		062AD09E174EE05B0021D892 /* RefillTokensByWaitingEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD08E174EE05B0021D892 /* RefillTokensByWaitingEvent.proto */; };
+		062AD09F174EE05B0021D892 /* RetrieveNewQuestionsEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD08F174EE05B0021D892 /* RetrieveNewQuestionsEvent.proto */; };
+		062AD0A0174EE05B0021D892 /* SearchForUserEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD090174EE05B0021D892 /* SearchForUserEvent.proto */; };
+		062AD0A1174EE05B0021D892 /* SpendRubiesEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD091174EE05B0021D892 /* SpendRubiesEvent.proto */; };
+		062AD0A2174EE05B0021D892 /* StartRoundEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD092174EE05B0021D892 /* StartRoundEvent.proto */; };
+		062AD0A3174EE05B0021D892 /* TriviaGameFormat.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD093174EE05B0021D892 /* TriviaGameFormat.proto */; };
+		062AD0A4174EE05B0021D892 /* TriviaQuestionFormat.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD094174EE05B0021D892 /* TriviaQuestionFormat.proto */; };
+		062AD0A5174EE05B0021D892 /* TriviaRoundFormat.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD095174EE05B0021D892 /* TriviaRoundFormat.proto */; };
+		062AD0A6174EE05B0021D892 /* User.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD096174EE05B0021D892 /* User.proto */; };
+		0638341917586CF100A0E417 /* circleglow.png in Resources */ = {isa = PBXBuildFile; fileRef = 0638341717586CF100A0E417 /* circleglow.png */; };
+		0638341A17586CF100A0E417 /* circleglow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0638341817586CF100A0E417 /* circleglow@2x.png */; };
 		063BC1F4173B1F1200330E98 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 063BC1F3173B1F1200330E98 /* LoadingView.m */; };
 		063DEA4B1718B77B00D8ADE2 /* FullEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 063DEA4A1718B77B00D8ADE2 /* FullEvent.m */; };
 		0658A01C1734C3C1003305CA /* createaccount.png in Resources */ = {isa = PBXBuildFile; fileRef = 0658A0101734C3C1003305CA /* createaccount.png */; };
@@ -42,9 +66,17 @@
 		0658A0251734C3C1003305CA /* nameinput@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0658A0191734C3C1003305CA /* nameinput@2x.png */; };
 		0658A0261734C3C1003305CA /* signupaccountbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 0658A01A1734C3C1003305CA /* signupaccountbg.png */; };
 		0658A0271734C3C1003305CA /* signupaccountbg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0658A01B1734C3C1003305CA /* signupaccountbg@2x.png */; };
-		0662BDE61739BA87003B1E98 /* ForceLogout.proto in Resources */ = {isa = PBXBuildFile; fileRef = 0662BDE51739BA87003B1E98 /* ForceLogout.proto */; };
-		0665725F17331D53005496E2 /* User.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 0665725E17331D53005496E2 /* User.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		0665726117331D58005496E2 /* User.proto in Resources */ = {isa = PBXBuildFile; fileRef = 0665726017331D58005496E2 /* User.proto */; };
+		065EF159174EDD7500534D6F /* IAPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 06FF5C1C1742FF0E006D37C4 /* IAPHelper.m */; };
+		065EF15A174EDD7500534D6F /* TriviaBlitzIAPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 06FF5C1F174301A6006D37C4 /* TriviaBlitzIAPHelper.m */; };
+		065EF16D174EDFDB00534D6F /* RefillTokensByWaitingEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 065EF15C174EDFD700534D6F /* RefillTokensByWaitingEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		065EF16E174EDFDB00534D6F /* RetrieveNewQuestionsEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 065EF15E174EDFD700534D6F /* RetrieveNewQuestionsEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		065EF16F174EDFDB00534D6F /* SearchForUserEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 065EF160174EDFD800534D6F /* SearchForUserEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		065EF170174EDFDB00534D6F /* SpendRubiesEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 065EF162174EDFD900534D6F /* SpendRubiesEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		065EF171174EDFDB00534D6F /* StartRoundEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 065EF164174EDFD900534D6F /* StartRoundEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		065EF172174EDFDB00534D6F /* TriviaGameFormat.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 065EF166174EDFD900534D6F /* TriviaGameFormat.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		065EF173174EDFDB00534D6F /* TriviaQuestionFormat.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 065EF168174EDFDA00534D6F /* TriviaQuestionFormat.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		065EF174174EDFDB00534D6F /* TriviaRoundFormat.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 065EF16A174EDFDA00534D6F /* TriviaRoundFormat.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		065EF175174EDFDB00534D6F /* User.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 065EF16C174EDFDB00534D6F /* User.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		066B423A171C9B0E00B26CE4 /* libChartboost.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 066B4238171C9B0E00B26CE4 /* libChartboost.a */; };
 		066B423B171C9B0E00B26CE4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 066B4239171C9B0E00B26CE4 /* README.md */; };
 		066B423D171C9B7400B26CE4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 066B423C171C9B7400B26CE4 /* SystemConfiguration.framework */; };
@@ -52,17 +84,6 @@
 		066B4243171CB23400B26CE4 /* wrongt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 066B423F171CB23400B26CE4 /* wrongt@2x.png */; };
 		066B4244171CB23400B26CE4 /* correct.png in Resources */ = {isa = PBXBuildFile; fileRef = 066B4240171CB23400B26CE4 /* correct.png */; };
 		066B4245171CB23400B26CE4 /* correct@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 066B4241171CB23400B26CE4 /* correct@2x.png */; };
-		066B4269171CCA9900B26CE4 /* CommonEventProtocol.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 066B424F171CCA9900B26CE4 /* CommonEventProtocol.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		066B426B171CCA9900B26CE4 /* CreateAccountEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 066B4253171CCA9900B26CE4 /* CreateAccountEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		066B426C171CCA9900B26CE4 /* Example.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 066B4255171CCA9900B26CE4 /* Example.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		066B426D171CCA9900B26CE4 /* LoginEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 066B4257171CCA9900B26CE4 /* LoginEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		066B426E171CCA9A00B26CE4 /* PicturesEventProtocol.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 066B4259171CCA9900B26CE4 /* PicturesEventProtocol.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		066B4270171CCA9A00B26CE4 /* CommonEventProtocol.proto in Resources */ = {isa = PBXBuildFile; fileRef = 066B425C171CCA9900B26CE4 /* CommonEventProtocol.proto */; };
-		066B4272171CCA9A00B26CE4 /* CreateAccountEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 066B425E171CCA9900B26CE4 /* CreateAccountEvent.proto */; };
-		066B4273171CCA9A00B26CE4 /* Example.proto in Resources */ = {isa = PBXBuildFile; fileRef = 066B425F171CCA9900B26CE4 /* Example.proto */; };
-		066B4274171CCA9A00B26CE4 /* LoginEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 066B4260171CCA9900B26CE4 /* LoginEvent.proto */; };
-		066B4275171CCA9A00B26CE4 /* PicturesEventProtocol.proto in Resources */ = {isa = PBXBuildFile; fileRef = 066B4261171CCA9900B26CE4 /* PicturesEventProtocol.proto */; };
-		066B4279171CCA9A00B26CE4 /* TriviaQuestionFormat.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 066B4267171CCA9900B26CE4 /* TriviaQuestionFormat.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		066B427F171CD65200B26CE4 /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 066B427D171CD65200B26CE4 /* SignUpViewController.m */; };
 		066B4280171CD65200B26CE4 /* SignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 066B427E171CD65200B26CE4 /* SignUpViewController.xib */; };
 		067301B6173D9805001C507A /* FillInTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 067301B4173D9805001C507A /* FillInTypeViewController.m */; };
@@ -98,6 +119,30 @@
 		06773A771722445500B11F3F /* ScoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06773A751722445500B11F3F /* ScoreViewController.m */; };
 		06773A781722445500B11F3F /* ScoreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06773A761722445500B11F3F /* ScoreViewController.xib */; };
 		0677D84C16F133FE005B3AA9 /* PublishDataView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0677D84B16F133FE005B3AA9 /* PublishDataView.m */; };
+		067EA92D175FEA2B00E6C0B3 /* clock.png in Resources */ = {isa = PBXBuildFile; fileRef = 067EA925175FEA2B00E6C0B3 /* clock.png */; };
+		067EA92E175FEA2B00E6C0B3 /* clock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 067EA926175FEA2B00E6C0B3 /* clock@2x.png */; };
+		067EA92F175FEA2B00E6C0B3 /* freezebutton.png in Resources */ = {isa = PBXBuildFile; fileRef = 067EA927175FEA2B00E6C0B3 /* freezebutton.png */; };
+		067EA930175FEA2B00E6C0B3 /* freezebutton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 067EA928175FEA2B00E6C0B3 /* freezebutton@2x.png */; };
+		067EA931175FEA2B00E6C0B3 /* optionsbutton.png in Resources */ = {isa = PBXBuildFile; fileRef = 067EA929175FEA2B00E6C0B3 /* optionsbutton.png */; };
+		067EA932175FEA2B00E6C0B3 /* optionsbutton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 067EA92A175FEA2B00E6C0B3 /* optionsbutton@2x.png */; };
+		067EA933175FEA2B00E6C0B3 /* skipbutton.png in Resources */ = {isa = PBXBuildFile; fileRef = 067EA92B175FEA2B00E6C0B3 /* skipbutton.png */; };
+		067EA934175FEA2B00E6C0B3 /* skipbutton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 067EA92C175FEA2B00E6C0B3 /* skipbutton@2x.png */; };
+		067FA6431759905F00FF0514 /* 3darrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 067FA6411759905E00FF0514 /* 3darrow.png */; };
+		067FA6441759905F00FF0514 /* 3darrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 067FA6421759905E00FF0514 /* 3darrow@2x.png */; };
+		0680E4041758361600BCFCF7 /* Tutorial.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0680E4031758361600BCFCF7 /* Tutorial.plist */; };
+		0680E4071758387700BCFCF7 /* TutorialMultipleChoiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0680E4061758387700BCFCF7 /* TutorialMultipleChoiceViewController.m */; };
+		0680E40B17583E1300BCFCF7 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0680E40917583E1300BCFCF7 /* TutorialViewController.m */; };
+		0680E40C17583E1300BCFCF7 /* TutorialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0680E40A17583E1300BCFCF7 /* TutorialViewController.xib */; };
+		0680E4331758555700BCFCF7 /* next.png in Resources */ = {isa = PBXBuildFile; fileRef = 0680E4271758555700BCFCF7 /* next.png */; };
+		0680E4341758555700BCFCF7 /* next@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0680E4281758555700BCFCF7 /* next@2x.png */; };
+		0680E4351758555700BCFCF7 /* okay.png in Resources */ = {isa = PBXBuildFile; fileRef = 0680E4291758555700BCFCF7 /* okay.png */; };
+		0680E4361758555700BCFCF7 /* okay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0680E42A1758555700BCFCF7 /* okay@2x.png */; };
+		0680E4371758555700BCFCF7 /* panda.png in Resources */ = {isa = PBXBuildFile; fileRef = 0680E42B1758555700BCFCF7 /* panda.png */; };
+		0680E4381758555700BCFCF7 /* panda@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0680E42C1758555700BCFCF7 /* panda@2x.png */; };
+		0680E4391758555700BCFCF7 /* questionblackout.png in Resources */ = {isa = PBXBuildFile; fileRef = 0680E42D1758555700BCFCF7 /* questionblackout.png */; };
+		0680E43A1758555700BCFCF7 /* questionblackout@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0680E42E1758555700BCFCF7 /* questionblackout@2x.png */; };
+		0680E43B1758555700BCFCF7 /* speechbubble.png in Resources */ = {isa = PBXBuildFile; fileRef = 0680E42F1758555700BCFCF7 /* speechbubble.png */; };
+		0680E43C1758555700BCFCF7 /* speechbubble@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0680E4301758555700BCFCF7 /* speechbubble@2x.png */; };
 		0682262516F7CF7900F92076 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0682262316F7CF7900F92076 /* GameViewController.m */; };
 		0682262616F7CF7900F92076 /* GameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0682262416F7CF7900F92076 /* GameViewController.xib */; };
 		068AF4BD171E1C550090E4DB /* libProtocolBuffers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 068AF4B6171E1C390090E4DB /* libProtocolBuffers.a */; };
@@ -152,8 +197,6 @@
 		06989EC016FAA85200F38F83 /* buttontop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 06989EAC16FAA85200F38F83 /* buttontop@2x.png */; };
 		06989EC116FAA85200F38F83 /* divider.png in Resources */ = {isa = PBXBuildFile; fileRef = 06989EAD16FAA85200F38F83 /* divider.png */; };
 		06989EC216FAA85200F38F83 /* divider@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 06989EAE16FAA85200F38F83 /* divider@2x.png */; };
-		06989EC316FAA85200F38F83 /* freezebutton.png in Resources */ = {isa = PBXBuildFile; fileRef = 06989EAF16FAA85200F38F83 /* freezebutton.png */; };
-		06989EC416FAA85200F38F83 /* freezebutton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 06989EB016FAA85200F38F83 /* freezebutton@2x.png */; };
 		06989EC516FAA85200F38F83 /* pointsbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 06989EB116FAA85200F38F83 /* pointsbg.png */; };
 		06989EC616FAA85200F38F83 /* pointsbg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 06989EB216FAA85200F38F83 /* pointsbg@2x.png */; };
 		06989EC716FAA85200F38F83 /* timer.png in Resources */ = {isa = PBXBuildFile; fileRef = 06989EB316FAA85200F38F83 /* timer.png */; };
@@ -208,14 +251,6 @@
 		06A5476917138A810049C53A /* usernamestart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 06A5475B17138A810049C53A /* usernamestart@2x.png */; };
 		06A5477D1713A53B0049C53A /* HomeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A5477C1713A53B0049C53A /* HomeCell.m */; };
 		06A5477F1713A5750049C53A /* HomeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06A5477E1713A5750049C53A /* HomeCell.xib */; };
-		06A887701741DE4F00D7805B /* RefillTokensByWaitingEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A8876F1741DE4F00D7805B /* RefillTokensByWaitingEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		06A887721741DE5F00D7805B /* RefillTokensByWaitingEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06A887711741DE5F00D7805B /* RefillTokensByWaitingEvent.proto */; };
-		06A887771741DE7000D7805B /* RetrieveNewQuestionsEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A887741741DE7000D7805B /* RetrieveNewQuestionsEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		06A887781741DE7000D7805B /* StartRoundEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A887761741DE7000D7805B /* StartRoundEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		06A8877B1741DE7C00D7805B /* RetrieveNewQuestionsEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06A887791741DE7C00D7805B /* RetrieveNewQuestionsEvent.proto */; };
-		06A8877C1741DE7C00D7805B /* StartRoundEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06A8877A1741DE7C00D7805B /* StartRoundEvent.proto */; };
-		06A8877F1741DE9400D7805B /* CompletedRoundEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A8877E1741DE9400D7805B /* CompletedRoundEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		06A887811741DEA400D7805B /* CompletedRoundEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06A887801741DEA400D7805B /* CompletedRoundEvent.proto */; };
 		06A9E5731720D05700969076 /* AMQPConnectionThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A9E5721720D05700969076 /* AMQPConnectionThread.m */; };
 		06A9E57E1722039F00969076 /* OpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A9E57D1722039F00969076 /* OpenUDID.m */; };
 		06B38C73170B731B008D9BB8 /* answerbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 06B38C6E170B731B008D9BB8 /* answerbar.png */; };
@@ -231,19 +266,10 @@
 		06E58AA317445D4D00262A44 /* testimage2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 06E58AA117445D4D00262A44 /* testimage2.jpg */; };
 		06E58AB217446C9A00262A44 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06E58AB117446C9900262A44 /* iAd.framework */; };
 		06EDE7E116F1375100BA3A7A /* PublishData.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06EDE7E016F1375100BA3A7A /* PublishData.xib */; };
-		06F560551731F0B600157FEF /* TypeFillInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F560531731F0B600157FEF /* TypeFillInViewController.m */; };
-		06F560561731F0B600157FEF /* TypeFillInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06F560541731F0B600157FEF /* TypeFillInViewController.xib */; };
-		06F8C0C5172F299300A8D348 /* TriviaQuestionFormat.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06F8C0C4172F299300A8D348 /* TriviaQuestionFormat.proto */; };
-		06F8C0C7172F29DC00A8D348 /* TriviaRoundFormat.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06F8C0C6172F29DC00A8D348 /* TriviaRoundFormat.proto */; };
-		06F8C0C9172F29EA00A8D348 /* TriviaGameFormat.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06F8C0C8172F29EA00A8D348 /* TriviaGameFormat.proto */; };
-		06F8C0CE172F2F2C00A8D348 /* TriviaGameFormat.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F8C0CB172F2F2B00A8D348 /* TriviaGameFormat.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		06F8C0CF172F2F2C00A8D348 /* TriviaRoundFormat.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F8C0CD172F2F2C00A8D348 /* TriviaRoundFormat.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		06F8C0D3172F330A00A8D348 /* ShopMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06F8C0D0172F330A00A8D348 /* ShopMenu.xib */; };
 		06F8C0D4172F330A00A8D348 /* ShopMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F8C0D1172F330A00A8D348 /* ShopMenu.m */; };
 		06F8C0E3172F4B3B00A8D348 /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F8C0E2172F4B3B00A8D348 /* Utilities.m */; };
 		06FF59AC17385EC0003741A6 /* TextFieldIndentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 06FF59AB17385EC0003741A6 /* TextFieldIndentation.m */; };
-		06FF5C1D1742FF0E006D37C4 /* IAPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 06FF5C1C1742FF0E006D37C4 /* IAPHelper.m */; };
-		06FF5C20174301A6006D37C4 /* TriviaBlitzIAPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 06FF5C1F174301A6006D37C4 /* TriviaBlitzIAPHelper.m */; };
 		06FF5C231743350E006D37C4 /* spinnerbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 06FF5C211743350E006D37C4 /* spinnerbg.png */; };
 		06FF5C241743350E006D37C4 /* spinnerbg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 06FF5C221743350E006D37C4 /* spinnerbg@2x.png */; };
 /* End PBXBuildFile section */
@@ -307,7 +333,38 @@
 		0628CCB516F284BA00AE97A0 /* FriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendsViewController.m; sourceTree = "<group>"; };
 		0628CCB616F284BA00AE97A0 /* FriendsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendsViewController.xib; sourceTree = "<group>"; };
 		0628CFC416F2B7B000AE97A0 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		063BC1E7173AFA2600330E98 /* ForceLogout.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForceLogout.pb.m; sourceTree = "<group>"; };
+		062AD072174EE0350021D892 /* CommonEventProtocol.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonEventProtocol.pb.h; sourceTree = "<group>"; };
+		062AD073174EE0350021D892 /* CommonEventProtocol.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonEventProtocol.pb.m; sourceTree = "<group>"; };
+		062AD074174EE0350021D892 /* CompletedRoundEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompletedRoundEvent.pb.h; sourceTree = "<group>"; };
+		062AD075174EE0350021D892 /* CompletedRoundEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompletedRoundEvent.pb.m; sourceTree = "<group>"; };
+		062AD076174EE0350021D892 /* CreateAccountEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateAccountEvent.pb.h; sourceTree = "<group>"; };
+		062AD077174EE0350021D892 /* CreateAccountEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateAccountEvent.pb.m; sourceTree = "<group>"; };
+		062AD078174EE0360021D892 /* Example.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Example.pb.h; sourceTree = "<group>"; };
+		062AD079174EE0360021D892 /* Example.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Example.pb.m; sourceTree = "<group>"; };
+		062AD07A174EE0360021D892 /* ForceLogout.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForceLogout.pb.h; sourceTree = "<group>"; };
+		062AD07B174EE0360021D892 /* ForceLogout.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForceLogout.pb.m; sourceTree = "<group>"; };
+		062AD07C174EE0360021D892 /* LoginEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginEvent.pb.h; sourceTree = "<group>"; };
+		062AD07D174EE0360021D892 /* LoginEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginEvent.pb.m; sourceTree = "<group>"; };
+		062AD07E174EE0360021D892 /* PicturesEventProtocol.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicturesEventProtocol.pb.h; sourceTree = "<group>"; };
+		062AD07F174EE0360021D892 /* PicturesEventProtocol.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PicturesEventProtocol.pb.m; sourceTree = "<group>"; };
+		062AD087174EE05B0021D892 /* CommonEventProtocol.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CommonEventProtocol.proto; sourceTree = "<group>"; };
+		062AD088174EE05B0021D892 /* CompletedRoundEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CompletedRoundEvent.proto; sourceTree = "<group>"; };
+		062AD089174EE05B0021D892 /* CreateAccountEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CreateAccountEvent.proto; sourceTree = "<group>"; };
+		062AD08A174EE05B0021D892 /* Example.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Example.proto; sourceTree = "<group>"; };
+		062AD08B174EE05B0021D892 /* ForceLogout.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ForceLogout.proto; sourceTree = "<group>"; };
+		062AD08C174EE05B0021D892 /* LoginEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LoginEvent.proto; sourceTree = "<group>"; };
+		062AD08D174EE05B0021D892 /* PicturesEventProtocol.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PicturesEventProtocol.proto; sourceTree = "<group>"; };
+		062AD08E174EE05B0021D892 /* RefillTokensByWaitingEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RefillTokensByWaitingEvent.proto; sourceTree = "<group>"; };
+		062AD08F174EE05B0021D892 /* RetrieveNewQuestionsEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RetrieveNewQuestionsEvent.proto; sourceTree = "<group>"; };
+		062AD090174EE05B0021D892 /* SearchForUserEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SearchForUserEvent.proto; sourceTree = "<group>"; };
+		062AD091174EE05B0021D892 /* SpendRubiesEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SpendRubiesEvent.proto; sourceTree = "<group>"; };
+		062AD092174EE05B0021D892 /* StartRoundEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StartRoundEvent.proto; sourceTree = "<group>"; };
+		062AD093174EE05B0021D892 /* TriviaGameFormat.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TriviaGameFormat.proto; sourceTree = "<group>"; };
+		062AD094174EE05B0021D892 /* TriviaQuestionFormat.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TriviaQuestionFormat.proto; sourceTree = "<group>"; };
+		062AD095174EE05B0021D892 /* TriviaRoundFormat.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TriviaRoundFormat.proto; sourceTree = "<group>"; };
+		062AD096174EE05B0021D892 /* User.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = User.proto; sourceTree = "<group>"; };
+		0638341717586CF100A0E417 /* circleglow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circleglow.png; sourceTree = "<group>"; };
+		0638341817586CF100A0E417 /* circleglow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "circleglow@2x.png"; sourceTree = "<group>"; };
 		063BC1EE173B194E00330E98 /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
 		063BC1F3173B1F1200330E98 /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
 		063DEA491718B77B00D8ADE2 /* FullEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FullEvent.h; sourceTree = "<group>"; };
@@ -325,11 +382,24 @@
 		0658A0191734C3C1003305CA /* nameinput@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nameinput@2x.png"; sourceTree = "<group>"; };
 		0658A01A1734C3C1003305CA /* signupaccountbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = signupaccountbg.png; sourceTree = "<group>"; };
 		0658A01B1734C3C1003305CA /* signupaccountbg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "signupaccountbg@2x.png"; sourceTree = "<group>"; };
-		0662BDE51739BA87003B1E98 /* ForceLogout.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ForceLogout.proto; sourceTree = "<group>"; };
-		0662BDEA1739BAC5003B1E98 /* ForceLogout.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForceLogout.pb.h; sourceTree = "<group>"; };
-		0665725D17331D53005496E2 /* User.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.pb.h; sourceTree = "<group>"; };
-		0665725E17331D53005496E2 /* User.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.pb.m; sourceTree = "<group>"; };
-		0665726017331D58005496E2 /* User.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = User.proto; sourceTree = "<group>"; };
+		065EF15B174EDFD700534D6F /* RefillTokensByWaitingEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefillTokensByWaitingEvent.pb.h; sourceTree = "<group>"; };
+		065EF15C174EDFD700534D6F /* RefillTokensByWaitingEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefillTokensByWaitingEvent.pb.m; sourceTree = "<group>"; };
+		065EF15D174EDFD700534D6F /* RetrieveNewQuestionsEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RetrieveNewQuestionsEvent.pb.h; sourceTree = "<group>"; };
+		065EF15E174EDFD700534D6F /* RetrieveNewQuestionsEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RetrieveNewQuestionsEvent.pb.m; sourceTree = "<group>"; };
+		065EF15F174EDFD800534D6F /* SearchForUserEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchForUserEvent.pb.h; sourceTree = "<group>"; };
+		065EF160174EDFD800534D6F /* SearchForUserEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchForUserEvent.pb.m; sourceTree = "<group>"; };
+		065EF161174EDFD800534D6F /* SpendRubiesEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpendRubiesEvent.pb.h; sourceTree = "<group>"; };
+		065EF162174EDFD900534D6F /* SpendRubiesEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpendRubiesEvent.pb.m; sourceTree = "<group>"; };
+		065EF163174EDFD900534D6F /* StartRoundEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartRoundEvent.pb.h; sourceTree = "<group>"; };
+		065EF164174EDFD900534D6F /* StartRoundEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartRoundEvent.pb.m; sourceTree = "<group>"; };
+		065EF165174EDFD900534D6F /* TriviaGameFormat.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriviaGameFormat.pb.h; sourceTree = "<group>"; };
+		065EF166174EDFD900534D6F /* TriviaGameFormat.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriviaGameFormat.pb.m; sourceTree = "<group>"; };
+		065EF167174EDFDA00534D6F /* TriviaQuestionFormat.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriviaQuestionFormat.pb.h; sourceTree = "<group>"; };
+		065EF168174EDFDA00534D6F /* TriviaQuestionFormat.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriviaQuestionFormat.pb.m; sourceTree = "<group>"; };
+		065EF169174EDFDA00534D6F /* TriviaRoundFormat.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriviaRoundFormat.pb.h; sourceTree = "<group>"; };
+		065EF16A174EDFDA00534D6F /* TriviaRoundFormat.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriviaRoundFormat.pb.m; sourceTree = "<group>"; };
+		065EF16B174EDFDB00534D6F /* User.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.pb.h; sourceTree = "<group>"; };
+		065EF16C174EDFDB00534D6F /* User.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.pb.m; sourceTree = "<group>"; };
 		066B4236171C9B0E00B26CE4 /* CBAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBAnalytics.h; sourceTree = "<group>"; };
 		066B4237171C9B0E00B26CE4 /* Chartboost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chartboost.h; sourceTree = "<group>"; };
 		066B4238171C9B0E00B26CE4 /* libChartboost.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libChartboost.a; sourceTree = "<group>"; };
@@ -339,23 +409,6 @@
 		066B423F171CB23400B26CE4 /* wrongt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wrongt@2x.png"; sourceTree = "<group>"; };
 		066B4240171CB23400B26CE4 /* correct.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = correct.png; sourceTree = "<group>"; };
 		066B4241171CB23400B26CE4 /* correct@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "correct@2x.png"; sourceTree = "<group>"; };
-		066B424E171CCA9900B26CE4 /* CommonEventProtocol.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonEventProtocol.pb.h; sourceTree = "<group>"; };
-		066B424F171CCA9900B26CE4 /* CommonEventProtocol.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonEventProtocol.pb.m; sourceTree = "<group>"; };
-		066B4252171CCA9900B26CE4 /* CreateAccountEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateAccountEvent.pb.h; sourceTree = "<group>"; };
-		066B4253171CCA9900B26CE4 /* CreateAccountEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateAccountEvent.pb.m; sourceTree = "<group>"; };
-		066B4254171CCA9900B26CE4 /* Example.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Example.pb.h; sourceTree = "<group>"; };
-		066B4255171CCA9900B26CE4 /* Example.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Example.pb.m; sourceTree = "<group>"; };
-		066B4256171CCA9900B26CE4 /* LoginEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginEvent.pb.h; sourceTree = "<group>"; };
-		066B4257171CCA9900B26CE4 /* LoginEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginEvent.pb.m; sourceTree = "<group>"; };
-		066B4258171CCA9900B26CE4 /* PicturesEventProtocol.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicturesEventProtocol.pb.h; sourceTree = "<group>"; };
-		066B4259171CCA9900B26CE4 /* PicturesEventProtocol.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PicturesEventProtocol.pb.m; sourceTree = "<group>"; };
-		066B425C171CCA9900B26CE4 /* CommonEventProtocol.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CommonEventProtocol.proto; sourceTree = "<group>"; };
-		066B425E171CCA9900B26CE4 /* CreateAccountEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CreateAccountEvent.proto; sourceTree = "<group>"; };
-		066B425F171CCA9900B26CE4 /* Example.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Example.proto; sourceTree = "<group>"; };
-		066B4260171CCA9900B26CE4 /* LoginEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LoginEvent.proto; sourceTree = "<group>"; };
-		066B4261171CCA9900B26CE4 /* PicturesEventProtocol.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PicturesEventProtocol.proto; sourceTree = "<group>"; };
-		066B4266171CCA9900B26CE4 /* TriviaQuestionFormat.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriviaQuestionFormat.pb.h; sourceTree = "<group>"; };
-		066B4267171CCA9900B26CE4 /* TriviaQuestionFormat.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriviaQuestionFormat.pb.m; sourceTree = "<group>"; };
 		066B427C171CD65200B26CE4 /* SignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
 		066B427D171CD65200B26CE4 /* SignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
 		066B427E171CD65200B26CE4 /* SignUpViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignUpViewController.xib; sourceTree = "<group>"; };
@@ -400,6 +453,32 @@
 		06773A761722445500B11F3F /* ScoreViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScoreViewController.xib; sourceTree = "<group>"; };
 		0677D84A16F133FE005B3AA9 /* PublishDataView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublishDataView.h; sourceTree = "<group>"; };
 		0677D84B16F133FE005B3AA9 /* PublishDataView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublishDataView.m; sourceTree = "<group>"; };
+		067EA925175FEA2B00E6C0B3 /* clock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clock.png; sourceTree = "<group>"; };
+		067EA926175FEA2B00E6C0B3 /* clock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clock@2x.png"; sourceTree = "<group>"; };
+		067EA927175FEA2B00E6C0B3 /* freezebutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = freezebutton.png; sourceTree = "<group>"; };
+		067EA928175FEA2B00E6C0B3 /* freezebutton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "freezebutton@2x.png"; sourceTree = "<group>"; };
+		067EA929175FEA2B00E6C0B3 /* optionsbutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = optionsbutton.png; sourceTree = "<group>"; };
+		067EA92A175FEA2B00E6C0B3 /* optionsbutton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "optionsbutton@2x.png"; sourceTree = "<group>"; };
+		067EA92B175FEA2B00E6C0B3 /* skipbutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = skipbutton.png; sourceTree = "<group>"; };
+		067EA92C175FEA2B00E6C0B3 /* skipbutton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "skipbutton@2x.png"; sourceTree = "<group>"; };
+		067FA6411759905E00FF0514 /* 3darrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 3darrow.png; path = "../../../Downloads/attachments (1)/3darrow.png"; sourceTree = "<group>"; };
+		067FA6421759905E00FF0514 /* 3darrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "3darrow@2x.png"; path = "../../../Downloads/attachments (1)/3darrow@2x.png"; sourceTree = "<group>"; };
+		0680E4031758361600BCFCF7 /* Tutorial.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Tutorial.plist; sourceTree = "<group>"; };
+		0680E4051758387700BCFCF7 /* TutorialMultipleChoiceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialMultipleChoiceViewController.h; sourceTree = "<group>"; };
+		0680E4061758387700BCFCF7 /* TutorialMultipleChoiceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialMultipleChoiceViewController.m; sourceTree = "<group>"; };
+		0680E40817583E1300BCFCF7 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
+		0680E40917583E1300BCFCF7 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
+		0680E40A17583E1300BCFCF7 /* TutorialViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TutorialViewController.xib; sourceTree = "<group>"; };
+		0680E4271758555700BCFCF7 /* next.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = next.png; sourceTree = "<group>"; };
+		0680E4281758555700BCFCF7 /* next@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "next@2x.png"; sourceTree = "<group>"; };
+		0680E4291758555700BCFCF7 /* okay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = okay.png; sourceTree = "<group>"; };
+		0680E42A1758555700BCFCF7 /* okay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "okay@2x.png"; sourceTree = "<group>"; };
+		0680E42B1758555700BCFCF7 /* panda.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = panda.png; sourceTree = "<group>"; };
+		0680E42C1758555700BCFCF7 /* panda@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "panda@2x.png"; sourceTree = "<group>"; };
+		0680E42D1758555700BCFCF7 /* questionblackout.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = questionblackout.png; sourceTree = "<group>"; };
+		0680E42E1758555700BCFCF7 /* questionblackout@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "questionblackout@2x.png"; sourceTree = "<group>"; };
+		0680E42F1758555700BCFCF7 /* speechbubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = speechbubble.png; sourceTree = "<group>"; };
+		0680E4301758555700BCFCF7 /* speechbubble@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "speechbubble@2x.png"; sourceTree = "<group>"; };
 		0682262216F7CF7900F92076 /* GameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
 		0682262316F7CF7900F92076 /* GameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
 		0682262416F7CF7900F92076 /* GameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameViewController.xib; sourceTree = "<group>"; };
@@ -464,8 +543,6 @@
 		06989EAC16FAA85200F38F83 /* buttontop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "buttontop@2x.png"; sourceTree = "<group>"; };
 		06989EAD16FAA85200F38F83 /* divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = divider.png; sourceTree = "<group>"; };
 		06989EAE16FAA85200F38F83 /* divider@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "divider@2x.png"; sourceTree = "<group>"; };
-		06989EAF16FAA85200F38F83 /* freezebutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = freezebutton.png; sourceTree = "<group>"; };
-		06989EB016FAA85200F38F83 /* freezebutton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "freezebutton@2x.png"; sourceTree = "<group>"; };
 		06989EB116FAA85200F38F83 /* pointsbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pointsbg.png; sourceTree = "<group>"; };
 		06989EB216FAA85200F38F83 /* pointsbg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pointsbg@2x.png"; sourceTree = "<group>"; };
 		06989EB316FAA85200F38F83 /* timer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = timer.png; sourceTree = "<group>"; };
@@ -542,18 +619,6 @@
 		06A5477B1713A53B0049C53A /* HomeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeCell.h; sourceTree = "<group>"; };
 		06A5477C1713A53B0049C53A /* HomeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeCell.m; sourceTree = "<group>"; };
 		06A5477E1713A5750049C53A /* HomeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeCell.xib; sourceTree = "<group>"; };
-		06A8876E1741DE4F00D7805B /* RefillTokensByWaitingEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefillTokensByWaitingEvent.pb.h; sourceTree = "<group>"; };
-		06A8876F1741DE4F00D7805B /* RefillTokensByWaitingEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefillTokensByWaitingEvent.pb.m; sourceTree = "<group>"; };
-		06A887711741DE5F00D7805B /* RefillTokensByWaitingEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RefillTokensByWaitingEvent.proto; sourceTree = "<group>"; };
-		06A887731741DE7000D7805B /* RetrieveNewQuestionsEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RetrieveNewQuestionsEvent.pb.h; sourceTree = "<group>"; };
-		06A887741741DE7000D7805B /* RetrieveNewQuestionsEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RetrieveNewQuestionsEvent.pb.m; sourceTree = "<group>"; };
-		06A887751741DE7000D7805B /* StartRoundEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartRoundEvent.pb.h; sourceTree = "<group>"; };
-		06A887761741DE7000D7805B /* StartRoundEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartRoundEvent.pb.m; sourceTree = "<group>"; };
-		06A887791741DE7C00D7805B /* RetrieveNewQuestionsEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RetrieveNewQuestionsEvent.proto; sourceTree = "<group>"; };
-		06A8877A1741DE7C00D7805B /* StartRoundEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StartRoundEvent.proto; sourceTree = "<group>"; };
-		06A8877D1741DE9400D7805B /* CompletedRoundEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompletedRoundEvent.pb.h; sourceTree = "<group>"; };
-		06A8877E1741DE9400D7805B /* CompletedRoundEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompletedRoundEvent.pb.m; sourceTree = "<group>"; };
-		06A887801741DEA400D7805B /* CompletedRoundEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CompletedRoundEvent.proto; sourceTree = "<group>"; };
 		06A9E5711720D05700969076 /* AMQPConnectionThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQPConnectionThread.h; sourceTree = "<group>"; };
 		06A9E5721720D05700969076 /* AMQPConnectionThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQPConnectionThread.m; sourceTree = "<group>"; };
 		06A9E5741720D0BA00969076 /* AMQPConnectionThreadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQPConnectionThreadDelegate.h; sourceTree = "<group>"; };
@@ -574,16 +639,6 @@
 		06E58AA117445D4D00262A44 /* testimage2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = testimage2.jpg; sourceTree = "<group>"; };
 		06E58AB117446C9900262A44 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		06EDE7E016F1375100BA3A7A /* PublishData.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PublishData.xib; sourceTree = "<group>"; };
-		06F560521731F0B600157FEF /* TypeFillInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeFillInViewController.h; sourceTree = "<group>"; };
-		06F560531731F0B600157FEF /* TypeFillInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TypeFillInViewController.m; sourceTree = "<group>"; };
-		06F560541731F0B600157FEF /* TypeFillInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TypeFillInViewController.xib; sourceTree = "<group>"; };
-		06F8C0C4172F299300A8D348 /* TriviaQuestionFormat.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TriviaQuestionFormat.proto; sourceTree = "<group>"; };
-		06F8C0C6172F29DC00A8D348 /* TriviaRoundFormat.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TriviaRoundFormat.proto; sourceTree = "<group>"; };
-		06F8C0C8172F29EA00A8D348 /* TriviaGameFormat.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TriviaGameFormat.proto; sourceTree = "<group>"; };
-		06F8C0CA172F2F2B00A8D348 /* TriviaGameFormat.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriviaGameFormat.pb.h; sourceTree = "<group>"; };
-		06F8C0CB172F2F2B00A8D348 /* TriviaGameFormat.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriviaGameFormat.pb.m; sourceTree = "<group>"; };
-		06F8C0CC172F2F2C00A8D348 /* TriviaRoundFormat.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriviaRoundFormat.pb.h; sourceTree = "<group>"; };
-		06F8C0CD172F2F2C00A8D348 /* TriviaRoundFormat.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriviaRoundFormat.pb.m; sourceTree = "<group>"; };
 		06F8C0D0172F330A00A8D348 /* ShopMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShopMenu.xib; sourceTree = "<group>"; };
 		06F8C0D1172F330A00A8D348 /* ShopMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopMenu.m; sourceTree = "<group>"; };
 		06F8C0D2172F330A00A8D348 /* ShopMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopMenu.h; sourceTree = "<group>"; };
@@ -664,6 +719,40 @@
 			path = "Icon-Blitz";
 			sourceTree = "<group>";
 		};
+		062931181756D7750073E961 /* Tutorial */ = {
+			isa = PBXGroup;
+			children = (
+				067FA6411759905E00FF0514 /* 3darrow.png */,
+				067FA6421759905E00FF0514 /* 3darrow@2x.png */,
+				0638341717586CF100A0E417 /* circleglow.png */,
+				0638341817586CF100A0E417 /* circleglow@2x.png */,
+				0680E4271758555700BCFCF7 /* next.png */,
+				0680E4281758555700BCFCF7 /* next@2x.png */,
+				0680E4291758555700BCFCF7 /* okay.png */,
+				0680E42A1758555700BCFCF7 /* okay@2x.png */,
+				0680E42B1758555700BCFCF7 /* panda.png */,
+				0680E42C1758555700BCFCF7 /* panda@2x.png */,
+				0680E42D1758555700BCFCF7 /* questionblackout.png */,
+				0680E42E1758555700BCFCF7 /* questionblackout@2x.png */,
+				0680E42F1758555700BCFCF7 /* speechbubble.png */,
+				0680E4301758555700BCFCF7 /* speechbubble@2x.png */,
+			);
+			name = Tutorial;
+			sourceTree = "<group>";
+		};
+		0629312A1756D7D30073E961 /* Tutorial */ = {
+			isa = PBXGroup;
+			children = (
+				0680E40817583E1300BCFCF7 /* TutorialViewController.h */,
+				0680E40917583E1300BCFCF7 /* TutorialViewController.m */,
+				0680E40A17583E1300BCFCF7 /* TutorialViewController.xib */,
+				0680E4051758387700BCFCF7 /* TutorialMultipleChoiceViewController.h */,
+				0680E4061758387700BCFCF7 /* TutorialMultipleChoiceViewController.m */,
+				0680E4031758361600BCFCF7 /* Tutorial.plist */,
+			);
+			name = Tutorial;
+			sourceTree = "<group>";
+		};
 		063DEA481718B72800D8ADE2 /* Communication */ = {
 			isa = PBXGroup;
 			children = (
@@ -690,7 +779,7 @@
 			name = Invite;
 			sourceTree = "<group>";
 		};
-		0658A00F1734C3C1003305CA /* signup */ = {
+		0658A00F1734C3C1003305CA /* Signup */ = {
 			isa = PBXGroup;
 			children = (
 				0658A0101734C3C1003305CA /* createaccount.png */,
@@ -706,6 +795,7 @@
 				0658A01A1734C3C1003305CA /* signupaccountbg.png */,
 				0658A01B1734C3C1003305CA /* signupaccountbg@2x.png */,
 			);
+			name = Signup;
 			path = signup;
 			sourceTree = "<group>";
 		};
@@ -723,34 +813,38 @@
 		066B424B171CCA9900B26CE4 /* ProtoBuffers */ = {
 			isa = PBXGroup;
 			children = (
-				06A8876E1741DE4F00D7805B /* RefillTokensByWaitingEvent.pb.h */,
-				06A8876F1741DE4F00D7805B /* RefillTokensByWaitingEvent.pb.m */,
-				0662BDEA1739BAC5003B1E98 /* ForceLogout.pb.h */,
-				063BC1E7173AFA2600330E98 /* ForceLogout.pb.m */,
-				06F8C0CA172F2F2B00A8D348 /* TriviaGameFormat.pb.h */,
-				06F8C0CB172F2F2B00A8D348 /* TriviaGameFormat.pb.m */,
-				06F8C0CC172F2F2C00A8D348 /* TriviaRoundFormat.pb.h */,
-				06F8C0CD172F2F2C00A8D348 /* TriviaRoundFormat.pb.m */,
-				066B424E171CCA9900B26CE4 /* CommonEventProtocol.pb.h */,
-				066B424F171CCA9900B26CE4 /* CommonEventProtocol.pb.m */,
-				066B4252171CCA9900B26CE4 /* CreateAccountEvent.pb.h */,
-				066B4253171CCA9900B26CE4 /* CreateAccountEvent.pb.m */,
-				066B4254171CCA9900B26CE4 /* Example.pb.h */,
-				066B4255171CCA9900B26CE4 /* Example.pb.m */,
-				066B4256171CCA9900B26CE4 /* LoginEvent.pb.h */,
-				066B4257171CCA9900B26CE4 /* LoginEvent.pb.m */,
-				066B4258171CCA9900B26CE4 /* PicturesEventProtocol.pb.h */,
-				066B4259171CCA9900B26CE4 /* PicturesEventProtocol.pb.m */,
-				066B4266171CCA9900B26CE4 /* TriviaQuestionFormat.pb.h */,
-				066B4267171CCA9900B26CE4 /* TriviaQuestionFormat.pb.m */,
-				0665725D17331D53005496E2 /* User.pb.h */,
-				0665725E17331D53005496E2 /* User.pb.m */,
-				06A887731741DE7000D7805B /* RetrieveNewQuestionsEvent.pb.h */,
-				06A887741741DE7000D7805B /* RetrieveNewQuestionsEvent.pb.m */,
-				06A887751741DE7000D7805B /* StartRoundEvent.pb.h */,
-				06A887761741DE7000D7805B /* StartRoundEvent.pb.m */,
-				06A8877D1741DE9400D7805B /* CompletedRoundEvent.pb.h */,
-				06A8877E1741DE9400D7805B /* CompletedRoundEvent.pb.m */,
+				062AD072174EE0350021D892 /* CommonEventProtocol.pb.h */,
+				062AD073174EE0350021D892 /* CommonEventProtocol.pb.m */,
+				062AD074174EE0350021D892 /* CompletedRoundEvent.pb.h */,
+				062AD075174EE0350021D892 /* CompletedRoundEvent.pb.m */,
+				062AD076174EE0350021D892 /* CreateAccountEvent.pb.h */,
+				062AD077174EE0350021D892 /* CreateAccountEvent.pb.m */,
+				062AD078174EE0360021D892 /* Example.pb.h */,
+				062AD079174EE0360021D892 /* Example.pb.m */,
+				062AD07A174EE0360021D892 /* ForceLogout.pb.h */,
+				062AD07B174EE0360021D892 /* ForceLogout.pb.m */,
+				062AD07C174EE0360021D892 /* LoginEvent.pb.h */,
+				062AD07D174EE0360021D892 /* LoginEvent.pb.m */,
+				062AD07E174EE0360021D892 /* PicturesEventProtocol.pb.h */,
+				062AD07F174EE0360021D892 /* PicturesEventProtocol.pb.m */,
+				065EF15B174EDFD700534D6F /* RefillTokensByWaitingEvent.pb.h */,
+				065EF15C174EDFD700534D6F /* RefillTokensByWaitingEvent.pb.m */,
+				065EF15D174EDFD700534D6F /* RetrieveNewQuestionsEvent.pb.h */,
+				065EF15E174EDFD700534D6F /* RetrieveNewQuestionsEvent.pb.m */,
+				065EF15F174EDFD800534D6F /* SearchForUserEvent.pb.h */,
+				065EF160174EDFD800534D6F /* SearchForUserEvent.pb.m */,
+				065EF161174EDFD800534D6F /* SpendRubiesEvent.pb.h */,
+				065EF162174EDFD900534D6F /* SpendRubiesEvent.pb.m */,
+				065EF163174EDFD900534D6F /* StartRoundEvent.pb.h */,
+				065EF164174EDFD900534D6F /* StartRoundEvent.pb.m */,
+				065EF165174EDFD900534D6F /* TriviaGameFormat.pb.h */,
+				065EF166174EDFD900534D6F /* TriviaGameFormat.pb.m */,
+				065EF167174EDFDA00534D6F /* TriviaQuestionFormat.pb.h */,
+				065EF168174EDFDA00534D6F /* TriviaQuestionFormat.pb.m */,
+				065EF169174EDFDA00534D6F /* TriviaRoundFormat.pb.h */,
+				065EF16A174EDFDA00534D6F /* TriviaRoundFormat.pb.m */,
+				065EF16B174EDFDB00534D6F /* User.pb.h */,
+				065EF16C174EDFDB00534D6F /* User.pb.m */,
 				066B425A171CCA9900B26CE4 /* ProtoFiles */,
 			);
 			path = ProtoBuffers;
@@ -759,20 +853,22 @@
 		066B425A171CCA9900B26CE4 /* ProtoFiles */ = {
 			isa = PBXGroup;
 			children = (
-				06A887801741DEA400D7805B /* CompletedRoundEvent.proto */,
-				06A887791741DE7C00D7805B /* RetrieveNewQuestionsEvent.proto */,
-				06A8877A1741DE7C00D7805B /* StartRoundEvent.proto */,
-				06A887711741DE5F00D7805B /* RefillTokensByWaitingEvent.proto */,
-				0662BDE51739BA87003B1E98 /* ForceLogout.proto */,
-				066B425C171CCA9900B26CE4 /* CommonEventProtocol.proto */,
-				0665726017331D58005496E2 /* User.proto */,
-				06F8C0C8172F29EA00A8D348 /* TriviaGameFormat.proto */,
-				06F8C0C6172F29DC00A8D348 /* TriviaRoundFormat.proto */,
-				06F8C0C4172F299300A8D348 /* TriviaQuestionFormat.proto */,
-				066B425E171CCA9900B26CE4 /* CreateAccountEvent.proto */,
-				066B425F171CCA9900B26CE4 /* Example.proto */,
-				066B4260171CCA9900B26CE4 /* LoginEvent.proto */,
-				066B4261171CCA9900B26CE4 /* PicturesEventProtocol.proto */,
+				062AD087174EE05B0021D892 /* CommonEventProtocol.proto */,
+				062AD088174EE05B0021D892 /* CompletedRoundEvent.proto */,
+				062AD089174EE05B0021D892 /* CreateAccountEvent.proto */,
+				062AD08A174EE05B0021D892 /* Example.proto */,
+				062AD08B174EE05B0021D892 /* ForceLogout.proto */,
+				062AD08C174EE05B0021D892 /* LoginEvent.proto */,
+				062AD08D174EE05B0021D892 /* PicturesEventProtocol.proto */,
+				062AD08E174EE05B0021D892 /* RefillTokensByWaitingEvent.proto */,
+				062AD08F174EE05B0021D892 /* RetrieveNewQuestionsEvent.proto */,
+				062AD090174EE05B0021D892 /* SearchForUserEvent.proto */,
+				062AD091174EE05B0021D892 /* SpendRubiesEvent.proto */,
+				062AD092174EE05B0021D892 /* StartRoundEvent.proto */,
+				062AD093174EE05B0021D892 /* TriviaGameFormat.proto */,
+				062AD094174EE05B0021D892 /* TriviaQuestionFormat.proto */,
+				062AD095174EE05B0021D892 /* TriviaRoundFormat.proto */,
+				062AD096174EE05B0021D892 /* User.proto */,
 			);
 			path = ProtoFiles;
 			sourceTree = "<group>";
@@ -840,6 +936,7 @@
 		0673C3E916F0379D00B5A586 /* Icon-Blitz */ = {
 			isa = PBXGroup;
 			children = (
+				0629312A1756D7D30073E961 /* Tutorial */,
 				066B424B171CCA9900B26CE4 /* ProtoBuffers */,
 				063DEA481718B72800D8ADE2 /* Communication */,
 				06989ED916FAB41100F38F83 /* MainData */,
@@ -864,7 +961,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		06773A5B172243FC00B11F3F /* game summary */ = {
+		06773A5B172243FC00B11F3F /* Game Summary */ = {
 			isa = PBXGroup;
 			children = (
 				06FF5C211743350E006D37C4 /* spinnerbg.png */,
@@ -882,6 +979,7 @@
 				06773A66172243FC00B11F3F /* vs.png */,
 				06773A67172243FC00B11F3F /* vs@2x.png */,
 			);
+			name = "Game Summary";
 			path = "game summary";
 			sourceTree = "<group>";
 		};
@@ -891,9 +989,6 @@
 				067301B3173D9805001C507A /* FillInTypeViewController.h */,
 				067301B4173D9805001C507A /* FillInTypeViewController.m */,
 				067301B5173D9805001C507A /* FillInTypeViewController.xib */,
-				06F560521731F0B600157FEF /* TypeFillInViewController.h */,
-				06F560531731F0B600157FEF /* TypeFillInViewController.m */,
-				06F560541731F0B600157FEF /* TypeFillInViewController.xib */,
 				069DE72E170E199D009A5C46 /* MultipleChoiceViewController.h */,
 				069DE72F170E199D009A5C46 /* MultipleChoiceViewController.m */,
 				069DE730170E199D009A5C46 /* MultipleChoiceViewController.xib */,
@@ -936,7 +1031,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		068CB2BA1728CA620029E755 /* coin shop */ = {
+		068CB2BA1728CA620029E755 /* Coin Shop */ = {
 			isa = PBXGroup;
 			children = (
 				068CB2BB1728CA620029E755 /* closex.png */,
@@ -948,10 +1043,11 @@
 				068CB2C11728CA620029E755 /* purplebutton.png */,
 				068CB2C21728CA620029E755 /* purplebutton@2x.png */,
 			);
+			name = "Coin Shop";
 			path = "coin shop";
 			sourceTree = "<group>";
 		};
-		068CB2CB1728CAC10029E755 /* homestuff */ = {
+		068CB2CB1728CAC10029E755 /* Homestuff */ = {
 			isa = PBXGroup;
 			children = (
 				06CBE8B7172A248500DCA20C /* coinoverlay.png */,
@@ -983,6 +1079,7 @@
 				068CB2DE1728CAC30029E755 /* yourturnbg.png */,
 				068CB2DF1728CAC30029E755 /* yourturnbg@2x.png */,
 			);
+			name = Homestuff;
 			path = homestuff;
 			sourceTree = "<group>";
 		};
@@ -1017,16 +1114,17 @@
 		06989EA616FAA85200F38F83 /* Icon Blitz Img */ = {
 			isa = PBXGroup;
 			children = (
-				0658A00F1734C3C1003305CA /* signup */,
-				068CB2CB1728CAC10029E755 /* homestuff */,
-				068CB2BA1728CA620029E755 /* coin shop */,
-				06773A5B172243FC00B11F3F /* game summary */,
-				06A5474D17138A810049C53A /* startgame home img */,
-				069DE738170E2E9F009A5C46 /* fb images */,
+				062931181756D7750073E961 /* Tutorial */,
+				0658A00F1734C3C1003305CA /* Signup */,
+				068CB2CB1728CAC10029E755 /* Homestuff */,
+				068CB2BA1728CA620029E755 /* Coin Shop */,
+				06773A5B172243FC00B11F3F /* Game Summary */,
+				06A5474D17138A810049C53A /* Startgame */,
+				069DE738170E2E9F009A5C46 /* FB Images */,
 				06B38C7B170B7347008D9BB8 /* Fonts */,
 				06B38C7A170B7333008D9BB8 /* Fillin */,
 				06B38C79170B7328008D9BB8 /* MainGame */,
-				06B38C6D170B731B008D9BB8 /* multiplechoice */,
+				06B38C6D170B731B008D9BB8 /* Multiplechoice */,
 			);
 			path = "Icon Blitz Img";
 			sourceTree = "<group>";
@@ -1063,7 +1161,7 @@
 			name = MainData;
 			sourceTree = "<group>";
 		};
-		069DE738170E2E9F009A5C46 /* fb images */ = {
+		069DE738170E2E9F009A5C46 /* FB Images */ = {
 			isa = PBXGroup;
 			children = (
 				060213E2171374F6008FDB19 /* fbblackcircle.png */,
@@ -1077,6 +1175,7 @@
 				069DE73F170E2E9F009A5C46 /* fbcircle.png */,
 				069DE740170E2E9F009A5C46 /* fbcircle@2x.png */,
 			);
+			name = "FB Images";
 			path = "fb images";
 			sourceTree = "<group>";
 		};
@@ -1143,7 +1242,7 @@
 			name = AMQP;
 			sourceTree = "<group>";
 		};
-		06A5474D17138A810049C53A /* startgame home img */ = {
+		06A5474D17138A810049C53A /* Startgame */ = {
 			isa = PBXGroup;
 			children = (
 				06A5475017138A810049C53A /* facebookstart.png */,
@@ -1155,6 +1254,7 @@
 				06A5475A17138A810049C53A /* usernamestart.png */,
 				06A5475B17138A810049C53A /* usernamestart@2x.png */,
 			);
+			name = Startgame;
 			path = "startgame home img";
 			sourceTree = "<group>";
 		};
@@ -1167,7 +1267,7 @@
 			name = OpenUDID;
 			sourceTree = "<group>";
 		};
-		06B38C6D170B731B008D9BB8 /* multiplechoice */ = {
+		06B38C6D170B731B008D9BB8 /* Multiplechoice */ = {
 			isa = PBXGroup;
 			children = (
 				06B38C6E170B731B008D9BB8 /* answerbar.png */,
@@ -1175,13 +1275,21 @@
 				06B38C70170B731B008D9BB8 /* answerbottom.png */,
 				06B38C71170B731B008D9BB8 /* answerbottom@2x.png */,
 			);
-			name = multiplechoice;
+			name = Multiplechoice;
 			path = ../multiplechoice;
 			sourceTree = "<group>";
 		};
 		06B38C79170B7328008D9BB8 /* MainGame */ = {
 			isa = PBXGroup;
 			children = (
+				067EA925175FEA2B00E6C0B3 /* clock.png */,
+				067EA926175FEA2B00E6C0B3 /* clock@2x.png */,
+				067EA927175FEA2B00E6C0B3 /* freezebutton.png */,
+				067EA928175FEA2B00E6C0B3 /* freezebutton@2x.png */,
+				067EA929175FEA2B00E6C0B3 /* optionsbutton.png */,
+				067EA92A175FEA2B00E6C0B3 /* optionsbutton@2x.png */,
+				067EA92B175FEA2B00E6C0B3 /* skipbutton.png */,
+				067EA92C175FEA2B00E6C0B3 /* skipbutton@2x.png */,
 				0612FB60173090D700DA0D5B /* iconbg.png */,
 				0612FB61173090D700DA0D5B /* iconbg@2x.png */,
 				0612FB62173090D700DA0D5B /* questionicon.png */,
@@ -1192,8 +1300,6 @@
 				066B4241171CB23400B26CE4 /* correct@2x.png */,
 				06989EA716FAA85200F38F83 /* background.png */,
 				06989EA816FAA85200F38F83 /* background@2x.png */,
-				06989EAF16FAA85200F38F83 /* freezebutton.png */,
-				06989EB016FAA85200F38F83 /* freezebutton@2x.png */,
 				06989EB316FAA85200F38F83 /* timer.png */,
 				06989EB416FAA85200F38F83 /* timer@2x.png */,
 				06989EB516FAA85200F38F83 /* topbar.png */,
@@ -1413,8 +1519,6 @@
 				0673C3FA16F0379D00B5A586 /* Default-568h@2x.png in Resources */,
 				06989EC116FAA85200F38F83 /* divider.png in Resources */,
 				06989EC216FAA85200F38F83 /* divider@2x.png in Resources */,
-				06989EC316FAA85200F38F83 /* freezebutton.png in Resources */,
-				06989EC416FAA85200F38F83 /* freezebutton@2x.png in Resources */,
 				06989EC516FAA85200F38F83 /* pointsbg.png in Resources */,
 				06989EC616FAA85200F38F83 /* pointsbg@2x.png in Resources */,
 				06989EC716FAA85200F38F83 /* timer.png in Resources */,
@@ -1461,11 +1565,6 @@
 				066B4243171CB23400B26CE4 /* wrongt@2x.png in Resources */,
 				066B4244171CB23400B26CE4 /* correct.png in Resources */,
 				066B4245171CB23400B26CE4 /* correct@2x.png in Resources */,
-				066B4270171CCA9A00B26CE4 /* CommonEventProtocol.proto in Resources */,
-				066B4272171CCA9A00B26CE4 /* CreateAccountEvent.proto in Resources */,
-				066B4273171CCA9A00B26CE4 /* Example.proto in Resources */,
-				066B4274171CCA9A00B26CE4 /* LoginEvent.proto in Resources */,
-				066B4275171CCA9A00B26CE4 /* PicturesEventProtocol.proto in Resources */,
 				066B4280171CD65200B26CE4 /* SignUpViewController.xib in Resources */,
 				06773A68172243FC00B11F3F /* blueplayer.png in Resources */,
 				06773A69172243FC00B11F3F /* blueplayer@2x.png in Resources */,
@@ -1518,17 +1617,12 @@
 				068CB2FF1728DCC80029E755 /* startnewgame@2x.png in Resources */,
 				06CBE8B9172A248500DCA20C /* coinoverlay.png in Resources */,
 				06CBE8BA172A248500DCA20C /* coinoverlay@2x.png in Resources */,
-				06F8C0C5172F299300A8D348 /* TriviaQuestionFormat.proto in Resources */,
-				06F8C0C7172F29DC00A8D348 /* TriviaRoundFormat.proto in Resources */,
-				06F8C0C9172F29EA00A8D348 /* TriviaGameFormat.proto in Resources */,
 				06F8C0D3172F330A00A8D348 /* ShopMenu.xib in Resources */,
 				0612FB64173090D700DA0D5B /* iconbg.png in Resources */,
 				0612FB65173090D700DA0D5B /* iconbg@2x.png in Resources */,
 				0612FB66173090D700DA0D5B /* questionicon.png in Resources */,
 				0612FB67173090D700DA0D5B /* questionicon@2x.png in Resources */,
 				0612FB7617309D8F00DA0D5B /* IconQuestionView.xib in Resources */,
-				06F560561731F0B600157FEF /* TypeFillInViewController.xib in Resources */,
-				0665726117331D58005496E2 /* User.proto in Resources */,
 				0658A01C1734C3C1003305CA /* createaccount.png in Resources */,
 				0658A01D1734C3C1003305CA /* createaccount@2x.png in Resources */,
 				0658A01E1734C3C1003305CA /* emaillogin.png in Resources */,
@@ -1541,16 +1635,51 @@
 				0658A0251734C3C1003305CA /* nameinput@2x.png in Resources */,
 				0658A0261734C3C1003305CA /* signupaccountbg.png in Resources */,
 				0658A0271734C3C1003305CA /* signupaccountbg@2x.png in Resources */,
-				0662BDE61739BA87003B1E98 /* ForceLogout.proto in Resources */,
 				067301B7173D9805001C507A /* FillInTypeViewController.xib in Resources */,
-				06A887721741DE5F00D7805B /* RefillTokensByWaitingEvent.proto in Resources */,
-				06A8877B1741DE7C00D7805B /* RetrieveNewQuestionsEvent.proto in Resources */,
-				06A8877C1741DE7C00D7805B /* StartRoundEvent.proto in Resources */,
-				06A887811741DEA400D7805B /* CompletedRoundEvent.proto in Resources */,
 				06FF5C231743350E006D37C4 /* spinnerbg.png in Resources */,
 				06FF5C241743350E006D37C4 /* spinnerbg@2x.png in Resources */,
 				06E58AA217445D4D00262A44 /* testimage1.jpg in Resources */,
 				06E58AA317445D4D00262A44 /* testimage2.jpg in Resources */,
+				062AD097174EE05B0021D892 /* CommonEventProtocol.proto in Resources */,
+				062AD098174EE05B0021D892 /* CompletedRoundEvent.proto in Resources */,
+				062AD099174EE05B0021D892 /* CreateAccountEvent.proto in Resources */,
+				062AD09A174EE05B0021D892 /* Example.proto in Resources */,
+				062AD09B174EE05B0021D892 /* ForceLogout.proto in Resources */,
+				062AD09C174EE05B0021D892 /* LoginEvent.proto in Resources */,
+				062AD09D174EE05B0021D892 /* PicturesEventProtocol.proto in Resources */,
+				062AD09E174EE05B0021D892 /* RefillTokensByWaitingEvent.proto in Resources */,
+				062AD09F174EE05B0021D892 /* RetrieveNewQuestionsEvent.proto in Resources */,
+				062AD0A0174EE05B0021D892 /* SearchForUserEvent.proto in Resources */,
+				062AD0A1174EE05B0021D892 /* SpendRubiesEvent.proto in Resources */,
+				062AD0A2174EE05B0021D892 /* StartRoundEvent.proto in Resources */,
+				062AD0A3174EE05B0021D892 /* TriviaGameFormat.proto in Resources */,
+				062AD0A4174EE05B0021D892 /* TriviaQuestionFormat.proto in Resources */,
+				062AD0A5174EE05B0021D892 /* TriviaRoundFormat.proto in Resources */,
+				062AD0A6174EE05B0021D892 /* User.proto in Resources */,
+				0680E4041758361600BCFCF7 /* Tutorial.plist in Resources */,
+				0680E40C17583E1300BCFCF7 /* TutorialViewController.xib in Resources */,
+				0680E4331758555700BCFCF7 /* next.png in Resources */,
+				0680E4341758555700BCFCF7 /* next@2x.png in Resources */,
+				0680E4351758555700BCFCF7 /* okay.png in Resources */,
+				0680E4361758555700BCFCF7 /* okay@2x.png in Resources */,
+				0680E4371758555700BCFCF7 /* panda.png in Resources */,
+				0680E4381758555700BCFCF7 /* panda@2x.png in Resources */,
+				0680E4391758555700BCFCF7 /* questionblackout.png in Resources */,
+				0680E43A1758555700BCFCF7 /* questionblackout@2x.png in Resources */,
+				0680E43B1758555700BCFCF7 /* speechbubble.png in Resources */,
+				0680E43C1758555700BCFCF7 /* speechbubble@2x.png in Resources */,
+				0638341917586CF100A0E417 /* circleglow.png in Resources */,
+				0638341A17586CF100A0E417 /* circleglow@2x.png in Resources */,
+				067FA6431759905F00FF0514 /* 3darrow.png in Resources */,
+				067FA6441759905F00FF0514 /* 3darrow@2x.png in Resources */,
+				067EA92D175FEA2B00E6C0B3 /* clock.png in Resources */,
+				067EA92E175FEA2B00E6C0B3 /* clock@2x.png in Resources */,
+				067EA92F175FEA2B00E6C0B3 /* freezebutton.png in Resources */,
+				067EA930175FEA2B00E6C0B3 /* freezebutton@2x.png in Resources */,
+				067EA931175FEA2B00E6C0B3 /* optionsbutton.png in Resources */,
+				067EA932175FEA2B00E6C0B3 /* optionsbutton@2x.png in Resources */,
+				067EA933175FEA2B00E6C0B3 /* skipbutton.png in Resources */,
+				067EA934175FEA2B00E6C0B3 /* skipbutton@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1561,6 +1690,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				065EF159174EDD7500534D6F /* IAPHelper.m in Sources */,
+				065EF15A174EDD7500534D6F /* TriviaBlitzIAPHelper.m in Sources */,
 				0673C3F016F0379D00B5A586 /* main.m in Sources */,
 				0673C3F416F0379D00B5A586 /* AppDelegate.m in Sources */,
 				0673C3FD16F0379D00B5A586 /* ViewController.m in Sources */,
@@ -1578,12 +1709,6 @@
 				06A5477D1713A53B0049C53A /* HomeCell.m in Sources */,
 				06BDCF141713B74E0036DDC5 /* ChallengeTypeViewController.m in Sources */,
 				063DEA4B1718B77B00D8ADE2 /* FullEvent.m in Sources */,
-				066B4269171CCA9900B26CE4 /* CommonEventProtocol.pb.m in Sources */,
-				066B426B171CCA9900B26CE4 /* CreateAccountEvent.pb.m in Sources */,
-				066B426C171CCA9900B26CE4 /* Example.pb.m in Sources */,
-				066B426D171CCA9900B26CE4 /* LoginEvent.pb.m in Sources */,
-				066B426E171CCA9A00B26CE4 /* PicturesEventProtocol.pb.m in Sources */,
-				066B4279171CCA9A00B26CE4 /* TriviaQuestionFormat.pb.m in Sources */,
 				066B427F171CD65200B26CE4 /* SignUpViewController.m in Sources */,
 				068AF4C0171E36330090E4DB /* SocketCommunication.m in Sources */,
 				068AF4D2171E4CBF0090E4DB /* Userinfo.m in Sources */,
@@ -1608,25 +1733,32 @@
 				06773A771722445500B11F3F /* ScoreViewController.m in Sources */,
 				068ED7DA17274B0D00744C8D /* LoginViewController.m in Sources */,
 				068CB2A81728A3F00029E755 /* CreateAccountViewController.m in Sources */,
-				06F8C0CE172F2F2C00A8D348 /* TriviaGameFormat.pb.m in Sources */,
-				06F8C0CF172F2F2C00A8D348 /* TriviaRoundFormat.pb.m in Sources */,
 				06F8C0D4172F330A00A8D348 /* ShopMenu.m in Sources */,
 				06F8C0E3172F4B3B00A8D348 /* Utilities.m in Sources */,
 				0612FB6A173095EE00DA0D5B /* IconQuestionView.m in Sources */,
 				0612FB711730999E00DA0D5B /* JRSwizzle.m in Sources */,
 				0612FB74173099A800DA0D5B /* UINavigationController+PushPopRotated.m in Sources */,
-				06F560551731F0B600157FEF /* TypeFillInViewController.m in Sources */,
-				0665725F17331D53005496E2 /* User.pb.m in Sources */,
 				06FF59AC17385EC0003741A6 /* TextFieldIndentation.m in Sources */,
-				063BC1E8173AFA2600330E98 /* ForceLogout.pb.m in Sources */,
 				063BC1F4173B1F1200330E98 /* LoadingView.m in Sources */,
 				067301B6173D9805001C507A /* FillInTypeViewController.m in Sources */,
-				06A887701741DE4F00D7805B /* RefillTokensByWaitingEvent.pb.m in Sources */,
-				06A887771741DE7000D7805B /* RetrieveNewQuestionsEvent.pb.m in Sources */,
-				06A887781741DE7000D7805B /* StartRoundEvent.pb.m in Sources */,
-				06A8877F1741DE9400D7805B /* CompletedRoundEvent.pb.m in Sources */,
-				06FF5C1D1742FF0E006D37C4 /* IAPHelper.m in Sources */,
-				06FF5C20174301A6006D37C4 /* TriviaBlitzIAPHelper.m in Sources */,
+				065EF16D174EDFDB00534D6F /* RefillTokensByWaitingEvent.pb.m in Sources */,
+				065EF16E174EDFDB00534D6F /* RetrieveNewQuestionsEvent.pb.m in Sources */,
+				065EF16F174EDFDB00534D6F /* SearchForUserEvent.pb.m in Sources */,
+				065EF170174EDFDB00534D6F /* SpendRubiesEvent.pb.m in Sources */,
+				065EF171174EDFDB00534D6F /* StartRoundEvent.pb.m in Sources */,
+				065EF172174EDFDB00534D6F /* TriviaGameFormat.pb.m in Sources */,
+				065EF173174EDFDB00534D6F /* TriviaQuestionFormat.pb.m in Sources */,
+				065EF174174EDFDB00534D6F /* TriviaRoundFormat.pb.m in Sources */,
+				065EF175174EDFDB00534D6F /* User.pb.m in Sources */,
+				062AD080174EE0360021D892 /* CommonEventProtocol.pb.m in Sources */,
+				062AD081174EE0360021D892 /* CompletedRoundEvent.pb.m in Sources */,
+				062AD082174EE0360021D892 /* CreateAccountEvent.pb.m in Sources */,
+				062AD083174EE0360021D892 /* Example.pb.m in Sources */,
+				062AD084174EE0360021D892 /* ForceLogout.pb.m in Sources */,
+				062AD085174EE0360021D892 /* LoginEvent.pb.m in Sources */,
+				062AD086174EE0360021D892 /* PicturesEventProtocol.pb.m in Sources */,
+				0680E4071758387700BCFCF7 /* TutorialMultipleChoiceViewController.m in Sources */,
+				0680E40B17583E1300BCFCF7 /* TutorialViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,8 @@
 @class BasicUserProto_Builder;
 @class CompleteUserProto;
 @class CompleteUserProto_Builder;
+@class UserCurrencyProto;
+@class UserCurrencyProto_Builder;
 
 @interface UserRoot : NSObject {
 }
@@ -212,6 +214,72 @@
 - (BasicAuthorizedDeviceProto_Builder*) clearDeviceId;
 @end
 
+@interface UserCurrencyProto : PBGeneratedMessage {
+@private
+  BOOL hasLastTokenRefillTime_:1;
+  BOOL hasNumTokens_:1;
+  BOOL hasNumRubies_:1;
+  int64_t lastTokenRefillTime;
+  int32_t numTokens;
+  int32_t numRubies;
+}
+- (BOOL) hasNumTokens;
+- (BOOL) hasLastTokenRefillTime;
+- (BOOL) hasNumRubies;
+@property (readonly) int32_t numTokens;
+@property (readonly) int64_t lastTokenRefillTime;
+@property (readonly) int32_t numRubies;
+
++ (UserCurrencyProto*) defaultInstance;
+- (UserCurrencyProto*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (UserCurrencyProto_Builder*) builder;
++ (UserCurrencyProto_Builder*) builder;
++ (UserCurrencyProto_Builder*) builderWithPrototype:(UserCurrencyProto*) prototype;
+
++ (UserCurrencyProto*) parseFromData:(NSData*) data;
++ (UserCurrencyProto*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (UserCurrencyProto*) parseFromInputStream:(NSInputStream*) input;
++ (UserCurrencyProto*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (UserCurrencyProto*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (UserCurrencyProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface UserCurrencyProto_Builder : PBGeneratedMessage_Builder {
+@private
+  UserCurrencyProto* result;
+}
+
+- (UserCurrencyProto*) defaultInstance;
+
+- (UserCurrencyProto_Builder*) clear;
+- (UserCurrencyProto_Builder*) clone;
+
+- (UserCurrencyProto*) build;
+- (UserCurrencyProto*) buildPartial;
+
+- (UserCurrencyProto_Builder*) mergeFrom:(UserCurrencyProto*) other;
+- (UserCurrencyProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (UserCurrencyProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasNumTokens;
+- (int32_t) numTokens;
+- (UserCurrencyProto_Builder*) setNumTokens:(int32_t) value;
+- (UserCurrencyProto_Builder*) clearNumTokens;
+
+- (BOOL) hasLastTokenRefillTime;
+- (int64_t) lastTokenRefillTime;
+- (UserCurrencyProto_Builder*) setLastTokenRefillTime:(int64_t) value;
+- (UserCurrencyProto_Builder*) clearLastTokenRefillTime;
+
+- (BOOL) hasNumRubies;
+- (int32_t) numRubies;
+- (UserCurrencyProto_Builder*) setNumRubies:(int32_t) value;
+- (UserCurrencyProto_Builder*) clearNumRubies;
+@end
+
 @interface CompleteUserProto : PBGeneratedMessage {
 @private
   BOOL hasLastLogin_:1;
@@ -223,8 +291,9 @@
   BOOL hasPassword_:1;
   BOOL hasFacebookId_:1;
   BOOL hasBadp_:1;
+  BOOL hasCurrency_:1;
   int64_t lastLogin;
-  int32_t signupDate;
+  int64_t signupDate;
   NSString* userId;
   NSString* nameStrangersSee;
   NSString* nameFriendsSee;
@@ -232,6 +301,7 @@
   NSString* password;
   NSString* facebookId;
   BasicAuthorizedDeviceProto* badp;
+  UserCurrencyProto* currency;
 }
 - (BOOL) hasUserId;
 - (BOOL) hasNameStrangersSee;
@@ -242,6 +312,7 @@
 - (BOOL) hasBadp;
 - (BOOL) hasLastLogin;
 - (BOOL) hasSignupDate;
+- (BOOL) hasCurrency;
 @property (readonly, retain) NSString* userId;
 @property (readonly, retain) NSString* nameStrangersSee;
 @property (readonly, retain) NSString* nameFriendsSee;
@@ -250,7 +321,8 @@
 @property (readonly, retain) NSString* facebookId;
 @property (readonly, retain) BasicAuthorizedDeviceProto* badp;
 @property (readonly) int64_t lastLogin;
-@property (readonly) int32_t signupDate;
+@property (readonly) int64_t signupDate;
+@property (readonly, retain) UserCurrencyProto* currency;
 
 + (CompleteUserProto*) defaultInstance;
 - (CompleteUserProto*) defaultInstance;
@@ -329,8 +401,15 @@
 - (CompleteUserProto_Builder*) clearLastLogin;
 
 - (BOOL) hasSignupDate;
-- (int32_t) signupDate;
-- (CompleteUserProto_Builder*) setSignupDate:(int32_t) value;
+- (int64_t) signupDate;
+- (CompleteUserProto_Builder*) setSignupDate:(int64_t) value;
 - (CompleteUserProto_Builder*) clearSignupDate;
+
+- (BOOL) hasCurrency;
+- (UserCurrencyProto*) currency;
+- (CompleteUserProto_Builder*) setCurrency:(UserCurrencyProto*) value;
+- (CompleteUserProto_Builder*) setCurrencyBuilder:(UserCurrencyProto_Builder*) builderForValue;
+- (CompleteUserProto_Builder*) mergeCurrency:(UserCurrencyProto*) value;
+- (CompleteUserProto_Builder*) clearCurrency;
 @end
 

@@ -1,0 +1,25 @@
+import "User.proto";
+
+package proto;
+
+option java_package = "com.lvl6.pictures.eventprotos";
+option java_outer_classname = "SearchForUserEventProto";
+
+message SearchForUserRequestProto {
+	optional BasicUserProto sender = 1;
+	optional string nameOfPerson = 2;
+}
+
+message SearchForUserResponseProto {
+	optional BasicUserProto recipient = 1;
+	
+	optional int32 nameOfPersonId = 2;
+	optional SearchForUserStatus status = 3;
+	
+	enum SearchForUserStatus {
+		SUCCESS = 1;
+		FAIL_PERSON_NOT_FOUND = 2;
+		FAIL_OTHER = 3;
+	}
+	
+}
