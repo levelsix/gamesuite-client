@@ -58,7 +58,7 @@ typedef enum {
 }
 
 - (IBAction)back:(id)sender {
-  [self.navigationController popViewControllerAnimated:YES];
+  [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (IBAction)login:(id)sender {

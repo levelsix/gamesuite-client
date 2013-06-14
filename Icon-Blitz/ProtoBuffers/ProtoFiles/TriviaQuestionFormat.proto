@@ -3,6 +3,24 @@ package proto;
 option java_package = "com.lvl6.pictures.noneventprotos";
 option java_outer_classname = "TriviaQuestionFormatProto";
 
+message QuestionAnsweredProto {
+	//id of the question that was answered
+	optional string questionId = 1;
+	optional AnswerType answerType = 2;
+	
+	//used to determine the order the user saw the questions
+	optional int32 questionNumber = 3;
+	
+	//the time the user saw the question
+	optional int64 timeAnswered = 4;
+	
+	enum AnswerType {
+		CORRECT = 1;
+		INCORRECT = 2;
+		SKIPPED = 3;
+	}
+}
+
 message QuestionProto {
 	//uniquely identifies this question (id string used in the db)
 	optional string id = 1;

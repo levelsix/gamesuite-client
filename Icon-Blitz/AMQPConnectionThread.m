@@ -7,14 +7,15 @@
 //
 
 #import "AMQPConnectionThread.h"
-#import "StaticProperties.h"
+#import "ClientProperties.h"
 
 #import "amqp.h"
 #import "amqp_framing.h"
 #import "UserInfo.h"
 
-#define UDID_KEY = [NSString stringWithFormat:@"client_udid_%@",_udid];
-#define USER_ID_KEY [NSString stringWithFormat:@"client_userid_%d", gs.userId]
+#define UDID_KEY [NSString stringWithFormat:@"client_udid_%@",_udid];
+#define USER_ID_KEY [NSString stringWithFormat:@"client_userid_%d",userId]
+#define ROUTING_KEY @"messagesFromPlayers"
 
 @implementation AMQPConnectionThread 
 
@@ -26,9 +27,11 @@ static int sessionId;
 }
 
 - (void)initConnection {
+  NSLog(@"Initializing connection..");
   @try {
     sessionId = arc4random();
     [self endConnection];
+    
     _connection = [[AMQPConnection alloc] init];
     [_connection connectToHost:HOST_NAME onPort:HOST_PORT];
     [_connection loginAsUser:MQ_USERNAME withPassword:MQ_PASSWORD onVHost:MQ_VHOST];
@@ -38,7 +41,7 @@ static int sessionId;
     
     _topicExchange = [[AMQPExchange alloc] initTopicExchangeWithName:@"chatmessages" onChannel:channel isPassive:NO isDurable:YES];
     
-    NSString *udidKey = @"whatever"; //udid
+    NSString *udidKey = UDID_KEY //udid
     _udidQueue = [[AMQPQueue alloc] initWithName:[udidKey stringByAppendingFormat:@"_%d_queue", sessionId] onChannel:channel isPassive:NO isExclusive:NO isDurable:YES getsAutoDeleted:YES];
     [_udidQueue bindToExchange:_directExchange withKey:udidKey];
     _udidConsumer  = [_udidQueue startConsumerWithAcknowledgements:NO isExclusive:NO receiveLocalMessages:YES];
@@ -59,11 +62,10 @@ static int sessionId;
 }
 
 - (void)initUserIdMessageQueue {
-  NSString *useridKey = @"whatever"; // userid
+  NSString *useridKey = nil;
   _useridQueue = [[AMQPQueue alloc] initWithName:[useridKey stringByAppendingFormat:@"_%d_queue", sessionId]  onChannel:_udidConsumer.channel  isPassive:NO isExclusive:NO isDurable:YES getsAutoDeleted:YES];
   [_useridQueue bindToExchange:_directExchange withKey:useridKey];
   _useridConsumer = [_useridQueue startConsumerWithAcknowledgements:NO isExclusive:NO receiveLocalMessages:YES];
-  
 }
 
 - (void)endConnection {
@@ -93,7 +95,7 @@ static int sessionId;
 }
 
 - (void)postDataToExchange:(NSData *)data {
-  [_directExchange publishMessageWithData:data usingRoutingKey:@"messageFromPlayers"];
+  [_directExchange publishMessageWithData:data usingRoutingKey:ROUTING_KEY];
 }
 
 - (void)end {
@@ -118,10 +120,8 @@ static int sessionId;
         }
       }
     }
-		
 		}
 	}
-  
   
   [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:10]];
   

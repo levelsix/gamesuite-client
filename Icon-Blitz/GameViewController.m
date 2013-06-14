@@ -16,6 +16,9 @@
 #import "SocketCommunication.h" 
 #import "TutorialMultipleChoiceViewController.h"
 
+#define Tutorial_Timer 60
+#define Regular_Game_Timer 120
+
 @interface GameViewController () {
   int freezeCounter;
   int pointsBefore;
@@ -23,6 +26,7 @@
   int timeAfter;
   NSTimer *freezeTimer;
   CGRect gameRect;
+  CGRect originalTriviaLabelFrame;
 }
 - (void)youLose;
 @end
@@ -47,6 +51,8 @@
     [self.view addSubview:self.currentController.view];
     self.isTutorial = YES;
     gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
+    self.triviaType.text = [NSString stringWithFormat:@"Multiple Choice Fact"];
+    [self startTimer];
   }
   return self;
 }
@@ -72,6 +78,12 @@
 - (void)tutorialCheatUsed {
   if ([self.delegate respondsToSelector:@selector(tutorialCheatClicked)]) {
     [self.delegate tutorialCheatClicked];
+  }
+}
+
+- (void)tutorialFreezeUsed {
+  if ([self.delegate respondsToSelector:@selector(tutorialFreezeClicked)]) {
+    [self.delegate tutorialFreezeClicked];
   }
 }
 
@@ -112,6 +124,84 @@
   [self fadeInLabelWithAmount:10 add:YES andNumberType:kPointType];
 }
 
+- (void)pushToTutorialFillInIconView {
+  NSArray *selectionArray = [[NSArray alloc] initWithObjects:@"A",@"B",@"T",@"X",@"Y",@"Z",@"N",@"M",@"A",@"N",@"Q",@"L",@"R",@"D", nil];
+  NSMutableDictionary *question = [NSMutableDictionary dictionary];
+  [question setObject:[NSNumber numberWithInt:6] forKey:@"letterCount"];
+  [question setObject:[NSNumber numberWithInt:1] forKey:@"numberOfLines"];
+  [question setObject:[NSNumber numberWithInt:6] forKey:@"firstLineCount"];
+  [question setObject:[NSNumber numberWithInt:0] forKey:@"secondLineCount"];
+  [question setObject:@"BATMAN" forKey:@"correctAnswer"];
+  [question setObject:selectionArray forKey:@"selectionSlots"];
+  
+  UIViewController *newController = [[FillInTypeViewController alloc] initWithTutorialIconQuestion:self questionData:[question copy] iconQuestion:YES];
+  
+  [newController.view layoutIfNeeded];
+  CGRect newFrame = CGRectMake(self.view.bounds.size.width, gameRect.origin.y, gameRect.size.width, gameRect.size.height);
+  CGPoint offFrame = CGPointMake(-self.view.bounds.size.width, self.currentController.view.center.y);
+  newController.view.frame = newFrame;
+  
+  [self.currentController willMoveToParentViewController:nil];
+  [self addChildViewController:newController];
+  
+  [self.view addSubview:newController.view];
+  
+  [self.currentController willMoveToParentViewController:nil];
+  
+  __weak __block GameViewController  *weakSelf = self;
+  [UIView animateWithDuration:0.4 animations:^{
+    self.currentController.view.center = offFrame;
+    newController.view.frame = gameRect;
+    self.triviaType.hidden = YES;
+  }completion:^(BOOL finished) {
+    [weakSelf.currentController.view removeFromSuperview];
+    [weakSelf.currentController removeFromParentViewController];
+    [newController didMoveToParentViewController:weakSelf];
+    
+    weakSelf.currentController = newController;
+    self.view.userInteractionEnabled = YES;
+  }];
+}
+
+- (void)pushtoLastQuestion {
+  NSMutableDictionary *question= [NSMutableDictionary dictionary];
+  [question setObject:[NSString stringWithFormat:@"What company did Steve Jobs create?"] forKey:@"question"];
+  [question setObject:[NSNumber numberWithInt:5] forKey:@"letterCount"];
+  [question setObject:[NSNumber numberWithInt:1] forKey:@"numberOfLines"];
+  [question setObject:[NSNumber numberWithInt:5] forKey:@"firstLineCount"];
+  [question setObject:[NSNumber numberWithInt:0] forKey:@"secondLineCount"];
+  [question setObject:@"APPLE" forKey:@"correctAnswer"];
+  NSArray *selection = [[NSArray alloc] initWithObjects:@"L",@"V",@"L",@"6",@"A",@"Z",@"P",@"P",@"X",@"Y",@"S",@"E",@"W",@"Q", nil];
+  [question setObject:selection forKey:@"selectionSlots"];
+  UIViewController *newController = [[FillInTypeViewController alloc] initWithTutorialIconQuestion:self questionData:[question copy] iconQuestion:NO];
+  
+  [newController.view layoutIfNeeded];
+  CGRect newFrame = CGRectMake(self.view.bounds.size.width, gameRect.origin.y, gameRect.size.width, gameRect.size.height);
+  CGPoint offFrame = CGPointMake(-self.view.bounds.size.width, self.currentController.view.center.y);
+  newController.view.frame = newFrame;
+  
+  [self.currentController willMoveToParentViewController:nil];
+  [self addChildViewController:newController];
+  
+  [self.view addSubview:newController.view];
+  
+  [self.currentController willMoveToParentViewController:nil];
+  
+  __weak __block GameViewController  *weakSelf = self;
+  [UIView animateWithDuration:0.4 animations:^{
+    self.currentController.view.center = offFrame;
+    newController.view.frame = gameRect;
+    self.triviaType.hidden = YES;
+  }completion:^(BOOL finished) {
+    [weakSelf.currentController.view removeFromSuperview];
+    [weakSelf.currentController removeFromParentViewController];
+    [newController didMoveToParentViewController:weakSelf];
+    
+    weakSelf.currentController = newController;
+    self.view.userInteractionEnabled = YES;
+  }];
+}
+
 - (void)pushToLyricsView {
   NSMutableDictionary *question = [NSMutableDictionary dictionary];
   [question setObject:[NSString stringWithFormat:@"I got 99 problems but a @#$%% ain't one"] forKey:@"question"];
@@ -139,6 +229,7 @@
   [UIView animateWithDuration:0.4 animations:^{
     self.currentController.view.center = offFrame;
     newController.view.frame = gameRect;
+    self.triviaType.hidden = YES;
   }completion:^(BOOL finished) {
     [weakSelf.currentController.view removeFromSuperview];
     [weakSelf.currentController removeFromParentViewController];
@@ -154,22 +245,23 @@
   [vc resetTutorialLetters];
 }
 
+- (void)disableLetterInteraction:(int)tag {
+  FillInTypeViewController *vc = (FillInTypeViewController *)self.currentController;
+  [vc disableUserInteractionWithTag:tag];
+}
+
+- (void)enableTimer {
+  if (![self.gameTimer isValid]) {
+    self.gameTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countDown) userInfo:nil repeats:YES];
+  }
+}
+
 #pragma mark Non-Tutorial Stuff
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userData:(UserInfo *)userData {
   if ((self = [super init])) {
     self.userData = userData;
-    //[self updateRubyLabel];
-    
-    //  if ([self getQuestiontype] == kMultipleChoice) {
-    //    self.currentController = [FillInViewController gameWithController:self];
-    //  }
-    //  else {
-    //    self.currentController = [MultipleChoiceViewController initWithGameInfo:self];
-    //  }
-    
     self.currentController = [[FillInTypeViewController alloc] initWithGame:self];
-    //self.currentController = [[MultipleChoiceViewController alloc] initWithGame:self];
     self.currentController.view.center = CGPointMake(self.currentController.view.center.x, self.currentController.view.center.y+56);
     [self.view addSubview:self.currentController.view];    
     gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
@@ -181,36 +273,39 @@
   if ((self = [super init])) {
     self.userData = userData;
     self.gameId = gameId;
-    //[self updateRubyLabel];
   }
   return self;
 }
 
-- (id)initWithBasicRoundProto:(BasicRoundProto *)proto userInfo:(UserInfo *)userInfo {
-  if ((self = [super init])) {
-    self.questions = proto.questionsList;
-    self.proto = proto;
-    self.userData = userInfo;
-  }
-  return self;
-}
 
 - (void)viewDidLoad
 {
   [super viewDidLoad];
   self.currentQuestion = 0;
-  self.timeLeft = 120;
   self.points = 0;
   pointsBefore = 0;
   pointsAfter = 0;
-  self.timeLeftLabel.text = [NSString stringWithFormat:@"%d",self.timeLeft];
-  self.pointsLabel.text = [NSString stringWithFormat:@"%d",self.points];
-  self.gameTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countDown) userInfo:nil repeats:YES];
   self.freezeCost.font = [UIFont fontWithName:@"Avenir Next Lt Pro" size:13];
   self.optionCost.font = [UIFont fontWithName:@"Avenir Next Lt Pro" size:13];
-
+  self.triviaType.font = [UIFont fontWithName:@"Avenir Next Lt Pro" size:14];
+  //originalTriviaLabelFrame =  self.triviaContainer.frame;
+  //self.triviaContainer.frame = CGRectMake(self.triviaContainer.center.x, self.triviaContainer.frame.origin.y, 0, self.triviaContainer.frame.size.height);
 }
 
+- (void)startTimer {
+  if (self.isTutorial) self.timeLeft = Tutorial_Timer;
+  else self.timeLeft = Regular_Game_Timer;
+  self.timeLeftLabel.text = [NSString stringWithFormat:@"%d",self.timeLeft];
+  self.gameTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(countDown) userInfo:nil repeats:YES];
+}
+
+- (void)animateTriviaTypeLabel {
+  self.triviaType.hidden = NO;
+  self.triviaContainer.frame = CGRectMake(self.triviaContainer.center.x, self.triviaContainer.frame.origin.y, 0, self.triviaContainer.frame.size.height);
+  [UIView animateWithDuration:1.0f animations:^{
+    self.triviaContainer.frame = originalTriviaLabelFrame;
+  }completion:NULL];
+}
 
 - (QuestionType)getQuestiontype {
   QuestionType type;
@@ -225,6 +320,12 @@
 }
 
 - (void)countDown {
+  if (self.timeLeft == 1 && self.isTutorial) {
+    self.timeLeft = 1;
+    self.timeLeftLabel.text = [NSString stringWithFormat:@"1"];
+    [self.gameTimer invalidate];
+    return;
+  }
   self.timeLeft -= 1;
   [self updateTimeLabelWithSkip:NO];
   if (self.timeLeft <= 0) {
@@ -359,7 +460,11 @@
 }
 
 - (IBAction)cheatTwoClicked:(id)sender {
-  //need to check if user has enough rubies  
+  
+  if (self.isTutorial) [self tutorialFreezeUsed];
+  
+  //need to check if user has enough rubies
+  
   self.freezeButton.userInteractionEnabled = NO;
   self.freezeButton.alpha = 0.5f;
   freezeCounter = 10;
@@ -380,20 +485,17 @@
     [freezeTimer invalidate];
     self.freezeButton.userInteractionEnabled = YES;
     self.freezeButton.alpha = 1.0f;
-    self.gameTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countDown) userInfo:nil repeats:YES];
+    if (!self.isTutorial && !self.timeLeft <= 1) self.gameTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countDown) userInfo:nil repeats:YES];
   }
 }
 
 - (void)pushNewViewControllersWithType:(QuestionType)type {
   UIViewController *newController;
-  
-  if (type == kFillIn) newController = [[FillInTypeViewController alloc]initWithGame:self];
+  if (type == kFillIn)  {
+    newController = [[FillInTypeViewController alloc] initWithGame:self];
+  }
   else if (type == kMultipleChoice) {
-    if (self.isTutorial) {
-
-    }
-    else
-      newController = [[MultipleChoiceViewController alloc] initWithGame:self];
+    newController = [[MultipleChoiceViewController alloc] initWithGame:self];
   }
   
   [newController.view layoutIfNeeded];
@@ -413,6 +515,7 @@
   [UIView animateWithDuration:0.4 animations:^{
     self.currentController.view.center = offFrame;
     newController.view.frame = gameRect;
+    self.triviaType.hidden = YES;
   }completion:^(BOOL finished) {
     [weakSelf.currentController.view removeFromSuperview];
     [weakSelf.currentController removeFromParentViewController];

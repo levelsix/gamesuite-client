@@ -12,12 +12,13 @@
 #import "SignUpViewController.h"
 #import "CreateAccountViewController.h"
 #import "FullEvent.h"
+#import "ClientProperties.h"
 
 #define HEADER_SIZE 12
 
 @implementation SocketCommunication
 
-- (Class) getClassForType:(CommonEventProtocolResponse)type {
+- (Class) getClassForType:(int)type {
   Class responseClass;
   switch (type) {
     case CommonEventProtocolResponseSCreateAccountViaEmailEvent:
@@ -40,6 +41,31 @@
       responseClass = [ForceLogoutResponseProto class];
       break;
       
+    case PicturesEventProtocolRequestCStartRoundEvent:
+      responseClass = [StartRoundResponseProto class];
+      break;
+      
+    case PicturesEventProtocolRequestCCompletedRoundEvent:
+      responseClass = [CompletedRoundResponseProto class];
+      break;
+      
+    case PicturesEventProtocolRequestCSpendRubiesEvent:
+      responseClass = [SpendRubiesResponseProto class];
+      break;
+      
+    case PicturesEventProtocolResponseSRefillTokensByWaitingEvent:
+      responseClass = [RefillTokensByWaitingResponseProto class];
+      break;
+      
+    case PicturesEventProtocolResponseSSearchForUserEvent:
+      responseClass = [SearchForUserResponseProto class];
+      break;
+      
+    case PicturesEventProtocolResponseSRetrieveNewQuestionsEvent:
+      responseClass = [RetrieveNewQuestionsResponseProto class];
+      break;
+      
+      
     default:
       responseClass = nil;
       break;
@@ -50,15 +76,22 @@
 SINGLETON_GCD(SocketCommunication);
 static NSString *udid = nil;
 
+- (id)init {
+  if ((self = [super init])) {
+    udid = UDID;
+  }
+  return self;
+}
+
+#warning change it that if they have email set it, otherwise set null
 - (int)sendCreateAccountViaFacebookMessage:(NSDictionary *)facebookInfo{
   UserInfo *ui = [[UserInfo alloc] init];
   NSString *facebookId = [facebookInfo objectForKey:@"facebookId"];
   NSString *name = [facebookInfo objectForKey:@"name"];
-  NSString *email = [facebookInfo objectForKey:@"email"];
+  //NSString *email = [facebookInfo objectForKey:@"email"];
   NSString *udid = [ui getUDID];
   NSString *deviceId = [ui getMacAddress];
-  
-  CreateAccountViaFacebookRequestProto *req = [[[[[[[CreateAccountViaFacebookRequestProto builder] setFacebookId:facebookId] setNameFriendsSee:name] setEmail:email]setUdid:udid]setDeviceId:deviceId] build];
+  CreateAccountViaFacebookRequestProto *req = [[[[[[[CreateAccountViaFacebookRequestProto builder] setFacebookId:facebookId] setNameFriendsSee:name] setEmail:NULL]setUdid:udid]setDeviceId:deviceId] build];
   return [self sendData:req withMessageType:CommonEventProtocolRequestCCreateAccountViaFacebookEvent];
 }
 
@@ -84,22 +117,22 @@ static NSString *udid = nil;
 
 - (int)sendLoginRequestEventViaToken:(BasicUserProto *)proto {
   LoginRequestProto *req = [[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeLoginToken] build];
-  return [self sendData:req withMessageType:LoginRequestProto_LoginTypeLoginToken];
+  return [self sendData:req withMessageType:CommonEventProtocolRequestCLoginEvent];
 }
 
 - (int)sendLoginRequestEventViaFacebook:(BasicUserProto *)proto facebookFriends:(NSArray *)facebookFriendId {
-  LoginRequestProto *req = [[[[[LoginRequestProto builder] setSender:proto] addAllFacebookFriendIds:facebookFriendId] setLoginType:LoginRequestProto_LoginTypeFacebook] build];
-  return [self sendData:req withMessageType:LoginRequestProto_LoginTypeFacebook];
+  LoginRequestProto *req = [[[[[[LoginRequestProto builder] setSender:proto] addAllFacebookFriendIds:facebookFriendId] setLoginType:LoginRequestProto_LoginTypeFacebook] setInitializeAccount:YES] build];
+  return [self sendData:req withMessageType:CommonEventProtocolRequestCLoginEvent];
 }
 
 - (int)sendLoginRequestEventViaEmail:(BasicUserProto *)proto {
   LoginRequestProto *req = [[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeEmailPassword] build];
-  return [self sendData:req withMessageType:LoginRequestProto_LoginTypeEmailPassword];
+  return [self sendData:req withMessageType:CommonEventProtocolRequestCLoginEvent];
 }
 
 - (int)sendLoginRequestEventViaNoCredentials:(BasicUserProto *)proto {
   LoginRequestProto *req = [[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeNoCredentials] build];
-  return [self sendData:req withMessageType:LoginRequestProto_LoginTypeNoCredentials];
+  return [self sendData:req withMessageType:CommonEventProtocolRequestCLoginEvent];
 }
 
 - (int)sendRetrieveNewQuestions:(BasicUserProto *)sender numQuestionsWanted:(int32_t)numberWanted {
@@ -140,44 +173,34 @@ static NSString *udid = nil;
   int tag = *(int *)(header+4);
   NSData *payload = [data subdataWithRange:NSMakeRange(HEADER_SIZE, data.length-HEADER_SIZE)];
   
-  [self messageReceived:payload withCommonEventType:nextMsgType tag:tag];
+  [self messageReceived:payload withEvent:nextMsgType tag:tag];
 }
 
--(void) messageReceived:(NSData *)data withPictureEventType:(PicturesEventProtocolRequest)eventType tag:(int)tag {
-  
-}
 
--(void) messageReceived:(NSData *)data withCommonEventType:(CommonEventProtocolRequest)eventType tag:(int)tag {
+-(void) messageReceived:(NSData *)data withEvent:(int)eventType tag:(int)tag {
   Class typeClass = [self getClassForType:eventType];
-
   if ([self.delegate respondsToSelector:@selector(receivedProtoResponse:)]) {
     FullEvent *fe = [FullEvent createWithEvent:(PBGeneratedMessage *)[typeClass parseFromData:data] tag:tag];
     [self.delegate receivedProtoResponse:fe.event];
   }
 }
-
-- (void)rebuildSender {
-}
-
 - (void)initNetworkCommunication {
   _connectionThread = [[AMQPConnectionThread alloc] init];
   [_connectionThread start];
+  _connectionThread.delegate = self;
   [_connectionThread connect:udid];
-  
-  [self rebuildSender];
-  
+    
   _currentTagNum = 1;
   _shouldReconnect = YES;
   _numDisconnects = 0;  
 }
 
 - (void)connectedToHost {
-  //UserInfo *us = [UserInfo sharedUserInfo];
+
 }
 
 
 - (int)sendData:(PBGeneratedMessage *)msg withMessageType:(int)type {
-  
   if (_sender.userId == 0) {
     
   }

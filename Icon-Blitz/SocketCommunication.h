@@ -27,7 +27,6 @@
 
 + (SocketCommunication *)sharedSocketCommunication;
 - (void)initNetworkCommunication;
-- (void)rebuildSender;
 - (int)sendCreateAccountViaFacebookMessage:(NSDictionary *)facebookInfo;
 - (int)sendCreateAccountViaEmailMessage:(NSDictionary *)userInfo;
 - (int)sendCreateAccountViaNoCredentialsRequestProto: (NSDictionary *)deviceInfo;

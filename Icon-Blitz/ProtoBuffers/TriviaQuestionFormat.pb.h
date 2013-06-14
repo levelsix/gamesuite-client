@@ -8,8 +8,18 @@
 @class MultipleChoiceQuestionProto_Builder;
 @class PictureQuestionProto;
 @class PictureQuestionProto_Builder;
+@class QuestionAnsweredProto;
+@class QuestionAnsweredProto_Builder;
 @class QuestionProto;
 @class QuestionProto_Builder;
+typedef enum {
+  QuestionAnsweredProto_AnswerTypeCorrect = 1,
+  QuestionAnsweredProto_AnswerTypeIncorrect = 2,
+  QuestionAnsweredProto_AnswerTypeSkipped = 3,
+} QuestionAnsweredProto_AnswerType;
+
+BOOL QuestionAnsweredProto_AnswerTypeIsValidValue(QuestionAnsweredProto_AnswerType value);
+
 typedef enum {
   MultipleChoiceAnswerProto_AnswerTypeText = 1,
   MultipleChoiceAnswerProto_AnswerTypePicture = 2,
@@ -22,6 +32,81 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
 }
 + (PBExtensionRegistry*) extensionRegistry;
 + (void) registerAllExtensions:(PBMutableExtensionRegistry*) registry;
+@end
+
+@interface QuestionAnsweredProto : PBGeneratedMessage {
+@private
+  BOOL hasTimeAnswered_:1;
+  BOOL hasQuestionNumber_:1;
+  BOOL hasQuestionId_:1;
+  BOOL hasAnswerType_:1;
+  int64_t timeAnswered;
+  int32_t questionNumber;
+  NSString* questionId;
+  QuestionAnsweredProto_AnswerType answerType;
+}
+- (BOOL) hasQuestionId;
+- (BOOL) hasAnswerType;
+- (BOOL) hasQuestionNumber;
+- (BOOL) hasTimeAnswered;
+@property (readonly, retain) NSString* questionId;
+@property (readonly) QuestionAnsweredProto_AnswerType answerType;
+@property (readonly) int32_t questionNumber;
+@property (readonly) int64_t timeAnswered;
+
++ (QuestionAnsweredProto*) defaultInstance;
+- (QuestionAnsweredProto*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (QuestionAnsweredProto_Builder*) builder;
++ (QuestionAnsweredProto_Builder*) builder;
++ (QuestionAnsweredProto_Builder*) builderWithPrototype:(QuestionAnsweredProto*) prototype;
+
++ (QuestionAnsweredProto*) parseFromData:(NSData*) data;
++ (QuestionAnsweredProto*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (QuestionAnsweredProto*) parseFromInputStream:(NSInputStream*) input;
++ (QuestionAnsweredProto*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (QuestionAnsweredProto*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (QuestionAnsweredProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface QuestionAnsweredProto_Builder : PBGeneratedMessage_Builder {
+@private
+  QuestionAnsweredProto* result;
+}
+
+- (QuestionAnsweredProto*) defaultInstance;
+
+- (QuestionAnsweredProto_Builder*) clear;
+- (QuestionAnsweredProto_Builder*) clone;
+
+- (QuestionAnsweredProto*) build;
+- (QuestionAnsweredProto*) buildPartial;
+
+- (QuestionAnsweredProto_Builder*) mergeFrom:(QuestionAnsweredProto*) other;
+- (QuestionAnsweredProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (QuestionAnsweredProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasQuestionId;
+- (NSString*) questionId;
+- (QuestionAnsweredProto_Builder*) setQuestionId:(NSString*) value;
+- (QuestionAnsweredProto_Builder*) clearQuestionId;
+
+- (BOOL) hasAnswerType;
+- (QuestionAnsweredProto_AnswerType) answerType;
+- (QuestionAnsweredProto_Builder*) setAnswerType:(QuestionAnsweredProto_AnswerType) value;
+- (QuestionAnsweredProto_Builder*) clearAnswerType;
+
+- (BOOL) hasQuestionNumber;
+- (int32_t) questionNumber;
+- (QuestionAnsweredProto_Builder*) setQuestionNumber:(int32_t) value;
+- (QuestionAnsweredProto_Builder*) clearQuestionNumber;
+
+- (BOOL) hasTimeAnswered;
+- (int64_t) timeAnswered;
+- (QuestionAnsweredProto_Builder*) setTimeAnswered:(int64_t) value;
+- (QuestionAnsweredProto_Builder*) clearTimeAnswered;
 @end
 
 @interface QuestionProto : PBGeneratedMessage {

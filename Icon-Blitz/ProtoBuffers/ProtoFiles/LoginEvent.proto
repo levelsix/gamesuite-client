@@ -56,7 +56,21 @@ message LoginResponseProto {
 		optional int32 defaultInitialRubies = 2;
 		optional int32 defaultRoundsPerGame = 3;
 		optional int32 defaultMinutesPerRound = 4;
-		optional int32 defaultQuestionsPerRound = 5;
+		optional QuestionTypeScoringConstants scoreTypes = 5;
+		
+		message QuestionTypeScoringConstants {
+			//for multiple choice questions
+			optional int32 mcqCorrect = 1;
+			optional int32 mcqIncorrect = 2;
+			
+			//for questions with images and answer construction
+			//(acq = answer construction question)
+			optional int32 acqCorrect = 3;
+			optional int32 acqIncorrect = 4;
+
+			//other question types and scores			
+		}
+		 
 	}
 	
 	enum LoginResponseStatus {

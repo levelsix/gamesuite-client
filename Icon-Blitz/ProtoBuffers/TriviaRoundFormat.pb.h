@@ -16,6 +16,8 @@
 @class MultipleChoiceQuestionProto_Builder;
 @class PictureQuestionProto;
 @class PictureQuestionProto_Builder;
+@class QuestionAnsweredProto;
+@class QuestionAnsweredProto_Builder;
 @class QuestionProto;
 @class QuestionProto_Builder;
 
@@ -27,25 +29,17 @@
 
 @interface BasicRoundResultsProto : PBGeneratedMessage {
 @private
-  BOOL hasNumQuestionsSeen_:1;
-  BOOL hasNumQuestionsAnsweredCorrectly_:1;
-  BOOL hasScore_:1;
   BOOL hasRoundNumber_:1;
   BOOL hasId_:1;
-  int32_t numQuestionsSeen;
-  int32_t numQuestionsAnsweredCorrectly;
-  int32_t score;
+  BOOL hasScore_:1;
   int32_t roundNumber;
   NSString* id;
+  int32_t score;
 }
 - (BOOL) hasId;
-- (BOOL) hasNumQuestionsSeen;
-- (BOOL) hasNumQuestionsAnsweredCorrectly;
 - (BOOL) hasScore;
 - (BOOL) hasRoundNumber;
 @property (readonly, retain) NSString* id;
-@property (readonly) int32_t numQuestionsSeen;
-@property (readonly) int32_t numQuestionsAnsweredCorrectly;
 @property (readonly) int32_t score;
 @property (readonly) int32_t roundNumber;
 
@@ -88,16 +82,6 @@
 - (BasicRoundResultsProto_Builder*) setId:(NSString*) value;
 - (BasicRoundResultsProto_Builder*) clearId;
 
-- (BOOL) hasNumQuestionsSeen;
-- (int32_t) numQuestionsSeen;
-- (BasicRoundResultsProto_Builder*) setNumQuestionsSeen:(int32_t) value;
-- (BasicRoundResultsProto_Builder*) clearNumQuestionsSeen;
-
-- (BOOL) hasNumQuestionsAnsweredCorrectly;
-- (int32_t) numQuestionsAnsweredCorrectly;
-- (BasicRoundResultsProto_Builder*) setNumQuestionsAnsweredCorrectly:(int32_t) value;
-- (BasicRoundResultsProto_Builder*) clearNumQuestionsAnsweredCorrectly;
-
 - (BOOL) hasScore;
 - (int32_t) score;
 - (BasicRoundResultsProto_Builder*) setScore:(int32_t) value;
@@ -113,36 +97,28 @@
 @private
   BOOL hasStartTime_:1;
   BOOL hasEndTime_:1;
-  BOOL hasNumQuestionsSeen_:1;
-  BOOL hasNumQuestionsAnsweredCorrectly_:1;
-  BOOL hasScore_:1;
   BOOL hasRoundNumber_:1;
   BOOL hasId_:1;
+  BOOL hasScore_:1;
   int64_t startTime;
   int64_t endTime;
-  int32_t numQuestionsSeen;
-  int32_t numQuestionsAnsweredCorrectly;
-  int32_t score;
   int32_t roundNumber;
   NSString* id;
-  NSMutableArray* mutableQuestionsList;
+  int32_t score;
+  NSMutableArray* mutableAnswersList;
 }
 - (BOOL) hasId;
-- (BOOL) hasNumQuestionsSeen;
-- (BOOL) hasNumQuestionsAnsweredCorrectly;
 - (BOOL) hasScore;
 - (BOOL) hasRoundNumber;
 - (BOOL) hasStartTime;
 - (BOOL) hasEndTime;
 @property (readonly, retain) NSString* id;
-@property (readonly) int32_t numQuestionsSeen;
-@property (readonly) int32_t numQuestionsAnsweredCorrectly;
 @property (readonly) int32_t score;
 @property (readonly) int32_t roundNumber;
 @property (readonly) int64_t startTime;
 @property (readonly) int64_t endTime;
-- (NSArray*) questionsList;
-- (QuestionProto*) questionsAtIndex:(int32_t) index;
+- (NSArray*) answersList;
+- (QuestionAnsweredProto*) answersAtIndex:(int32_t) index;
 
 + (CompleteRoundResultsProto*) defaultInstance;
 - (CompleteRoundResultsProto*) defaultInstance;
@@ -183,16 +159,6 @@
 - (CompleteRoundResultsProto_Builder*) setId:(NSString*) value;
 - (CompleteRoundResultsProto_Builder*) clearId;
 
-- (BOOL) hasNumQuestionsSeen;
-- (int32_t) numQuestionsSeen;
-- (CompleteRoundResultsProto_Builder*) setNumQuestionsSeen:(int32_t) value;
-- (CompleteRoundResultsProto_Builder*) clearNumQuestionsSeen;
-
-- (BOOL) hasNumQuestionsAnsweredCorrectly;
-- (int32_t) numQuestionsAnsweredCorrectly;
-- (CompleteRoundResultsProto_Builder*) setNumQuestionsAnsweredCorrectly:(int32_t) value;
-- (CompleteRoundResultsProto_Builder*) clearNumQuestionsAnsweredCorrectly;
-
 - (BOOL) hasScore;
 - (int32_t) score;
 - (CompleteRoundResultsProto_Builder*) setScore:(int32_t) value;
@@ -203,12 +169,12 @@
 - (CompleteRoundResultsProto_Builder*) setRoundNumber:(int32_t) value;
 - (CompleteRoundResultsProto_Builder*) clearRoundNumber;
 
-- (NSArray*) questionsList;
-- (QuestionProto*) questionsAtIndex:(int32_t) index;
-- (CompleteRoundResultsProto_Builder*) replaceQuestionsAtIndex:(int32_t) index with:(QuestionProto*) value;
-- (CompleteRoundResultsProto_Builder*) addQuestions:(QuestionProto*) value;
-- (CompleteRoundResultsProto_Builder*) addAllQuestions:(NSArray*) values;
-- (CompleteRoundResultsProto_Builder*) clearQuestionsList;
+- (NSArray*) answersList;
+- (QuestionAnsweredProto*) answersAtIndex:(int32_t) index;
+- (CompleteRoundResultsProto_Builder*) replaceAnswersAtIndex:(int32_t) index with:(QuestionAnsweredProto*) value;
+- (CompleteRoundResultsProto_Builder*) addAnswers:(QuestionAnsweredProto*) value;
+- (CompleteRoundResultsProto_Builder*) addAllAnswers:(NSArray*) values;
+- (CompleteRoundResultsProto_Builder*) clearAnswersList;
 
 - (BOOL) hasStartTime;
 - (int64_t) startTime;
@@ -224,15 +190,23 @@
 @interface BasicRoundProto : PBGeneratedMessage {
 @private
   BOOL hasRoundNumber_:1;
+  BOOL hasSecondsRemaning_:1;
+  BOOL hasCurrentQuestionNumber_:1;
   BOOL hasId_:1;
   int32_t roundNumber;
+  int32_t secondsRemaning;
+  int32_t currentQuestionNumber;
   NSString* id;
   NSMutableArray* mutableQuestionsList;
 }
 - (BOOL) hasId;
 - (BOOL) hasRoundNumber;
+- (BOOL) hasSecondsRemaning;
+- (BOOL) hasCurrentQuestionNumber;
 @property (readonly, retain) NSString* id;
 @property (readonly) int32_t roundNumber;
+@property (readonly) int32_t secondsRemaning;
+@property (readonly) int32_t currentQuestionNumber;
 - (NSArray*) questionsList;
 - (QuestionProto*) questionsAtIndex:(int32_t) index;
 
@@ -286,5 +260,15 @@
 - (int32_t) roundNumber;
 - (BasicRoundProto_Builder*) setRoundNumber:(int32_t) value;
 - (BasicRoundProto_Builder*) clearRoundNumber;
+
+- (BOOL) hasSecondsRemaning;
+- (int32_t) secondsRemaning;
+- (BasicRoundProto_Builder*) setSecondsRemaning:(int32_t) value;
+- (BasicRoundProto_Builder*) clearSecondsRemaning;
+
+- (BOOL) hasCurrentQuestionNumber;
+- (int32_t) currentQuestionNumber;
+- (BasicRoundProto_Builder*) setCurrentQuestionNumber:(int32_t) value;
+- (BasicRoundProto_Builder*) clearCurrentQuestionNumber;
 @end
 

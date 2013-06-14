@@ -14,6 +14,7 @@
 #import "SignUpViewController.h"
 #import "HomeViewController.h"
 #import "TriviaBlitzIAPHelper.h"
+#import "SocketCommunication.h" 
 
 NSString *const FBSessionStateChangedNotification =
 @"com.bestfunfreegames.Icon-Blitz:FBSessionStateChangedNotification";
@@ -31,8 +32,8 @@ NSString *const FBSessionStateChangedNotification =
 {
   switch (state) {
     case FBSessionStateOpen:
-      if ([self.delegate respondsToSelector:@selector(test)]) {
-        [self.delegate test];
+      if ([self.delegate respondsToSelector:@selector(finishedFBLogin)]) {
+        [self.delegate finishedFBLogin];
       }
       break;
     case FBSessionStateClosed:
@@ -62,7 +63,7 @@ NSString *const FBSessionStateChangedNotification =
  * Opens a Facebook session and optionally shows the login UX.
  */
 - (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI {
-  NSArray *permissions = [[NSArray alloc] initWithObjects:@"email", nil];
+  NSArray *permissions = [[NSArray alloc] initWithObjects:@"email",@"user_birthday", nil];
   return [FBSession openActiveSessionWithReadPermissions:permissions
                                             allowLoginUI:allowLoginUI
                                        completionHandler:^(FBSession *session,
@@ -94,6 +95,9 @@ NSString *const FBSessionStateChangedNotification =
   
   self.viewController = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
   [[self window] setRootViewController:self.navController];
+  
+  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+  [sc initNetworkCommunication];
   
   [self.window makeKeyAndVisible];
   return YES;

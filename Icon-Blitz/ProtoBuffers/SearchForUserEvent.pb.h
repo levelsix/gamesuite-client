@@ -95,7 +95,7 @@ BOOL SearchForUserResponseProto_SearchForUserStatusIsValidValue(SearchForUserRes
   BOOL hasNameOfPersonId_:1;
   BOOL hasRecipient_:1;
   BOOL hasStatus_:1;
-  int32_t nameOfPersonId;
+  NSString* nameOfPersonId;
   BasicUserProto* recipient;
   SearchForUserResponseProto_SearchForUserStatus status;
 }
@@ -103,7 +103,7 @@ BOOL SearchForUserResponseProto_SearchForUserStatusIsValidValue(SearchForUserRes
 - (BOOL) hasNameOfPersonId;
 - (BOOL) hasStatus;
 @property (readonly, retain) BasicUserProto* recipient;
-@property (readonly) int32_t nameOfPersonId;
+@property (readonly, retain) NSString* nameOfPersonId;
 @property (readonly) SearchForUserResponseProto_SearchForUserStatus status;
 
 + (SearchForUserResponseProto*) defaultInstance;
@@ -148,8 +148,8 @@ BOOL SearchForUserResponseProto_SearchForUserStatusIsValidValue(SearchForUserRes
 - (SearchForUserResponseProto_Builder*) clearRecipient;
 
 - (BOOL) hasNameOfPersonId;
-- (int32_t) nameOfPersonId;
-- (SearchForUserResponseProto_Builder*) setNameOfPersonId:(int32_t) value;
+- (NSString*) nameOfPersonId;
+- (SearchForUserResponseProto_Builder*) setNameOfPersonId:(NSString*) value;
 - (SearchForUserResponseProto_Builder*) clearNameOfPersonId;
 
 - (BOOL) hasStatus;

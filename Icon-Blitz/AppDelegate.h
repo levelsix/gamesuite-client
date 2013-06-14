@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <FacebookSDK/FacebookSDK.h>
 
-@protocol TestingDelegate <NSObject>
+@protocol FinishFacebookLogin <NSObject>
 
-- (void)test;
+- (void)finishedFBLogin;
 
 @end
 

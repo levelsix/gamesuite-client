@@ -22,8 +22,6 @@ static PBExtensionRegistry* extensionRegistry = nil;
 
 @interface BasicRoundResultsProto ()
 @property (retain) NSString* id;
-@property int32_t numQuestionsSeen;
-@property int32_t numQuestionsAnsweredCorrectly;
 @property int32_t score;
 @property int32_t roundNumber;
 @end
@@ -37,20 +35,6 @@ static PBExtensionRegistry* extensionRegistry = nil;
   hasId_ = !!value;
 }
 @synthesize id;
-- (BOOL) hasNumQuestionsSeen {
-  return !!hasNumQuestionsSeen_;
-}
-- (void) setHasNumQuestionsSeen:(BOOL) value {
-  hasNumQuestionsSeen_ = !!value;
-}
-@synthesize numQuestionsSeen;
-- (BOOL) hasNumQuestionsAnsweredCorrectly {
-  return !!hasNumQuestionsAnsweredCorrectly_;
-}
-- (void) setHasNumQuestionsAnsweredCorrectly:(BOOL) value {
-  hasNumQuestionsAnsweredCorrectly_ = !!value;
-}
-@synthesize numQuestionsAnsweredCorrectly;
 - (BOOL) hasScore {
   return !!hasScore_;
 }
@@ -72,8 +56,6 @@ static PBExtensionRegistry* extensionRegistry = nil;
 - (id) init {
   if ((self = [super init])) {
     self.id = @"";
-    self.numQuestionsSeen = 0;
-    self.numQuestionsAnsweredCorrectly = 0;
     self.score = 0;
     self.roundNumber = 0;
   }
@@ -95,20 +77,14 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
   return YES;
 }
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
-  if (self.hasNumQuestionsSeen) {
-    [output writeInt32:1 value:self.numQuestionsSeen];
-  }
-  if (self.hasNumQuestionsAnsweredCorrectly) {
-    [output writeInt32:2 value:self.numQuestionsAnsweredCorrectly];
+  if (self.hasId) {
+    [output writeString:1 value:self.id];
   }
   if (self.hasScore) {
-    [output writeInt32:3 value:self.score];
+    [output writeSInt32:2 value:self.score];
   }
   if (self.hasRoundNumber) {
-    [output writeInt32:4 value:self.roundNumber];
-  }
-  if (self.hasId) {
-    [output writeString:5 value:self.id];
+    [output writeInt32:3 value:self.roundNumber];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -119,20 +95,14 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
   }
 
   size = 0;
-  if (self.hasNumQuestionsSeen) {
-    size += computeInt32Size(1, self.numQuestionsSeen);
-  }
-  if (self.hasNumQuestionsAnsweredCorrectly) {
-    size += computeInt32Size(2, self.numQuestionsAnsweredCorrectly);
+  if (self.hasId) {
+    size += computeStringSize(1, self.id);
   }
   if (self.hasScore) {
-    size += computeInt32Size(3, self.score);
+    size += computeSInt32Size(2, self.score);
   }
   if (self.hasRoundNumber) {
-    size += computeInt32Size(4, self.roundNumber);
-  }
-  if (self.hasId) {
-    size += computeStringSize(5, self.id);
+    size += computeInt32Size(3, self.roundNumber);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -212,12 +182,6 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
   if (other.hasId) {
     [self setId:other.id];
   }
-  if (other.hasNumQuestionsSeen) {
-    [self setNumQuestionsSeen:other.numQuestionsSeen];
-  }
-  if (other.hasNumQuestionsAnsweredCorrectly) {
-    [self setNumQuestionsAnsweredCorrectly:other.numQuestionsAnsweredCorrectly];
-  }
   if (other.hasScore) {
     [self setScore:other.score];
   }
@@ -245,24 +209,16 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
         }
         break;
       }
-      case 8: {
-        [self setNumQuestionsSeen:[input readInt32]];
+      case 10: {
+        [self setId:[input readString]];
         break;
       }
       case 16: {
-        [self setNumQuestionsAnsweredCorrectly:[input readInt32]];
+        [self setScore:[input readSInt32]];
         break;
       }
       case 24: {
-        [self setScore:[input readInt32]];
-        break;
-      }
-      case 32: {
         [self setRoundNumber:[input readInt32]];
-        break;
-      }
-      case 42: {
-        [self setId:[input readString]];
         break;
       }
     }
@@ -282,38 +238,6 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
 - (BasicRoundResultsProto_Builder*) clearId {
   result.hasId = NO;
   result.id = @"";
-  return self;
-}
-- (BOOL) hasNumQuestionsSeen {
-  return result.hasNumQuestionsSeen;
-}
-- (int32_t) numQuestionsSeen {
-  return result.numQuestionsSeen;
-}
-- (BasicRoundResultsProto_Builder*) setNumQuestionsSeen:(int32_t) value {
-  result.hasNumQuestionsSeen = YES;
-  result.numQuestionsSeen = value;
-  return self;
-}
-- (BasicRoundResultsProto_Builder*) clearNumQuestionsSeen {
-  result.hasNumQuestionsSeen = NO;
-  result.numQuestionsSeen = 0;
-  return self;
-}
-- (BOOL) hasNumQuestionsAnsweredCorrectly {
-  return result.hasNumQuestionsAnsweredCorrectly;
-}
-- (int32_t) numQuestionsAnsweredCorrectly {
-  return result.numQuestionsAnsweredCorrectly;
-}
-- (BasicRoundResultsProto_Builder*) setNumQuestionsAnsweredCorrectly:(int32_t) value {
-  result.hasNumQuestionsAnsweredCorrectly = YES;
-  result.numQuestionsAnsweredCorrectly = value;
-  return self;
-}
-- (BasicRoundResultsProto_Builder*) clearNumQuestionsAnsweredCorrectly {
-  result.hasNumQuestionsAnsweredCorrectly = NO;
-  result.numQuestionsAnsweredCorrectly = 0;
   return self;
 }
 - (BOOL) hasScore {
@@ -352,11 +276,9 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
 
 @interface CompleteRoundResultsProto ()
 @property (retain) NSString* id;
-@property int32_t numQuestionsSeen;
-@property int32_t numQuestionsAnsweredCorrectly;
 @property int32_t score;
 @property int32_t roundNumber;
-@property (retain) NSMutableArray* mutableQuestionsList;
+@property (retain) NSMutableArray* mutableAnswersList;
 @property int64_t startTime;
 @property int64_t endTime;
 @end
@@ -370,20 +292,6 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
   hasId_ = !!value;
 }
 @synthesize id;
-- (BOOL) hasNumQuestionsSeen {
-  return !!hasNumQuestionsSeen_;
-}
-- (void) setHasNumQuestionsSeen:(BOOL) value {
-  hasNumQuestionsSeen_ = !!value;
-}
-@synthesize numQuestionsSeen;
-- (BOOL) hasNumQuestionsAnsweredCorrectly {
-  return !!hasNumQuestionsAnsweredCorrectly_;
-}
-- (void) setHasNumQuestionsAnsweredCorrectly:(BOOL) value {
-  hasNumQuestionsAnsweredCorrectly_ = !!value;
-}
-@synthesize numQuestionsAnsweredCorrectly;
 - (BOOL) hasScore {
   return !!hasScore_;
 }
@@ -398,7 +306,7 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
   hasRoundNumber_ = !!value;
 }
 @synthesize roundNumber;
-@synthesize mutableQuestionsList;
+@synthesize mutableAnswersList;
 - (BOOL) hasStartTime {
   return !!hasStartTime_;
 }
@@ -415,14 +323,12 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
 @synthesize endTime;
 - (void) dealloc {
   self.id = nil;
-  self.mutableQuestionsList = nil;
+  self.mutableAnswersList = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
     self.id = @"";
-    self.numQuestionsSeen = 0;
-    self.numQuestionsAnsweredCorrectly = 0;
     self.score = 0;
     self.roundNumber = 0;
     self.startTime = 0L;
@@ -442,40 +348,34 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
 - (CompleteRoundResultsProto*) defaultInstance {
   return defaultCompleteRoundResultsProtoInstance;
 }
-- (NSArray*) questionsList {
-  return mutableQuestionsList;
+- (NSArray*) answersList {
+  return mutableAnswersList;
 }
-- (QuestionProto*) questionsAtIndex:(int32_t) index {
-  id value = [mutableQuestionsList objectAtIndex:index];
+- (QuestionAnsweredProto*) answersAtIndex:(int32_t) index {
+  id value = [mutableAnswersList objectAtIndex:index];
   return value;
 }
 - (BOOL) isInitialized {
   return YES;
 }
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
-  if (self.hasNumQuestionsSeen) {
-    [output writeInt32:1 value:self.numQuestionsSeen];
-  }
-  if (self.hasNumQuestionsAnsweredCorrectly) {
-    [output writeInt32:2 value:self.numQuestionsAnsweredCorrectly];
+  if (self.hasId) {
+    [output writeString:1 value:self.id];
   }
   if (self.hasScore) {
-    [output writeInt32:3 value:self.score];
+    [output writeSInt32:2 value:self.score];
   }
   if (self.hasRoundNumber) {
-    [output writeInt32:4 value:self.roundNumber];
+    [output writeInt32:3 value:self.roundNumber];
   }
-  for (QuestionProto* element in self.questionsList) {
-    [output writeMessage:5 value:element];
-  }
-  if (self.hasId) {
-    [output writeString:6 value:self.id];
+  for (QuestionAnsweredProto* element in self.answersList) {
+    [output writeMessage:4 value:element];
   }
   if (self.hasStartTime) {
-    [output writeInt64:7 value:self.startTime];
+    [output writeInt64:5 value:self.startTime];
   }
   if (self.hasEndTime) {
-    [output writeInt64:8 value:self.endTime];
+    [output writeInt64:6 value:self.endTime];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -486,29 +386,23 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
   }
 
   size = 0;
-  if (self.hasNumQuestionsSeen) {
-    size += computeInt32Size(1, self.numQuestionsSeen);
-  }
-  if (self.hasNumQuestionsAnsweredCorrectly) {
-    size += computeInt32Size(2, self.numQuestionsAnsweredCorrectly);
+  if (self.hasId) {
+    size += computeStringSize(1, self.id);
   }
   if (self.hasScore) {
-    size += computeInt32Size(3, self.score);
+    size += computeSInt32Size(2, self.score);
   }
   if (self.hasRoundNumber) {
-    size += computeInt32Size(4, self.roundNumber);
+    size += computeInt32Size(3, self.roundNumber);
   }
-  for (QuestionProto* element in self.questionsList) {
-    size += computeMessageSize(5, element);
-  }
-  if (self.hasId) {
-    size += computeStringSize(6, self.id);
+  for (QuestionAnsweredProto* element in self.answersList) {
+    size += computeMessageSize(4, element);
   }
   if (self.hasStartTime) {
-    size += computeInt64Size(7, self.startTime);
+    size += computeInt64Size(5, self.startTime);
   }
   if (self.hasEndTime) {
-    size += computeInt64Size(8, self.endTime);
+    size += computeInt64Size(6, self.endTime);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -588,23 +482,17 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
   if (other.hasId) {
     [self setId:other.id];
   }
-  if (other.hasNumQuestionsSeen) {
-    [self setNumQuestionsSeen:other.numQuestionsSeen];
-  }
-  if (other.hasNumQuestionsAnsweredCorrectly) {
-    [self setNumQuestionsAnsweredCorrectly:other.numQuestionsAnsweredCorrectly];
-  }
   if (other.hasScore) {
     [self setScore:other.score];
   }
   if (other.hasRoundNumber) {
     [self setRoundNumber:other.roundNumber];
   }
-  if (other.mutableQuestionsList.count > 0) {
-    if (result.mutableQuestionsList == nil) {
-      result.mutableQuestionsList = [NSMutableArray array];
+  if (other.mutableAnswersList.count > 0) {
+    if (result.mutableAnswersList == nil) {
+      result.mutableAnswersList = [NSMutableArray array];
     }
-    [result.mutableQuestionsList addObjectsFromArray:other.mutableQuestionsList];
+    [result.mutableAnswersList addObjectsFromArray:other.mutableAnswersList];
   }
   if (other.hasStartTime) {
     [self setStartTime:other.startTime];
@@ -633,37 +521,29 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
         }
         break;
       }
-      case 8: {
-        [self setNumQuestionsSeen:[input readInt32]];
-        break;
-      }
-      case 16: {
-        [self setNumQuestionsAnsweredCorrectly:[input readInt32]];
-        break;
-      }
-      case 24: {
-        [self setScore:[input readInt32]];
-        break;
-      }
-      case 32: {
-        [self setRoundNumber:[input readInt32]];
-        break;
-      }
-      case 42: {
-        QuestionProto_Builder* subBuilder = [QuestionProto builder];
-        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
-        [self addQuestions:[subBuilder buildPartial]];
-        break;
-      }
-      case 50: {
+      case 10: {
         [self setId:[input readString]];
         break;
       }
-      case 56: {
+      case 16: {
+        [self setScore:[input readSInt32]];
+        break;
+      }
+      case 24: {
+        [self setRoundNumber:[input readInt32]];
+        break;
+      }
+      case 34: {
+        QuestionAnsweredProto_Builder* subBuilder = [QuestionAnsweredProto builder];
+        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
+        [self addAnswers:[subBuilder buildPartial]];
+        break;
+      }
+      case 40: {
         [self setStartTime:[input readInt64]];
         break;
       }
-      case 64: {
+      case 48: {
         [self setEndTime:[input readInt64]];
         break;
       }
@@ -684,38 +564,6 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
 - (CompleteRoundResultsProto_Builder*) clearId {
   result.hasId = NO;
   result.id = @"";
-  return self;
-}
-- (BOOL) hasNumQuestionsSeen {
-  return result.hasNumQuestionsSeen;
-}
-- (int32_t) numQuestionsSeen {
-  return result.numQuestionsSeen;
-}
-- (CompleteRoundResultsProto_Builder*) setNumQuestionsSeen:(int32_t) value {
-  result.hasNumQuestionsSeen = YES;
-  result.numQuestionsSeen = value;
-  return self;
-}
-- (CompleteRoundResultsProto_Builder*) clearNumQuestionsSeen {
-  result.hasNumQuestionsSeen = NO;
-  result.numQuestionsSeen = 0;
-  return self;
-}
-- (BOOL) hasNumQuestionsAnsweredCorrectly {
-  return result.hasNumQuestionsAnsweredCorrectly;
-}
-- (int32_t) numQuestionsAnsweredCorrectly {
-  return result.numQuestionsAnsweredCorrectly;
-}
-- (CompleteRoundResultsProto_Builder*) setNumQuestionsAnsweredCorrectly:(int32_t) value {
-  result.hasNumQuestionsAnsweredCorrectly = YES;
-  result.numQuestionsAnsweredCorrectly = value;
-  return self;
-}
-- (CompleteRoundResultsProto_Builder*) clearNumQuestionsAnsweredCorrectly {
-  result.hasNumQuestionsAnsweredCorrectly = NO;
-  result.numQuestionsAnsweredCorrectly = 0;
   return self;
 }
 - (BOOL) hasScore {
@@ -750,33 +598,33 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
   result.roundNumber = 0;
   return self;
 }
-- (NSArray*) questionsList {
-  if (result.mutableQuestionsList == nil) { return [NSArray array]; }
-  return result.mutableQuestionsList;
+- (NSArray*) answersList {
+  if (result.mutableAnswersList == nil) { return [NSArray array]; }
+  return result.mutableAnswersList;
 }
-- (QuestionProto*) questionsAtIndex:(int32_t) index {
-  return [result questionsAtIndex:index];
+- (QuestionAnsweredProto*) answersAtIndex:(int32_t) index {
+  return [result answersAtIndex:index];
 }
-- (CompleteRoundResultsProto_Builder*) replaceQuestionsAtIndex:(int32_t) index with:(QuestionProto*) value {
-  [result.mutableQuestionsList replaceObjectAtIndex:index withObject:value];
+- (CompleteRoundResultsProto_Builder*) replaceAnswersAtIndex:(int32_t) index with:(QuestionAnsweredProto*) value {
+  [result.mutableAnswersList replaceObjectAtIndex:index withObject:value];
   return self;
 }
-- (CompleteRoundResultsProto_Builder*) addAllQuestions:(NSArray*) values {
-  if (result.mutableQuestionsList == nil) {
-    result.mutableQuestionsList = [NSMutableArray array];
+- (CompleteRoundResultsProto_Builder*) addAllAnswers:(NSArray*) values {
+  if (result.mutableAnswersList == nil) {
+    result.mutableAnswersList = [NSMutableArray array];
   }
-  [result.mutableQuestionsList addObjectsFromArray:values];
+  [result.mutableAnswersList addObjectsFromArray:values];
   return self;
 }
-- (CompleteRoundResultsProto_Builder*) clearQuestionsList {
-  result.mutableQuestionsList = nil;
+- (CompleteRoundResultsProto_Builder*) clearAnswersList {
+  result.mutableAnswersList = nil;
   return self;
 }
-- (CompleteRoundResultsProto_Builder*) addQuestions:(QuestionProto*) value {
-  if (result.mutableQuestionsList == nil) {
-    result.mutableQuestionsList = [NSMutableArray array];
+- (CompleteRoundResultsProto_Builder*) addAnswers:(QuestionAnsweredProto*) value {
+  if (result.mutableAnswersList == nil) {
+    result.mutableAnswersList = [NSMutableArray array];
   }
-  [result.mutableQuestionsList addObject:value];
+  [result.mutableAnswersList addObject:value];
   return self;
 }
 - (BOOL) hasStartTime {
@@ -817,6 +665,8 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
 @property (retain) NSString* id;
 @property (retain) NSMutableArray* mutableQuestionsList;
 @property int32_t roundNumber;
+@property int32_t secondsRemaning;
+@property int32_t currentQuestionNumber;
 @end
 
 @implementation BasicRoundProto
@@ -836,6 +686,20 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
   hasRoundNumber_ = !!value;
 }
 @synthesize roundNumber;
+- (BOOL) hasSecondsRemaning {
+  return !!hasSecondsRemaning_;
+}
+- (void) setHasSecondsRemaning:(BOOL) value {
+  hasSecondsRemaning_ = !!value;
+}
+@synthesize secondsRemaning;
+- (BOOL) hasCurrentQuestionNumber {
+  return !!hasCurrentQuestionNumber_;
+}
+- (void) setHasCurrentQuestionNumber:(BOOL) value {
+  hasCurrentQuestionNumber_ = !!value;
+}
+@synthesize currentQuestionNumber;
 - (void) dealloc {
   self.id = nil;
   self.mutableQuestionsList = nil;
@@ -845,6 +709,8 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
   if ((self = [super init])) {
     self.id = @"";
     self.roundNumber = 0;
+    self.secondsRemaning = 0;
+    self.currentQuestionNumber = 0;
   }
   return self;
 }
@@ -880,6 +746,12 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
   if (self.hasRoundNumber) {
     [output writeInt32:3 value:self.roundNumber];
   }
+  if (self.hasSecondsRemaning) {
+    [output writeInt32:4 value:self.secondsRemaning];
+  }
+  if (self.hasCurrentQuestionNumber) {
+    [output writeInt32:5 value:self.currentQuestionNumber];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -897,6 +769,12 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
   }
   if (self.hasRoundNumber) {
     size += computeInt32Size(3, self.roundNumber);
+  }
+  if (self.hasSecondsRemaning) {
+    size += computeInt32Size(4, self.secondsRemaning);
+  }
+  if (self.hasCurrentQuestionNumber) {
+    size += computeInt32Size(5, self.currentQuestionNumber);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -985,6 +863,12 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
   if (other.hasRoundNumber) {
     [self setRoundNumber:other.roundNumber];
   }
+  if (other.hasSecondsRemaning) {
+    [self setSecondsRemaning:other.secondsRemaning];
+  }
+  if (other.hasCurrentQuestionNumber) {
+    [self setCurrentQuestionNumber:other.currentQuestionNumber];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -1018,6 +902,14 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
       }
       case 24: {
         [self setRoundNumber:[input readInt32]];
+        break;
+      }
+      case 32: {
+        [self setSecondsRemaning:[input readInt32]];
+        break;
+      }
+      case 40: {
+        [self setCurrentQuestionNumber:[input readInt32]];
         break;
       }
     }
@@ -1082,6 +974,38 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
 - (BasicRoundProto_Builder*) clearRoundNumber {
   result.hasRoundNumber = NO;
   result.roundNumber = 0;
+  return self;
+}
+- (BOOL) hasSecondsRemaning {
+  return result.hasSecondsRemaning;
+}
+- (int32_t) secondsRemaning {
+  return result.secondsRemaning;
+}
+- (BasicRoundProto_Builder*) setSecondsRemaning:(int32_t) value {
+  result.hasSecondsRemaning = YES;
+  result.secondsRemaning = value;
+  return self;
+}
+- (BasicRoundProto_Builder*) clearSecondsRemaning {
+  result.hasSecondsRemaning = NO;
+  result.secondsRemaning = 0;
+  return self;
+}
+- (BOOL) hasCurrentQuestionNumber {
+  return result.hasCurrentQuestionNumber;
+}
+- (int32_t) currentQuestionNumber {
+  return result.currentQuestionNumber;
+}
+- (BasicRoundProto_Builder*) setCurrentQuestionNumber:(int32_t) value {
+  result.hasCurrentQuestionNumber = YES;
+  result.currentQuestionNumber = value;
+  return self;
+}
+- (BasicRoundProto_Builder*) clearCurrentQuestionNumber {
+  result.hasCurrentQuestionNumber = NO;
+  result.currentQuestionNumber = 0;
   return self;
 }
 @end

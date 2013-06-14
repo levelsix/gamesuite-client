@@ -17,6 +17,7 @@
   BOOL dragging;
   int usedCount;
   NSMutableArray *cheatArray;
+  NSMutableArray *usedCheatArray;
   BOOL selecteNewAnswer;
   BOOL isTutorialView;
 }
@@ -65,6 +66,7 @@
 }
 
 - (void)setUpCheatArray {
+  usedCheatArray = [NSMutableArray array];
   switch (self.correctChoice) {
     case kChoiceA:
       cheatArray = [[NSMutableArray alloc] initWithObjects:[NSNumber numberWithInt:kChoiceB], [NSNumber numberWithInt:kChoiceC], [NSNumber numberWithInt:kChoiceD], nil];
@@ -123,6 +125,7 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
   UITouch *touch = [[event allTouches] anyObject];
   CGPoint touchLocation = [touch locationInView:self.view];
+
   if (CGRectContainsPoint(self.answerAView.frame, touchLocation)) {
     selectedAnswer = kChoiceA;
     originalCenter = self.answerAView.center;
@@ -147,6 +150,12 @@
     selected  = YES;
   }
   [self moveTouchedView];
+  for (NSNumber *num in usedCheatArray) {
+    if ([num integerValue] == selectedAnswer) {
+      selected = NO;
+      touchedView = nil;
+    }
+  }
 }
 
 - (void)moveTouchedView{
@@ -215,7 +224,9 @@
   int random = arc4random() % cheatArray.count;
   int selectionTakenAway = [[cheatArray objectAtIndex:random] integerValue];
   [self takeAwayOptionsWithTag:selectionTakenAway];
+  NSNumber *removed = [cheatArray objectAtIndex:random];
   [cheatArray removeObjectAtIndex:random];
+  [usedCheatArray addObject:removed];
 }
 
 - (void)takeAwayOptionsWithTag:(int)tag {
@@ -224,6 +235,10 @@
       self.answerAView.alpha = 0.0;;
       self.answerALabel.alpha = 0.0f;
       self.answerABottom.alpha = 0.0f;
+    }completion:^(BOOL finished) {
+      self.answerAView.hidden = YES;
+      self.answerALabel.hidden = YES;
+      self.answerABottom.hidden = YES;
     }];
   }
   else if (tag == kChoiceB) {
@@ -231,6 +246,10 @@
       self.answerBView.alpha = 0.0f;
       self.answerBLabel.alpha = 0.0f;
       self.answerBBottom.alpha = 0.0f;
+    }completion:^(BOOL finished) {
+      self.answerBView.hidden = YES;
+      self.answerBLabel.hidden = YES;
+      self.answerBBottom.hidden = YES;
     }];
   }
   
@@ -239,6 +258,10 @@
       self.answerCView.alpha = 0.0f;
       self.answerCLabel.alpha = 0.0f;
       self.answerCBottom.alpha = 0.0f;
+    }completion:^(BOOL finished) {
+      self.answerCView.hidden = YES;
+      self.answerCLabel.hidden = YES;
+      self.answerCBottom.hidden = YES;
     }];
   }
   else if (tag == kChoiceD) {
@@ -246,8 +269,11 @@
       self.answerDView.alpha = 0.0f;
       self.answerDLabel.alpha = 0.0f;
       self.answerDBottom.alpha = 0.0f;
+    }completion:^(BOOL finished) {
+      self.answerDView.hidden = YES;
+      self.answerDLabel.hidden = YES;
+      self.answerDBottom.hidden = YES;
     }];
-
   }
 }
 

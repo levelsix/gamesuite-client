@@ -18,7 +18,6 @@
 #import "LoadingView.h"
 
 @interface SignUpViewController () {
-  UIActivityIndicatorView *spinner;
   NSMutableArray *friendIds;
 }
 
@@ -31,39 +30,30 @@
 {
   [super viewDidLoad];
   friendIds = [[NSMutableArray alloc] init];
+  protoType = kSignUp;
 }
 
 - (IBAction)signUpWithFacebook:(id)sender {
-  FacebookObject *fb = [[FacebookObject alloc] init];
-  if (![fb fbDidLogin]) {
-    self.signingUp = YES;
+  if (FBSession.activeSession.isOpen == YES) {
+    [FBSession.activeSession closeAndClearTokenInformation];
+  }
+  else {
+    FacebookObject *fb = [[FacebookObject alloc] init];
     AppDelegate *ad = [[UIApplication sharedApplication] delegate];
     ad.delegate = self;
     [fb facebookLogin];
-    //[self sendOverFacebookData];
-  }
-  else {    
-    HomeViewController *vc = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
-    [self.view addSubview:vc.view];
-    vc.view.frame = CGRectMake(0, -vc.view.frame.size.height, vc.view.frame.size.width, vc.view.frame.size.height);
-    [UIView animateWithDuration:0.3f delay:0.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
-      vc.view.frame = CGRectMake(0, 0, vc.view.frame.size.width, vc.view.frame.size.height);
-    } completion:^(BOOL finished) {
-      [self.navigationController pushViewController:vc animated:NO];
-    }];
-    //[self sendOverFacebookData];
   }
 }
 
+- (void)finishedFBLogin {
+  [self sendOverFacebookData];
+}
 
 - (void)sendOverFacebookData {
-  
-  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication]; 
   sc.delegate = self;
   
-  spinner = [[UIActivityIndicatorView alloc] init];
-  [self.view addSubview:spinner];
-  [spinner startAnimating];
+  [self.spinner startAnimating];
   
   __block NSString *name = @"";
   __block NSString *facebookId = @"";
@@ -71,10 +61,7 @@
   FBRequest *me = [FBRequest requestForMe];
   [me startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
     if (!error) {
-      
-      [spinner stopAnimating];
-      [spinner removeFromSuperview];
-      
+      [self.spinner stopAnimating];
       NSDictionary <FBGraphUser> *my = (NSDictionary<FBGraphUser>*)result;
       name = [NSString stringWithFormat:@"%@ %@", my.first_name, my.last_name];
       facebookId = my.id;
@@ -83,9 +70,8 @@
       [sc sendCreateAccountViaFacebookMessage:[dict copy]];
     }
     else {
-      [spinner stopAnimating];
-      [spinner removeFromSuperview];
-      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Error" message:@"Error logging in with Facebook, please try again" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:@"Cancel", nil];
+      [self.spinner stopAnimating];
+      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Error" message:@"Error logging in with Facebook, please try again" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
       [alert show];
     }
   }];
@@ -109,36 +95,44 @@
 }
 
 - (void)receivedProtoResponse:(PBGeneratedMessage *)message {
+  if (protoType == kSignUp) {
+    CreateAccountResponseProto *proto = (CreateAccountResponseProto *)message;
   
-  CreateAccountResponseProto *proto = (CreateAccountResponseProto *)message;
-  if (proto.status == CreateAccountResponseProto_CreateAccountStatusSuccessAccountCreated) {
-    SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
-    sc.delegate = nil;
-    FBRequest *friendsRequest = [FBRequest requestForMyFriends];
-    
-    
-    [friendsRequest startWithCompletionHandler: ^(FBRequestConnection *connection,
-                                                  NSDictionary* result,
-                                                  NSError *error) {
-      NSArray* friends = [result objectForKey:@"data"];
-      for (NSDictionary<FBGraphUser>* friend in friends) {
-        [friendIds addObject:friend.id];
-      }
-      LoadingView *vc = [[LoadingView alloc] initWithFriends:friends proto:proto.recipient signUp:self loadingType:kFromSignUpViewController];
-     [self.view addSubview:vc];
-  
-    }];
+    if (proto.status == CreateAccountResponseProto_CreateAccountStatusSuccessAccountCreated) {
+      NSLog(@"succeeded");
+      protoType = kLoginType;
+      FBRequest *friendsRequest = [FBRequest requestForMyFriends];
+      [friendsRequest startWithCompletionHandler: ^(FBRequestConnection *connection,
+                                                    NSDictionary* result,
+                                                    NSError *error) {
+        NSArray* friends = [result objectForKey:@"data"];
+        for (NSDictionary<FBGraphUser>* friend in friends) {
+          [friendIds addObject:friend.id];
+        }
+        SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+        sc.delegate = self;
+        [sc sendLoginRequestEventViaFacebook:proto.recipient facebookFriends:friendIds];
+      }];
+    }
+    else {
+      NSLog(@"failed");
+      [self receivedFailedProto:proto];
+    }
   }
   else {
-    [self receivedFailedProto:proto];
+    LoginResponseProto *proto = (LoginResponseProto *)message;
+    
   }
-}
 
+}
 
 - (void)receivedFailedProto:(CreateAccountResponseProto *)proto {
   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:@"Cancel", nil];
   switch ((int)proto.status) {
     case CreateAccountResponseProto_CreateAccountStatusFailDuplicateFacebookId:
+      NSLog(@"duplicate facebook id");
+      return;
+      break;
     case CreateAccountResponseProto_CreateAccountStatusFailDuplicateUdid:
       alert.title = @"Please sign In!";
       alert.message = @"You are already signed up, please sign in using the login page";
@@ -198,27 +192,22 @@
 }
 
 - (IBAction)signUpWithEmail:(id)sender {
-  CreateAccountViewController *vc = [[CreateAccountViewController alloc] init];
+  CreateAccountViewController *vc = [[CreateAccountViewController alloc] initWithNibName:@"CreateAccountViewController" bundle:nil];
   [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (IBAction)skipSignUp:(id)sender {
-  HomeViewController *vc = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
-  [self.navigationController pushViewController:vc animated:YES];
-
-  
-//  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
-//  sc.delegate = self;
-//  [sc sendCreateAccountViaNoCredentialsRequestProto:[dict copy]];
-//  UserInfo *ui = [[[UserInfo alloc] init] autorelease];
-//  NSString *udid = [ui getUDID];
-//  NSString *macAddress = [ui getMacAddress];
-//  NSString *name = [self randomName];
-//  NSMutableDictionary *dict = [[NSMutableDictionary dictionary ] autorelease];
-//  [dict setObject:udid forKey:@"udid"];
-//  [dict setObject:macAddress forKey:@"deviceId"];
-//  [dict setObject:name forKey:@"name"];
-//  [[SocketCommunication sharedSocketCommunication] sendCreateAccountViaNoCredentialsRequestProto:[dict copy]];
+  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+  sc.delegate = self;
+  UserInfo *ui = [[UserInfo alloc] init];
+  NSString *udid = [ui getUDID];
+  NSString *macAddress = [ui getMacAddress];
+  NSString *name = [self randomName];
+  NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+  [dict setObject:udid forKey:@"udid"];
+  [dict setObject:macAddress forKey:@"deviceId"];
+  [dict setObject:name forKey:@"name"];
+  [[SocketCommunication sharedSocketCommunication] sendCreateAccountViaNoCredentialsRequestProto:[dict copy]];
 }
 
 - (NSString *)randomName {

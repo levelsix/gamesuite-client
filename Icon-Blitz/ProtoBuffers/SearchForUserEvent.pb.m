@@ -258,7 +258,7 @@ static SearchForUserRequestProto* defaultSearchForUserRequestProtoInstance = nil
 
 @interface SearchForUserResponseProto ()
 @property (retain) BasicUserProto* recipient;
-@property int32_t nameOfPersonId;
+@property (retain) NSString* nameOfPersonId;
 @property SearchForUserResponseProto_SearchForUserStatus status;
 @end
 
@@ -287,12 +287,13 @@ static SearchForUserRequestProto* defaultSearchForUserRequestProtoInstance = nil
 @synthesize status;
 - (void) dealloc {
   self.recipient = nil;
+  self.nameOfPersonId = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
     self.recipient = [BasicUserProto defaultInstance];
-    self.nameOfPersonId = 0;
+    self.nameOfPersonId = @"";
     self.status = SearchForUserResponseProto_SearchForUserStatusSuccess;
   }
   return self;
@@ -317,7 +318,7 @@ static SearchForUserResponseProto* defaultSearchForUserResponseProtoInstance = n
     [output writeMessage:1 value:self.recipient];
   }
   if (self.hasNameOfPersonId) {
-    [output writeInt32:2 value:self.nameOfPersonId];
+    [output writeString:2 value:self.nameOfPersonId];
   }
   if (self.hasStatus) {
     [output writeEnum:3 value:self.status];
@@ -335,7 +336,7 @@ static SearchForUserResponseProto* defaultSearchForUserResponseProtoInstance = n
     size += computeMessageSize(1, self.recipient);
   }
   if (self.hasNameOfPersonId) {
-    size += computeInt32Size(2, self.nameOfPersonId);
+    size += computeStringSize(2, self.nameOfPersonId);
   }
   if (self.hasStatus) {
     size += computeEnumSize(3, self.status);
@@ -464,8 +465,8 @@ BOOL SearchForUserResponseProto_SearchForUserStatusIsValidValue(SearchForUserRes
         [self setRecipient:[subBuilder buildPartial]];
         break;
       }
-      case 16: {
-        [self setNameOfPersonId:[input readInt32]];
+      case 18: {
+        [self setNameOfPersonId:[input readString]];
         break;
       }
       case 24: {
@@ -513,17 +514,17 @@ BOOL SearchForUserResponseProto_SearchForUserStatusIsValidValue(SearchForUserRes
 - (BOOL) hasNameOfPersonId {
   return result.hasNameOfPersonId;
 }
-- (int32_t) nameOfPersonId {
+- (NSString*) nameOfPersonId {
   return result.nameOfPersonId;
 }
-- (SearchForUserResponseProto_Builder*) setNameOfPersonId:(int32_t) value {
+- (SearchForUserResponseProto_Builder*) setNameOfPersonId:(NSString*) value {
   result.hasNameOfPersonId = YES;
   result.nameOfPersonId = value;
   return self;
 }
 - (SearchForUserResponseProto_Builder*) clearNameOfPersonId {
   result.hasNameOfPersonId = NO;
-  result.nameOfPersonId = 0;
+  result.nameOfPersonId = @"";
   return self;
 }
 - (BOOL) hasStatus {

@@ -15,12 +15,8 @@
 
 - (void)facebookLogin {
   AppDelegate *ad = [[UIApplication sharedApplication] delegate];
-  if (FBSession.activeSession.isOpen) {
-    
-  }
-  else {
-    [ad openSessionWithAllowLoginUI:YES];
-  }
+  [ad openSessionWithAllowLoginUI:YES];
+
 }
 
 - (BOOL)fbDidLogin {

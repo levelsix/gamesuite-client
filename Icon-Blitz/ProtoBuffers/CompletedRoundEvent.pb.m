@@ -319,7 +319,7 @@ static CompletedRoundRequestProto* defaultCompletedRoundRequestProtoInstance = n
 @property (retain) BasicUserProto* recipient;
 @property (retain) NSString* gameId;
 @property (retain) BasicRoundResultsProto* results;
-@property CompletedRoundResponseProto_CompletedRoundResponseStatus status;
+@property CompletedRoundResponseProto_CompletedRoundStatus status;
 @end
 
 @implementation CompletedRoundResponseProto
@@ -363,7 +363,7 @@ static CompletedRoundRequestProto* defaultCompletedRoundRequestProtoInstance = n
     self.recipient = [BasicUserProto defaultInstance];
     self.gameId = @"";
     self.results = [BasicRoundResultsProto defaultInstance];
-    self.status = CompletedRoundResponseProto_CompletedRoundResponseStatusSuccess;
+    self.status = CompletedRoundResponseProto_CompletedRoundStatusSuccess;
   }
   return self;
 }
@@ -449,12 +449,12 @@ static CompletedRoundResponseProto* defaultCompletedRoundResponseProtoInstance =
 }
 @end
 
-BOOL CompletedRoundResponseProto_CompletedRoundResponseStatusIsValidValue(CompletedRoundResponseProto_CompletedRoundResponseStatus value) {
+BOOL CompletedRoundResponseProto_CompletedRoundStatusIsValidValue(CompletedRoundResponseProto_CompletedRoundStatus value) {
   switch (value) {
-    case CompletedRoundResponseProto_CompletedRoundResponseStatusSuccess:
-    case CompletedRoundResponseProto_CompletedRoundResponseStatusFailGameDoesNotExist:
-    case CompletedRoundResponseProto_CompletedRoundResponseStatusFailGameAlreadyCompleted:
-    case CompletedRoundResponseProto_CompletedRoundResponseStatusFailOther:
+    case CompletedRoundResponseProto_CompletedRoundStatusSuccess:
+    case CompletedRoundResponseProto_CompletedRoundStatusFailGameDoesNotExist:
+    case CompletedRoundResponseProto_CompletedRoundStatusFailGameAlreadyCompleted:
+    case CompletedRoundResponseProto_CompletedRoundStatusFailOther:
       return YES;
     default:
       return NO;
@@ -559,7 +559,7 @@ BOOL CompletedRoundResponseProto_CompletedRoundResponseStatusIsValidValue(Comple
       }
       case 32: {
         int32_t value = [input readEnum];
-        if (CompletedRoundResponseProto_CompletedRoundResponseStatusIsValidValue(value)) {
+        if (CompletedRoundResponseProto_CompletedRoundStatusIsValidValue(value)) {
           [self setStatus:value];
         } else {
           [unknownFields mergeVarintField:4 value:value];
@@ -648,369 +648,17 @@ BOOL CompletedRoundResponseProto_CompletedRoundResponseStatusIsValidValue(Comple
 - (BOOL) hasStatus {
   return result.hasStatus;
 }
-- (CompletedRoundResponseProto_CompletedRoundResponseStatus) status {
+- (CompletedRoundResponseProto_CompletedRoundStatus) status {
   return result.status;
 }
-- (CompletedRoundResponseProto_Builder*) setStatus:(CompletedRoundResponseProto_CompletedRoundResponseStatus) value {
+- (CompletedRoundResponseProto_Builder*) setStatus:(CompletedRoundResponseProto_CompletedRoundStatus) value {
   result.hasStatus = YES;
   result.status = value;
   return self;
 }
 - (CompletedRoundResponseProto_Builder*) clearStatus {
   result.hasStatus = NO;
-  result.status = CompletedRoundResponseProto_CompletedRoundResponseStatusSuccess;
-  return self;
-}
-@end
-
-@interface OpponentCompletedRoundResponseProto ()
-@property (retain) BasicUserProto* userWhoCompletedRound;
-@property (retain) NSString* gameId;
-@property (retain) BasicRoundResultsProto* roundUserCompletedBasic;
-@property (retain) CompleteRoundResultsProto* roundUserCompleted;
-@end
-
-@implementation OpponentCompletedRoundResponseProto
-
-- (BOOL) hasUserWhoCompletedRound {
-  return !!hasUserWhoCompletedRound_;
-}
-- (void) setHasUserWhoCompletedRound:(BOOL) value {
-  hasUserWhoCompletedRound_ = !!value;
-}
-@synthesize userWhoCompletedRound;
-- (BOOL) hasGameId {
-  return !!hasGameId_;
-}
-- (void) setHasGameId:(BOOL) value {
-  hasGameId_ = !!value;
-}
-@synthesize gameId;
-- (BOOL) hasRoundUserCompletedBasic {
-  return !!hasRoundUserCompletedBasic_;
-}
-- (void) setHasRoundUserCompletedBasic:(BOOL) value {
-  hasRoundUserCompletedBasic_ = !!value;
-}
-@synthesize roundUserCompletedBasic;
-- (BOOL) hasRoundUserCompleted {
-  return !!hasRoundUserCompleted_;
-}
-- (void) setHasRoundUserCompleted:(BOOL) value {
-  hasRoundUserCompleted_ = !!value;
-}
-@synthesize roundUserCompleted;
-- (void) dealloc {
-  self.userWhoCompletedRound = nil;
-  self.gameId = nil;
-  self.roundUserCompletedBasic = nil;
-  self.roundUserCompleted = nil;
-  [super dealloc];
-}
-- (id) init {
-  if ((self = [super init])) {
-    self.userWhoCompletedRound = [BasicUserProto defaultInstance];
-    self.gameId = @"";
-    self.roundUserCompletedBasic = [BasicRoundResultsProto defaultInstance];
-    self.roundUserCompleted = [CompleteRoundResultsProto defaultInstance];
-  }
-  return self;
-}
-static OpponentCompletedRoundResponseProto* defaultOpponentCompletedRoundResponseProtoInstance = nil;
-+ (void) initialize {
-  if (self == [OpponentCompletedRoundResponseProto class]) {
-    defaultOpponentCompletedRoundResponseProtoInstance = [[OpponentCompletedRoundResponseProto alloc] init];
-  }
-}
-+ (OpponentCompletedRoundResponseProto*) defaultInstance {
-  return defaultOpponentCompletedRoundResponseProtoInstance;
-}
-- (OpponentCompletedRoundResponseProto*) defaultInstance {
-  return defaultOpponentCompletedRoundResponseProtoInstance;
-}
-- (BOOL) isInitialized {
-  return YES;
-}
-- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
-  if (self.hasUserWhoCompletedRound) {
-    [output writeMessage:2 value:self.userWhoCompletedRound];
-  }
-  if (self.hasGameId) {
-    [output writeString:3 value:self.gameId];
-  }
-  if (self.hasRoundUserCompletedBasic) {
-    [output writeMessage:4 value:self.roundUserCompletedBasic];
-  }
-  if (self.hasRoundUserCompleted) {
-    [output writeMessage:5 value:self.roundUserCompleted];
-  }
-  [self.unknownFields writeToCodedOutputStream:output];
-}
-- (int32_t) serializedSize {
-  int32_t size = memoizedSerializedSize;
-  if (size != -1) {
-    return size;
-  }
-
-  size = 0;
-  if (self.hasUserWhoCompletedRound) {
-    size += computeMessageSize(2, self.userWhoCompletedRound);
-  }
-  if (self.hasGameId) {
-    size += computeStringSize(3, self.gameId);
-  }
-  if (self.hasRoundUserCompletedBasic) {
-    size += computeMessageSize(4, self.roundUserCompletedBasic);
-  }
-  if (self.hasRoundUserCompleted) {
-    size += computeMessageSize(5, self.roundUserCompleted);
-  }
-  size += self.unknownFields.serializedSize;
-  memoizedSerializedSize = size;
-  return size;
-}
-+ (OpponentCompletedRoundResponseProto*) parseFromData:(NSData*) data {
-  return (OpponentCompletedRoundResponseProto*)[[[OpponentCompletedRoundResponseProto builder] mergeFromData:data] build];
-}
-+ (OpponentCompletedRoundResponseProto*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  return (OpponentCompletedRoundResponseProto*)[[[OpponentCompletedRoundResponseProto builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
-}
-+ (OpponentCompletedRoundResponseProto*) parseFromInputStream:(NSInputStream*) input {
-  return (OpponentCompletedRoundResponseProto*)[[[OpponentCompletedRoundResponseProto builder] mergeFromInputStream:input] build];
-}
-+ (OpponentCompletedRoundResponseProto*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  return (OpponentCompletedRoundResponseProto*)[[[OpponentCompletedRoundResponseProto builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
-}
-+ (OpponentCompletedRoundResponseProto*) parseFromCodedInputStream:(PBCodedInputStream*) input {
-  return (OpponentCompletedRoundResponseProto*)[[[OpponentCompletedRoundResponseProto builder] mergeFromCodedInputStream:input] build];
-}
-+ (OpponentCompletedRoundResponseProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  return (OpponentCompletedRoundResponseProto*)[[[OpponentCompletedRoundResponseProto builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
-}
-+ (OpponentCompletedRoundResponseProto_Builder*) builder {
-  return [[[OpponentCompletedRoundResponseProto_Builder alloc] init] autorelease];
-}
-+ (OpponentCompletedRoundResponseProto_Builder*) builderWithPrototype:(OpponentCompletedRoundResponseProto*) prototype {
-  return [[OpponentCompletedRoundResponseProto builder] mergeFrom:prototype];
-}
-- (OpponentCompletedRoundResponseProto_Builder*) builder {
-  return [OpponentCompletedRoundResponseProto builder];
-}
-@end
-
-@interface OpponentCompletedRoundResponseProto_Builder()
-@property (retain) OpponentCompletedRoundResponseProto* result;
-@end
-
-@implementation OpponentCompletedRoundResponseProto_Builder
-@synthesize result;
-- (void) dealloc {
-  self.result = nil;
-  [super dealloc];
-}
-- (id) init {
-  if ((self = [super init])) {
-    self.result = [[[OpponentCompletedRoundResponseProto alloc] init] autorelease];
-  }
-  return self;
-}
-- (PBGeneratedMessage*) internalGetResult {
-  return result;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) clear {
-  self.result = [[[OpponentCompletedRoundResponseProto alloc] init] autorelease];
-  return self;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) clone {
-  return [OpponentCompletedRoundResponseProto builderWithPrototype:result];
-}
-- (OpponentCompletedRoundResponseProto*) defaultInstance {
-  return [OpponentCompletedRoundResponseProto defaultInstance];
-}
-- (OpponentCompletedRoundResponseProto*) build {
-  [self checkInitialized];
-  return [self buildPartial];
-}
-- (OpponentCompletedRoundResponseProto*) buildPartial {
-  OpponentCompletedRoundResponseProto* returnMe = [[result retain] autorelease];
-  self.result = nil;
-  return returnMe;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) mergeFrom:(OpponentCompletedRoundResponseProto*) other {
-  if (other == [OpponentCompletedRoundResponseProto defaultInstance]) {
-    return self;
-  }
-  if (other.hasUserWhoCompletedRound) {
-    [self mergeUserWhoCompletedRound:other.userWhoCompletedRound];
-  }
-  if (other.hasGameId) {
-    [self setGameId:other.gameId];
-  }
-  if (other.hasRoundUserCompletedBasic) {
-    [self mergeRoundUserCompletedBasic:other.roundUserCompletedBasic];
-  }
-  if (other.hasRoundUserCompleted) {
-    [self mergeRoundUserCompleted:other.roundUserCompleted];
-  }
-  [self mergeUnknownFields:other.unknownFields];
-  return self;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
-  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
-}
-- (OpponentCompletedRoundResponseProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
-  while (YES) {
-    int32_t tag = [input readTag];
-    switch (tag) {
-      case 0:
-        [self setUnknownFields:[unknownFields build]];
-        return self;
-      default: {
-        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
-          [self setUnknownFields:[unknownFields build]];
-          return self;
-        }
-        break;
-      }
-      case 18: {
-        BasicUserProto_Builder* subBuilder = [BasicUserProto builder];
-        if (self.hasUserWhoCompletedRound) {
-          [subBuilder mergeFrom:self.userWhoCompletedRound];
-        }
-        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
-        [self setUserWhoCompletedRound:[subBuilder buildPartial]];
-        break;
-      }
-      case 26: {
-        [self setGameId:[input readString]];
-        break;
-      }
-      case 34: {
-        BasicRoundResultsProto_Builder* subBuilder = [BasicRoundResultsProto builder];
-        if (self.hasRoundUserCompletedBasic) {
-          [subBuilder mergeFrom:self.roundUserCompletedBasic];
-        }
-        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
-        [self setRoundUserCompletedBasic:[subBuilder buildPartial]];
-        break;
-      }
-      case 42: {
-        CompleteRoundResultsProto_Builder* subBuilder = [CompleteRoundResultsProto builder];
-        if (self.hasRoundUserCompleted) {
-          [subBuilder mergeFrom:self.roundUserCompleted];
-        }
-        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
-        [self setRoundUserCompleted:[subBuilder buildPartial]];
-        break;
-      }
-    }
-  }
-}
-- (BOOL) hasUserWhoCompletedRound {
-  return result.hasUserWhoCompletedRound;
-}
-- (BasicUserProto*) userWhoCompletedRound {
-  return result.userWhoCompletedRound;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) setUserWhoCompletedRound:(BasicUserProto*) value {
-  result.hasUserWhoCompletedRound = YES;
-  result.userWhoCompletedRound = value;
-  return self;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) setUserWhoCompletedRoundBuilder:(BasicUserProto_Builder*) builderForValue {
-  return [self setUserWhoCompletedRound:[builderForValue build]];
-}
-- (OpponentCompletedRoundResponseProto_Builder*) mergeUserWhoCompletedRound:(BasicUserProto*) value {
-  if (result.hasUserWhoCompletedRound &&
-      result.userWhoCompletedRound != [BasicUserProto defaultInstance]) {
-    result.userWhoCompletedRound =
-      [[[BasicUserProto builderWithPrototype:result.userWhoCompletedRound] mergeFrom:value] buildPartial];
-  } else {
-    result.userWhoCompletedRound = value;
-  }
-  result.hasUserWhoCompletedRound = YES;
-  return self;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) clearUserWhoCompletedRound {
-  result.hasUserWhoCompletedRound = NO;
-  result.userWhoCompletedRound = [BasicUserProto defaultInstance];
-  return self;
-}
-- (BOOL) hasGameId {
-  return result.hasGameId;
-}
-- (NSString*) gameId {
-  return result.gameId;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) setGameId:(NSString*) value {
-  result.hasGameId = YES;
-  result.gameId = value;
-  return self;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) clearGameId {
-  result.hasGameId = NO;
-  result.gameId = @"";
-  return self;
-}
-- (BOOL) hasRoundUserCompletedBasic {
-  return result.hasRoundUserCompletedBasic;
-}
-- (BasicRoundResultsProto*) roundUserCompletedBasic {
-  return result.roundUserCompletedBasic;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) setRoundUserCompletedBasic:(BasicRoundResultsProto*) value {
-  result.hasRoundUserCompletedBasic = YES;
-  result.roundUserCompletedBasic = value;
-  return self;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) setRoundUserCompletedBasicBuilder:(BasicRoundResultsProto_Builder*) builderForValue {
-  return [self setRoundUserCompletedBasic:[builderForValue build]];
-}
-- (OpponentCompletedRoundResponseProto_Builder*) mergeRoundUserCompletedBasic:(BasicRoundResultsProto*) value {
-  if (result.hasRoundUserCompletedBasic &&
-      result.roundUserCompletedBasic != [BasicRoundResultsProto defaultInstance]) {
-    result.roundUserCompletedBasic =
-      [[[BasicRoundResultsProto builderWithPrototype:result.roundUserCompletedBasic] mergeFrom:value] buildPartial];
-  } else {
-    result.roundUserCompletedBasic = value;
-  }
-  result.hasRoundUserCompletedBasic = YES;
-  return self;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) clearRoundUserCompletedBasic {
-  result.hasRoundUserCompletedBasic = NO;
-  result.roundUserCompletedBasic = [BasicRoundResultsProto defaultInstance];
-  return self;
-}
-- (BOOL) hasRoundUserCompleted {
-  return result.hasRoundUserCompleted;
-}
-- (CompleteRoundResultsProto*) roundUserCompleted {
-  return result.roundUserCompleted;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) setRoundUserCompleted:(CompleteRoundResultsProto*) value {
-  result.hasRoundUserCompleted = YES;
-  result.roundUserCompleted = value;
-  return self;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) setRoundUserCompletedBuilder:(CompleteRoundResultsProto_Builder*) builderForValue {
-  return [self setRoundUserCompleted:[builderForValue build]];
-}
-- (OpponentCompletedRoundResponseProto_Builder*) mergeRoundUserCompleted:(CompleteRoundResultsProto*) value {
-  if (result.hasRoundUserCompleted &&
-      result.roundUserCompleted != [CompleteRoundResultsProto defaultInstance]) {
-    result.roundUserCompleted =
-      [[[CompleteRoundResultsProto builderWithPrototype:result.roundUserCompleted] mergeFrom:value] buildPartial];
-  } else {
-    result.roundUserCompleted = value;
-  }
-  result.hasRoundUserCompleted = YES;
-  return self;
-}
-- (OpponentCompletedRoundResponseProto_Builder*) clearRoundUserCompleted {
-  result.hasRoundUserCompleted = NO;
-  result.roundUserCompleted = [CompleteRoundResultsProto defaultInstance];
+  result.status = CompletedRoundResponseProto_CompletedRoundStatusSuccess;
   return self;
 }
 @end

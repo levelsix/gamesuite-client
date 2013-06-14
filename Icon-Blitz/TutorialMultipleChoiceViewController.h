@@ -17,6 +17,7 @@
 - (void)multipleChoiceCallBack:(BOOL)correct;
 - (void)fillInFinishedCallBack:(BOOL)correct;
 - (void)cheatClicked;
+- (void)freezeClicked;
 @end
 
 @interface TutorialMultipleChoiceViewController : UIViewController <TutorialAnswerDelegate>
@@ -28,7 +29,9 @@
 - (CGPoint)getFillInLettersCenter:(int)answerTag;
 - (void)disableButtons;
 - (void)enableButtons;
+- (void)pushToIconFillInTutorialView;
 - (void)pushToFillInView;
 - (void)pushToLyricsView;
-
+- (void)pushToLastQuestion;
+- (void)enableGameTimer;
 @end

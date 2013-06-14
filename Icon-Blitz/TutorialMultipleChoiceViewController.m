@@ -12,12 +12,15 @@
 #import "TutorialViewController.h"
 #import "MultipleChoiceViewController.h"
 #import "FillInTypeViewController.h"
+#import "ScoreViewController.h"
 
 @interface TutorialMultipleChoiceViewController ()
 
 @end
 
 @implementation TutorialMultipleChoiceViewController
+
+#pragma mark - DELEGATION
 
 - (void)answerSelection:(BOOL)correct {
   if ([self.delegate respondsToSelector:@selector(multipleChoiceCallBack:)]) {
@@ -43,6 +46,14 @@
   }
 }
 
+- (void)tutorialFreezeClicked {
+  if ([self.delegate respondsToSelector:@selector(freezeClicked)]) {
+    [self.delegate freezeClicked];
+  }
+}
+
+#pragma mark - Changing Views and other methods
+
 - (void)viewDidLoad
 {
   [super viewDidLoad];
@@ -55,18 +66,31 @@
   self.gameView.delegate = self;
 }
 
+- (void)pushToIconFillInTutorialView {
+  [self.gameView pushToTutorialFillInIconView];
+}
+
+- (void)pushToLastQuestion {
+  [self.gameView pushtoLastQuestion];
+}
+
 - (void)pushToFillInView {
   [self.gameView pushNewViewControllersWithType:kFillIn];
 }
 
 - (void)pushToLyricsView {
-  //[self.gameView pushNewViewControllersWithType:kMultipleChoice];
   [self.gameView pushToLyricsView];
+}
+
+- (void)enableGameTimer {
+  [self.gameView enableTimer];
 }
 
 - (CGPoint)getFillInLettersCenter:(int)answerTag {
   FillInTypeViewController *vc = (FillInTypeViewController *)self.gameView.currentController;
   UIView *letter = [vc.view viewWithTag:answerTag];
+  [self.gameView disableLetterInteraction:answerTag];
+  letter.userInteractionEnabled = YES;
   return letter.center;
 }
 
@@ -108,5 +132,6 @@
   self.gameView.skipButton.userInteractionEnabled = YES;
   self.gameView.removeCheatButon.userInteractionEnabled = YES;
 }
+
 
 @end

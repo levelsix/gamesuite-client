@@ -20,6 +20,8 @@
 @property (nonatomic, strong) IBOutlet TextFieldIndentation *passwordTextField;
 @property (nonatomic, strong) IBOutlet TextFieldIndentation *emailTextField;
 @property (nonatomic, strong) IBOutlet TextFieldIndentation *confirmPasswordTextField;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *spinner;
+@property (nonatomic, strong) IBOutlet UILabel *loadingLabel;
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *email;

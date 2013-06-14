@@ -9,8 +9,10 @@
 #import "TutorialViewController.h"
 #import "TutorialMultipleChoiceViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ScoreViewController.h"
+#import "SignUpViewController.h"
 
-#define MaxFillInLetters 12
+#define MaxFillInLetters 6
 
 @interface TutorialViewController () {
   int dialogueCount;
@@ -26,7 +28,9 @@
   BOOL answerIsCorrect;
   BOOL userDidStartFillIn;
   BOOL requiredDialogue;
-  BOOL keepTryingFillInAnswer;
+  BOOL keepTryingFillInAnswer;  
+  CGPoint originalChatViewCenter;
+  
 }
 
 @end
@@ -36,7 +40,6 @@
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-  
   dialogueCount = 0;
   rightAnswer = 3;
   currentLetter = 0;
@@ -49,11 +52,16 @@
   [self.view bringSubviewToFront:self.overlayView];
   [self.gameView disableButtons];
   
+  originalChatViewCenter = self.chatView.center;
+  
+  //hardcoding the integers
   correctLetterArray = [[NSMutableArray alloc] init];
-  for (int i = 1 ; i <= 12; i++) {
-    NSNumber *num = [NSNumber numberWithInt:i];
-    [correctLetterArray addObject:num];
-  }
+  [correctLetterArray addObject:[NSNumber numberWithInt:2]];
+  [correctLetterArray addObject:[NSNumber numberWithInt:1]];
+  [correctLetterArray addObject:[NSNumber numberWithInt:3]];
+  [correctLetterArray addObject:[NSNumber numberWithInt:8]];
+  [correctLetterArray addObject:[NSNumber numberWithInt:9]];
+  [correctLetterArray addObject:[NSNumber numberWithInt:10]];
   
   NSString *path = [[NSBundle mainBundle] pathForResource:@"Tutorial" ofType:@"plist"];
   NSDictionary *dict = [[NSDictionary alloc] initWithContentsOfFile:path];
@@ -125,7 +133,7 @@
       [self.gameView disableButtons];
       [self showQuestionView];
       [self.chatButton setImage:[UIImage imageNamed:@"next.png"] forState:UIControlStateNormal];
-      [self.gameView pushToFillInView];
+      [self.gameView pushToIconFillInTutorialView];
       self.currentStage = kFillInStage;
       fillInTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(countDown) userInfo:nil repeats:YES];
       break;
@@ -145,12 +153,34 @@
       break;
       
     case 5:
-      [self showFreezeStage];
+      [self.gameView pushToLastQuestion];
+      [self performSelector:@selector(showFreezeStage) withObject:nil afterDelay:0.5f];
+      break;
+      
+    case 6:
+      requiredDialogue = YES;
+      answerIsCorrect = NO;
+      break;
+      
+    case 7:
+      answerIsCorrect = NO;
+      requiredDialogue = YES;
+      break;
+      
+    case 8:
+      answerIsCorrect = NO;
+      requiredDialogue = NO;
+      [self pushToSignup];
       break;
       
     default:
       break;
   }
+}
+
+- (void)pushToSignup {
+  SignUpViewController *vc = [[SignUpViewController alloc] init];
+  [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)moveChatViewOffScreen {
@@ -170,12 +200,13 @@
     self.chatView.center = bumpFrame;
   }completion:^(BOOL finished) {
     [UIView animateWithDuration:0.3f animations:^{
-      self.chatView.center = newFrame;      
+      self.chatView.center = newFrame;
     }];
   }];
 }
 
 - (void)showQuestionView {
+  [self.gameView enableGameTimer];
   self.glowOverlay.hidden = YES;
   self.overlayView.userInteractionEnabled = NO;
 }
@@ -229,26 +260,24 @@
 }
 
 - (void)showMultipleChoiceCorrectAnimation {
-  int point = 0;
   if (self.currentStage == kCheatStage) {
     answerIsCorrect = NO;
     self.chatButton.userInteractionEnabled = YES;
-    point = 20;
   }
   [self setUpDialogue];
   self.chatButton.hidden = NO;
   //move the view from downwards
   self.chatView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height * 1.5);
   [UIView animateWithDuration:0.3f delay:0.4f options:UIViewAnimationCurveEaseInOut animations:^{
-    self.chatView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2 + 100 - point);
+    self.chatView.center = CGPointMake(originalChatViewCenter.x, originalChatViewCenter.y - 20);
   }completion:^(BOOL finished)
    {
      self.glowOverlay.hidden = NO;
     [UIView animateWithDuration:0.25f animations:^{
-      self.chatView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2 + 140 - point);
+      self.chatView.center = CGPointMake(originalChatViewCenter.x, originalChatViewCenter.y + 40);
     }completion:^(BOOL finished) {
       [UIView animateWithDuration:0.25f animations:^{
-        self.chatView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2 + 120 - point);
+        self.chatView.center = originalChatViewCenter;
       }];
     }];
   }];
@@ -300,7 +329,7 @@
   self.overlayView.userInteractionEnabled = YES;
   requiredDialogue = NO;
   answerIsCorrect = correct;
-  if (!keepTryingFillInAnswer) self.overlayView.center = CGPointMake(self.overlayView.center.x, self.overlayView.center.y + 20);
+  self.overlayView.hidden = NO;
   if (correct) {
     [self showFillInCorrectAnimation];
   }
@@ -312,22 +341,21 @@
 - (void)showFillInCorrectAnimation {
   [self setUpDialogue];
   self.chatButton.hidden = NO;
-  self.overlayView.hidden = NO;
   self.glowOverlay.hidden = YES;
   //move the view from downwards
-  if (!keepTryingFillInAnswer) self.glowOverlay.center = CGPointMake(self.glowOverlay.center.x,self.glowOverlay.center.y - 100);
-  self.chatView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height * 1.5);
+  self.chatView.center = CGPointMake(originalChatViewCenter.x, self.view.frame.size.height * 1.5);
   [UIView animateWithDuration:0.3f delay:0.4f options:UIViewAnimationCurveEaseInOut animations:^{
-    self.chatView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2 + 80);
+    self.chatView.center = CGPointMake(originalChatViewCenter.x, originalChatViewCenter.y - 20);
   }completion:^(BOOL finished)
    {
      self.glowOverlay.hidden = NO;
      [UIView animateWithDuration:0.25f animations:^{
-       self.chatView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2 + 120);
+       self.chatView.center = CGPointMake(originalChatViewCenter.x, originalChatViewCenter.y + 40);
+       [self.gameView.gameView animatePointsLabel];
      }completion:^(BOOL finished) {
        [UIView animateWithDuration:0.25f animations:^{
          keepTryingFillInAnswer = NO;
-         self.chatView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2 + 100);
+         self.chatView.center = originalChatViewCenter;
        }completion:NULL];
      }];
    }];
@@ -336,19 +364,19 @@
 
 - (void)showFillInFalseAnimation {
   if (keepTryingFillInAnswer) self.chatButton.hidden = YES;
+  [self setUpDialogue];
   self.chatView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height * 1.5);
   [UIView animateWithDuration:0.3f delay:0.4f options:UIViewAnimationCurveEaseInOut animations:^{
-    self.chatView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2 + 80);
+    self.chatView.center = CGPointMake(originalChatViewCenter.x, originalChatViewCenter.y - 20);
   }completion:^(BOOL finished)
    {
-     if (!keepTryingFillInAnswer) self.glowOverlay.center = CGPointMake(self.glowOverlay.center.x, self.glowOverlay.center.y - 100);
      self.overlayView.hidden = NO;
      self.glowOverlay.hidden = NO;
      [UIView animateWithDuration:0.25f animations:^{
-       self.chatView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2 + 120);
+       self.chatView.center = CGPointMake(originalChatViewCenter.x, originalChatViewCenter.y + 40);
      }completion:^(BOOL finished) {
        [UIView animateWithDuration:0.25f animations:^{
-         self.chatView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2 + 100);
+         self.chatView.center = originalChatViewCenter;
        }completion:^(BOOL finished) {
          if (keepTryingFillInAnswer) {
            [self performSelector:@selector(resetLetters) withObject:nil afterDelay:1.0f];
@@ -375,7 +403,6 @@
   [self moveChatViewOffScreen];
   self.glowOverlay.hidden = YES;
   
-  [arrow removeFromSuperview];
   CGPoint point = CGPointMake(self.view.frame.size.width/2 - 10, self.gameView.gameView.removeCheatButon.center.y - self.gameView.gameView.removeCheatButon.frame.size.height/2-30);
   [self animateArrowAtPoint:point];
   [self performSelector:@selector(enableRemoveCheatButtonOnly) withObject:nil afterDelay:0.9f];
@@ -400,7 +427,10 @@
 
 #pragma mark - FreezeStage
 
-#warning - animate arrow to freeze button
+- (void)freezeClicked {
+  self.gameView.gameView.currentController.view.userInteractionEnabled = YES;
+  [arrow removeFromSuperview];
+}
 
 - (void)animateArrowAtPoint:(CGPoint)point {
   [arrow removeFromSuperview];
@@ -424,8 +454,16 @@
   [self moveChatViewOffScreen];
   self.glowOverlay.hidden = YES;
   self.overlayView.userInteractionEnabled = NO;
-  [self.gameView pushToFillInView];
-  
+  CGPoint point = CGPointMake(self.gameView.gameView.freezeButton.center.x-10, self.gameView.gameView.freezeButton.center.y - self.gameView.gameView.freezeButton.frame.size.height/2-30);
+  [self animateArrowAtPoint:point];
+  [self performSelector:@selector(enableFreezeButtonOnly) withObject:nil afterDelay:0.9f];
 }
+
+- (void)enableFreezeButtonOnly {
+  self.gameView.gameView.currentController.view.userInteractionEnabled  = NO;
+  self.gameView.gameView.freezeButton.userInteractionEnabled = YES;
+}
+
+#pragma mark - Score screen
 
 @end

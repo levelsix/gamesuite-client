@@ -19,6 +19,313 @@ static PBExtensionRegistry* extensionRegistry = nil;
 }
 @end
 
+@interface QuestionAnsweredProto ()
+@property (retain) NSString* questionId;
+@property QuestionAnsweredProto_AnswerType answerType;
+@property int32_t questionNumber;
+@property int64_t timeAnswered;
+@end
+
+@implementation QuestionAnsweredProto
+
+- (BOOL) hasQuestionId {
+  return !!hasQuestionId_;
+}
+- (void) setHasQuestionId:(BOOL) value {
+  hasQuestionId_ = !!value;
+}
+@synthesize questionId;
+- (BOOL) hasAnswerType {
+  return !!hasAnswerType_;
+}
+- (void) setHasAnswerType:(BOOL) value {
+  hasAnswerType_ = !!value;
+}
+@synthesize answerType;
+- (BOOL) hasQuestionNumber {
+  return !!hasQuestionNumber_;
+}
+- (void) setHasQuestionNumber:(BOOL) value {
+  hasQuestionNumber_ = !!value;
+}
+@synthesize questionNumber;
+- (BOOL) hasTimeAnswered {
+  return !!hasTimeAnswered_;
+}
+- (void) setHasTimeAnswered:(BOOL) value {
+  hasTimeAnswered_ = !!value;
+}
+@synthesize timeAnswered;
+- (void) dealloc {
+  self.questionId = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.questionId = @"";
+    self.answerType = QuestionAnsweredProto_AnswerTypeCorrect;
+    self.questionNumber = 0;
+    self.timeAnswered = 0L;
+  }
+  return self;
+}
+static QuestionAnsweredProto* defaultQuestionAnsweredProtoInstance = nil;
++ (void) initialize {
+  if (self == [QuestionAnsweredProto class]) {
+    defaultQuestionAnsweredProtoInstance = [[QuestionAnsweredProto alloc] init];
+  }
+}
++ (QuestionAnsweredProto*) defaultInstance {
+  return defaultQuestionAnsweredProtoInstance;
+}
+- (QuestionAnsweredProto*) defaultInstance {
+  return defaultQuestionAnsweredProtoInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasQuestionId) {
+    [output writeString:1 value:self.questionId];
+  }
+  if (self.hasAnswerType) {
+    [output writeEnum:2 value:self.answerType];
+  }
+  if (self.hasQuestionNumber) {
+    [output writeInt32:3 value:self.questionNumber];
+  }
+  if (self.hasTimeAnswered) {
+    [output writeInt64:4 value:self.timeAnswered];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasQuestionId) {
+    size += computeStringSize(1, self.questionId);
+  }
+  if (self.hasAnswerType) {
+    size += computeEnumSize(2, self.answerType);
+  }
+  if (self.hasQuestionNumber) {
+    size += computeInt32Size(3, self.questionNumber);
+  }
+  if (self.hasTimeAnswered) {
+    size += computeInt64Size(4, self.timeAnswered);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (QuestionAnsweredProto*) parseFromData:(NSData*) data {
+  return (QuestionAnsweredProto*)[[[QuestionAnsweredProto builder] mergeFromData:data] build];
+}
++ (QuestionAnsweredProto*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (QuestionAnsweredProto*)[[[QuestionAnsweredProto builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (QuestionAnsweredProto*) parseFromInputStream:(NSInputStream*) input {
+  return (QuestionAnsweredProto*)[[[QuestionAnsweredProto builder] mergeFromInputStream:input] build];
+}
++ (QuestionAnsweredProto*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (QuestionAnsweredProto*)[[[QuestionAnsweredProto builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (QuestionAnsweredProto*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (QuestionAnsweredProto*)[[[QuestionAnsweredProto builder] mergeFromCodedInputStream:input] build];
+}
++ (QuestionAnsweredProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (QuestionAnsweredProto*)[[[QuestionAnsweredProto builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (QuestionAnsweredProto_Builder*) builder {
+  return [[[QuestionAnsweredProto_Builder alloc] init] autorelease];
+}
++ (QuestionAnsweredProto_Builder*) builderWithPrototype:(QuestionAnsweredProto*) prototype {
+  return [[QuestionAnsweredProto builder] mergeFrom:prototype];
+}
+- (QuestionAnsweredProto_Builder*) builder {
+  return [QuestionAnsweredProto builder];
+}
+@end
+
+BOOL QuestionAnsweredProto_AnswerTypeIsValidValue(QuestionAnsweredProto_AnswerType value) {
+  switch (value) {
+    case QuestionAnsweredProto_AnswerTypeCorrect:
+    case QuestionAnsweredProto_AnswerTypeIncorrect:
+    case QuestionAnsweredProto_AnswerTypeSkipped:
+      return YES;
+    default:
+      return NO;
+  }
+}
+@interface QuestionAnsweredProto_Builder()
+@property (retain) QuestionAnsweredProto* result;
+@end
+
+@implementation QuestionAnsweredProto_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[QuestionAnsweredProto alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (QuestionAnsweredProto_Builder*) clear {
+  self.result = [[[QuestionAnsweredProto alloc] init] autorelease];
+  return self;
+}
+- (QuestionAnsweredProto_Builder*) clone {
+  return [QuestionAnsweredProto builderWithPrototype:result];
+}
+- (QuestionAnsweredProto*) defaultInstance {
+  return [QuestionAnsweredProto defaultInstance];
+}
+- (QuestionAnsweredProto*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (QuestionAnsweredProto*) buildPartial {
+  QuestionAnsweredProto* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (QuestionAnsweredProto_Builder*) mergeFrom:(QuestionAnsweredProto*) other {
+  if (other == [QuestionAnsweredProto defaultInstance]) {
+    return self;
+  }
+  if (other.hasQuestionId) {
+    [self setQuestionId:other.questionId];
+  }
+  if (other.hasAnswerType) {
+    [self setAnswerType:other.answerType];
+  }
+  if (other.hasQuestionNumber) {
+    [self setQuestionNumber:other.questionNumber];
+  }
+  if (other.hasTimeAnswered) {
+    [self setTimeAnswered:other.timeAnswered];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (QuestionAnsweredProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (QuestionAnsweredProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 10: {
+        [self setQuestionId:[input readString]];
+        break;
+      }
+      case 16: {
+        int32_t value = [input readEnum];
+        if (QuestionAnsweredProto_AnswerTypeIsValidValue(value)) {
+          [self setAnswerType:value];
+        } else {
+          [unknownFields mergeVarintField:2 value:value];
+        }
+        break;
+      }
+      case 24: {
+        [self setQuestionNumber:[input readInt32]];
+        break;
+      }
+      case 32: {
+        [self setTimeAnswered:[input readInt64]];
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasQuestionId {
+  return result.hasQuestionId;
+}
+- (NSString*) questionId {
+  return result.questionId;
+}
+- (QuestionAnsweredProto_Builder*) setQuestionId:(NSString*) value {
+  result.hasQuestionId = YES;
+  result.questionId = value;
+  return self;
+}
+- (QuestionAnsweredProto_Builder*) clearQuestionId {
+  result.hasQuestionId = NO;
+  result.questionId = @"";
+  return self;
+}
+- (BOOL) hasAnswerType {
+  return result.hasAnswerType;
+}
+- (QuestionAnsweredProto_AnswerType) answerType {
+  return result.answerType;
+}
+- (QuestionAnsweredProto_Builder*) setAnswerType:(QuestionAnsweredProto_AnswerType) value {
+  result.hasAnswerType = YES;
+  result.answerType = value;
+  return self;
+}
+- (QuestionAnsweredProto_Builder*) clearAnswerType {
+  result.hasAnswerType = NO;
+  result.answerType = QuestionAnsweredProto_AnswerTypeCorrect;
+  return self;
+}
+- (BOOL) hasQuestionNumber {
+  return result.hasQuestionNumber;
+}
+- (int32_t) questionNumber {
+  return result.questionNumber;
+}
+- (QuestionAnsweredProto_Builder*) setQuestionNumber:(int32_t) value {
+  result.hasQuestionNumber = YES;
+  result.questionNumber = value;
+  return self;
+}
+- (QuestionAnsweredProto_Builder*) clearQuestionNumber {
+  result.hasQuestionNumber = NO;
+  result.questionNumber = 0;
+  return self;
+}
+- (BOOL) hasTimeAnswered {
+  return result.hasTimeAnswered;
+}
+- (int64_t) timeAnswered {
+  return result.timeAnswered;
+}
+- (QuestionAnsweredProto_Builder*) setTimeAnswered:(int64_t) value {
+  result.hasTimeAnswered = YES;
+  result.timeAnswered = value;
+  return self;
+}
+- (QuestionAnsweredProto_Builder*) clearTimeAnswered {
+  result.hasTimeAnswered = NO;
+  result.timeAnswered = 0L;
+  return self;
+}
+@end
+
 @interface QuestionProto ()
 @property (retain) NSString* id;
 @property (retain) MultipleChoiceQuestionProto* multipleChoice;

@@ -25,22 +25,22 @@
 @class MultipleChoiceAnswerProto_Builder;
 @class MultipleChoiceQuestionProto;
 @class MultipleChoiceQuestionProto_Builder;
-@class OpponentCompletedRoundResponseProto;
-@class OpponentCompletedRoundResponseProto_Builder;
 @class PictureQuestionProto;
 @class PictureQuestionProto_Builder;
+@class QuestionAnsweredProto;
+@class QuestionAnsweredProto_Builder;
 @class QuestionProto;
 @class QuestionProto_Builder;
 @class UserCurrencyProto;
 @class UserCurrencyProto_Builder;
 typedef enum {
-  CompletedRoundResponseProto_CompletedRoundResponseStatusSuccess = 1,
-  CompletedRoundResponseProto_CompletedRoundResponseStatusFailGameDoesNotExist = 2,
-  CompletedRoundResponseProto_CompletedRoundResponseStatusFailGameAlreadyCompleted = 3,
-  CompletedRoundResponseProto_CompletedRoundResponseStatusFailOther = 4,
-} CompletedRoundResponseProto_CompletedRoundResponseStatus;
+  CompletedRoundResponseProto_CompletedRoundStatusSuccess = 1,
+  CompletedRoundResponseProto_CompletedRoundStatusFailGameDoesNotExist = 2,
+  CompletedRoundResponseProto_CompletedRoundStatusFailGameAlreadyCompleted = 3,
+  CompletedRoundResponseProto_CompletedRoundStatusFailOther = 4,
+} CompletedRoundResponseProto_CompletedRoundStatus;
 
-BOOL CompletedRoundResponseProto_CompletedRoundResponseStatusIsValidValue(CompletedRoundResponseProto_CompletedRoundResponseStatus value);
+BOOL CompletedRoundResponseProto_CompletedRoundStatusIsValidValue(CompletedRoundResponseProto_CompletedRoundStatus value);
 
 
 @interface CompletedRoundEventRoot : NSObject {
@@ -128,7 +128,7 @@ BOOL CompletedRoundResponseProto_CompletedRoundResponseStatusIsValidValue(Comple
   NSString* gameId;
   BasicUserProto* recipient;
   BasicRoundResultsProto* results;
-  CompletedRoundResponseProto_CompletedRoundResponseStatus status;
+  CompletedRoundResponseProto_CompletedRoundStatus status;
 }
 - (BOOL) hasRecipient;
 - (BOOL) hasGameId;
@@ -137,7 +137,7 @@ BOOL CompletedRoundResponseProto_CompletedRoundResponseStatusIsValidValue(Comple
 @property (readonly, retain) BasicUserProto* recipient;
 @property (readonly, retain) NSString* gameId;
 @property (readonly, retain) BasicRoundResultsProto* results;
-@property (readonly) CompletedRoundResponseProto_CompletedRoundResponseStatus status;
+@property (readonly) CompletedRoundResponseProto_CompletedRoundStatus status;
 
 + (CompletedRoundResponseProto*) defaultInstance;
 - (CompletedRoundResponseProto*) defaultInstance;
@@ -193,89 +193,8 @@ BOOL CompletedRoundResponseProto_CompletedRoundResponseStatusIsValidValue(Comple
 - (CompletedRoundResponseProto_Builder*) clearResults;
 
 - (BOOL) hasStatus;
-- (CompletedRoundResponseProto_CompletedRoundResponseStatus) status;
-- (CompletedRoundResponseProto_Builder*) setStatus:(CompletedRoundResponseProto_CompletedRoundResponseStatus) value;
+- (CompletedRoundResponseProto_CompletedRoundStatus) status;
+- (CompletedRoundResponseProto_Builder*) setStatus:(CompletedRoundResponseProto_CompletedRoundStatus) value;
 - (CompletedRoundResponseProto_Builder*) clearStatus;
-@end
-
-@interface OpponentCompletedRoundResponseProto : PBGeneratedMessage {
-@private
-  BOOL hasGameId_:1;
-  BOOL hasUserWhoCompletedRound_:1;
-  BOOL hasRoundUserCompletedBasic_:1;
-  BOOL hasRoundUserCompleted_:1;
-  NSString* gameId;
-  BasicUserProto* userWhoCompletedRound;
-  BasicRoundResultsProto* roundUserCompletedBasic;
-  CompleteRoundResultsProto* roundUserCompleted;
-}
-- (BOOL) hasUserWhoCompletedRound;
-- (BOOL) hasGameId;
-- (BOOL) hasRoundUserCompletedBasic;
-- (BOOL) hasRoundUserCompleted;
-@property (readonly, retain) BasicUserProto* userWhoCompletedRound;
-@property (readonly, retain) NSString* gameId;
-@property (readonly, retain) BasicRoundResultsProto* roundUserCompletedBasic;
-@property (readonly, retain) CompleteRoundResultsProto* roundUserCompleted;
-
-+ (OpponentCompletedRoundResponseProto*) defaultInstance;
-- (OpponentCompletedRoundResponseProto*) defaultInstance;
-
-- (BOOL) isInitialized;
-- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
-- (OpponentCompletedRoundResponseProto_Builder*) builder;
-+ (OpponentCompletedRoundResponseProto_Builder*) builder;
-+ (OpponentCompletedRoundResponseProto_Builder*) builderWithPrototype:(OpponentCompletedRoundResponseProto*) prototype;
-
-+ (OpponentCompletedRoundResponseProto*) parseFromData:(NSData*) data;
-+ (OpponentCompletedRoundResponseProto*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-+ (OpponentCompletedRoundResponseProto*) parseFromInputStream:(NSInputStream*) input;
-+ (OpponentCompletedRoundResponseProto*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-+ (OpponentCompletedRoundResponseProto*) parseFromCodedInputStream:(PBCodedInputStream*) input;
-+ (OpponentCompletedRoundResponseProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-@end
-
-@interface OpponentCompletedRoundResponseProto_Builder : PBGeneratedMessage_Builder {
-@private
-  OpponentCompletedRoundResponseProto* result;
-}
-
-- (OpponentCompletedRoundResponseProto*) defaultInstance;
-
-- (OpponentCompletedRoundResponseProto_Builder*) clear;
-- (OpponentCompletedRoundResponseProto_Builder*) clone;
-
-- (OpponentCompletedRoundResponseProto*) build;
-- (OpponentCompletedRoundResponseProto*) buildPartial;
-
-- (OpponentCompletedRoundResponseProto_Builder*) mergeFrom:(OpponentCompletedRoundResponseProto*) other;
-- (OpponentCompletedRoundResponseProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
-- (OpponentCompletedRoundResponseProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-
-- (BOOL) hasUserWhoCompletedRound;
-- (BasicUserProto*) userWhoCompletedRound;
-- (OpponentCompletedRoundResponseProto_Builder*) setUserWhoCompletedRound:(BasicUserProto*) value;
-- (OpponentCompletedRoundResponseProto_Builder*) setUserWhoCompletedRoundBuilder:(BasicUserProto_Builder*) builderForValue;
-- (OpponentCompletedRoundResponseProto_Builder*) mergeUserWhoCompletedRound:(BasicUserProto*) value;
-- (OpponentCompletedRoundResponseProto_Builder*) clearUserWhoCompletedRound;
-
-- (BOOL) hasGameId;
-- (NSString*) gameId;
-- (OpponentCompletedRoundResponseProto_Builder*) setGameId:(NSString*) value;
-- (OpponentCompletedRoundResponseProto_Builder*) clearGameId;
-
-- (BOOL) hasRoundUserCompletedBasic;
-- (BasicRoundResultsProto*) roundUserCompletedBasic;
-- (OpponentCompletedRoundResponseProto_Builder*) setRoundUserCompletedBasic:(BasicRoundResultsProto*) value;
-- (OpponentCompletedRoundResponseProto_Builder*) setRoundUserCompletedBasicBuilder:(BasicRoundResultsProto_Builder*) builderForValue;
-- (OpponentCompletedRoundResponseProto_Builder*) mergeRoundUserCompletedBasic:(BasicRoundResultsProto*) value;
-- (OpponentCompletedRoundResponseProto_Builder*) clearRoundUserCompletedBasic;
-
-- (BOOL) hasRoundUserCompleted;
-- (CompleteRoundResultsProto*) roundUserCompleted;
-- (OpponentCompletedRoundResponseProto_Builder*) setRoundUserCompleted:(CompleteRoundResultsProto*) value;
-- (OpponentCompletedRoundResponseProto_Builder*) setRoundUserCompletedBuilder:(CompleteRoundResultsProto_Builder*) builderForValue;
-- (OpponentCompletedRoundResponseProto_Builder*) mergeRoundUserCompleted:(CompleteRoundResultsProto*) value;
-- (OpponentCompletedRoundResponseProto_Builder*) clearRoundUserCompleted;
 @end
 

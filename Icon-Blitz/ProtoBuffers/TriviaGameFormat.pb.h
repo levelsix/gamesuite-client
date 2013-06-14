@@ -30,6 +30,8 @@
 @class PictureQuestionProto_Builder;
 @class PlayerGameResultsProto;
 @class PlayerGameResultsProto_Builder;
+@class QuestionAnsweredProto;
+@class QuestionAnsweredProto_Builder;
 @class QuestionProto;
 @class QuestionProto_Builder;
 @class UserCurrencyProto;

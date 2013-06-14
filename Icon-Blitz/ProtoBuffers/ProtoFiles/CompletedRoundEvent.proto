@@ -16,32 +16,13 @@ message CompletedRoundResponseProto {
 	optional BasicUserProto recipient = 1;
 	optional string gameId = 2;
 	optional BasicRoundResultsProto results = 3;
-	optional CompletedRoundResponseStatus status = 4;
+	optional CompletedRoundStatus status = 4;
 	
-	enum CompletedRoundResponseStatus {
+	enum CompletedRoundStatus {
 		SUCCESS = 1;
 		FAIL_GAME_DOES_NOT_EXIST = 2;
 		FAIL_GAME_ALREADY_COMPLETED = 3;
 		FAIL_OTHER = 4;
-		//FAIL_INCORRECT_SCORE = 5; //client and server will both compute score
-		//FAIL_CLIENT_TOO_APART_FROM_SERVER_TIME = 6;
 	}
 }
-
-message OpponentCompletedRoundResponseProto {
-	//optional BasicUserProto recipient = 1;
-	optional BasicUserProto userWhoCompletedRound = 2;
-	
-	optional string gameId = 3;
-	
-	// either roundUserCompletedBasic is set or roundUserCompleted is set
-	//set when second player finishes a round and you are first player
-	optional BasicRoundResultsProto roundUserCompletedBasic = 4;
-	
-	//set whenever first player finishes a round and you are second player
-	//this will contain the questions first player answered
-	optional CompleteRoundResultsProto roundUserCompleted = 5;
-}
-
-
 

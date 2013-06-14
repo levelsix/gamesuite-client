@@ -26,6 +26,8 @@
 @class LoginResponseProto_Builder;
 @class LoginResponseProto_LoginConstants;
 @class LoginResponseProto_LoginConstants_Builder;
+@class LoginResponseProto_LoginConstants_QuestionTypeScoringConstants;
+@class LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder;
 @class MultipleChoiceAnswerProto;
 @class MultipleChoiceAnswerProto_Builder;
 @class MultipleChoiceQuestionProto;
@@ -36,6 +38,8 @@
 @class PictureQuestionProto_Builder;
 @class PlayerGameResultsProto;
 @class PlayerGameResultsProto_Builder;
+@class QuestionAnsweredProto;
+@class QuestionAnsweredProto_Builder;
 @class QuestionProto;
 @class QuestionProto_Builder;
 @class UserCurrencyProto;
@@ -205,23 +209,23 @@ BOOL LoginResponseProto_LoginResponseStatusIsValidValue(LoginResponseProto_Login
   BOOL hasDefaultInitialRubies_:1;
   BOOL hasDefaultRoundsPerGame_:1;
   BOOL hasDefaultMinutesPerRound_:1;
-  BOOL hasDefaultQuestionsPerRound_:1;
+  BOOL hasScoreTypes_:1;
   int32_t defaultInitialTokens;
   int32_t defaultInitialRubies;
   int32_t defaultRoundsPerGame;
   int32_t defaultMinutesPerRound;
-  int32_t defaultQuestionsPerRound;
+  LoginResponseProto_LoginConstants_QuestionTypeScoringConstants* scoreTypes;
 }
 - (BOOL) hasDefaultInitialTokens;
 - (BOOL) hasDefaultInitialRubies;
 - (BOOL) hasDefaultRoundsPerGame;
 - (BOOL) hasDefaultMinutesPerRound;
-- (BOOL) hasDefaultQuestionsPerRound;
+- (BOOL) hasScoreTypes;
 @property (readonly) int32_t defaultInitialTokens;
 @property (readonly) int32_t defaultInitialRubies;
 @property (readonly) int32_t defaultRoundsPerGame;
 @property (readonly) int32_t defaultMinutesPerRound;
-@property (readonly) int32_t defaultQuestionsPerRound;
+@property (readonly, retain) LoginResponseProto_LoginConstants_QuestionTypeScoringConstants* scoreTypes;
 
 + (LoginResponseProto_LoginConstants*) defaultInstance;
 - (LoginResponseProto_LoginConstants*) defaultInstance;
@@ -238,6 +242,81 @@ BOOL LoginResponseProto_LoginResponseStatusIsValidValue(LoginResponseProto_Login
 + (LoginResponseProto_LoginConstants*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 + (LoginResponseProto_LoginConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input;
 + (LoginResponseProto_LoginConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface LoginResponseProto_LoginConstants_QuestionTypeScoringConstants : PBGeneratedMessage {
+@private
+  BOOL hasMcqCorrect_:1;
+  BOOL hasMcqIncorrect_:1;
+  BOOL hasAcqCorrect_:1;
+  BOOL hasAcqIncorrect_:1;
+  int32_t mcqCorrect;
+  int32_t mcqIncorrect;
+  int32_t acqCorrect;
+  int32_t acqIncorrect;
+}
+- (BOOL) hasMcqCorrect;
+- (BOOL) hasMcqIncorrect;
+- (BOOL) hasAcqCorrect;
+- (BOOL) hasAcqIncorrect;
+@property (readonly) int32_t mcqCorrect;
+@property (readonly) int32_t mcqIncorrect;
+@property (readonly) int32_t acqCorrect;
+@property (readonly) int32_t acqIncorrect;
+
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) defaultInstance;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) builder;
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) builder;
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) builderWithPrototype:(LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) prototype;
+
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) parseFromData:(NSData*) data;
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) parseFromInputStream:(NSInputStream*) input;
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder : PBGeneratedMessage_Builder {
+@private
+  LoginResponseProto_LoginConstants_QuestionTypeScoringConstants* result;
+}
+
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) defaultInstance;
+
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) clear;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) clone;
+
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) build;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) buildPartial;
+
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) mergeFrom:(LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) other;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasMcqCorrect;
+- (int32_t) mcqCorrect;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) setMcqCorrect:(int32_t) value;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) clearMcqCorrect;
+
+- (BOOL) hasMcqIncorrect;
+- (int32_t) mcqIncorrect;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) setMcqIncorrect:(int32_t) value;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) clearMcqIncorrect;
+
+- (BOOL) hasAcqCorrect;
+- (int32_t) acqCorrect;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) setAcqCorrect:(int32_t) value;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) clearAcqCorrect;
+
+- (BOOL) hasAcqIncorrect;
+- (int32_t) acqIncorrect;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) setAcqIncorrect:(int32_t) value;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) clearAcqIncorrect;
 @end
 
 @interface LoginResponseProto_LoginConstants_Builder : PBGeneratedMessage_Builder {
@@ -277,10 +356,12 @@ BOOL LoginResponseProto_LoginResponseStatusIsValidValue(LoginResponseProto_Login
 - (LoginResponseProto_LoginConstants_Builder*) setDefaultMinutesPerRound:(int32_t) value;
 - (LoginResponseProto_LoginConstants_Builder*) clearDefaultMinutesPerRound;
 
-- (BOOL) hasDefaultQuestionsPerRound;
-- (int32_t) defaultQuestionsPerRound;
-- (LoginResponseProto_LoginConstants_Builder*) setDefaultQuestionsPerRound:(int32_t) value;
-- (LoginResponseProto_LoginConstants_Builder*) clearDefaultQuestionsPerRound;
+- (BOOL) hasScoreTypes;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) scoreTypes;
+- (LoginResponseProto_LoginConstants_Builder*) setScoreTypes:(LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) value;
+- (LoginResponseProto_LoginConstants_Builder*) setScoreTypesBuilder:(LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) builderForValue;
+- (LoginResponseProto_LoginConstants_Builder*) mergeScoreTypes:(LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) value;
+- (LoginResponseProto_LoginConstants_Builder*) clearScoreTypes;
 @end
 
 @interface LoginResponseProto_Builder : PBGeneratedMessage_Builder {

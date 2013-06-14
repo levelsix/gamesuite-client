@@ -13,7 +13,7 @@ message SearchForUserRequestProto {
 message SearchForUserResponseProto {
 	optional BasicUserProto recipient = 1;
 	
-	optional int32 nameOfPersonId = 2;
+	optional string nameOfPersonId = 2;
 	optional SearchForUserStatus status = 3;
 	
 	enum SearchForUserStatus {

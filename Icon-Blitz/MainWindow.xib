@@ -83,7 +83,7 @@
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						</object>
 						<reference key="IBUIParentViewController" ref="498793262"/>
-						<string key="IBUINibName">TutorialViewController</string>
+						<string key="IBUINibName">SignUpViewController</string>
 						<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
 						<object class="IBUISimulatedOrientationMetrics" key="IBUISimulatedOrientationMetrics">
 							<int key="IBUIInterfaceOrientation">1</int>
@@ -190,7 +190,7 @@
 				<dictionary class="NSMutableDictionary" key="4.IBAttributePlaceholdersKey"/>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="6.CustomClassName">TutorialViewController</string>
+				<string key="6.CustomClassName">SignUpViewController</string>
 				<string key="6.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -226,51 +226,49 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">TutorialViewController</string>
+					<string key="className">SignUpViewController</string>
 					<string key="superclassName">UIViewController</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">chatClicked:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">chatClicked:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">chatClicked:</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="login:">id</string>
+						<string key="signUpWithEmail:">id</string>
+						<string key="signUpWithFacebook:">id</string>
+						<string key="skipSignUp:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="login:">
+							<string key="name">login:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-					</object>
+						<object class="IBActionInfo" key="signUpWithEmail:">
+							<string key="name">signUpWithEmail:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="signUpWithFacebook:">
+							<string key="name">signUpWithFacebook:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="skipSignUp:">
+							<string key="name">skipSignUp:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="chatButton">UIButton</string>
-						<string key="chatView">UIView</string>
-						<string key="dialogueLabel">UILabel</string>
-						<string key="glowOverlay">UIImageView</string>
-						<string key="overlayView">UIView</string>
+						<string key="noCredentialLoginButton">UIButton</string>
+						<string key="signInWithEmailButotn">UIButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="chatButton">
-							<string key="name">chatButton</string>
+						<object class="IBToOneOutletInfo" key="noCredentialLoginButton">
+							<string key="name">noCredentialLoginButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="chatView">
-							<string key="name">chatView</string>
-							<string key="candidateClassName">UIView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="dialogueLabel">
-							<string key="name">dialogueLabel</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="glowOverlay">
-							<string key="name">glowOverlay</string>
-							<string key="candidateClassName">UIImageView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="overlayView">
-							<string key="name">overlayView</string>
-							<string key="candidateClassName">UIView</string>
+						<object class="IBToOneOutletInfo" key="signInWithEmailButotn">
+							<string key="name">signInWithEmailButotn</string>
+							<string key="candidateClassName">UIButton</string>
 						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/TutorialViewController.h</string>
+						<string key="minorKey">./Classes/SignUpViewController.h</string>
 					</object>
 				</object>
 			</array>

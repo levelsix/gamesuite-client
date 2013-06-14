@@ -13,16 +13,22 @@
 
 @class UserInfo;
 
-@interface SignUpViewController : UIViewController <UIAlertViewDelegate, ServerCallbackDelegate, TestingDelegate> {
+typedef enum {
+  kSignUp = 1,
+  kLoginType
+}ProtoTypeRequestType;
+
+@interface SignUpViewController : UIViewController <UIAlertViewDelegate, ServerCallbackDelegate, FinishFacebookLogin> {
   BOOL signedIn;
   NSMutableDictionary *signupInfo;
   UserInfo *userinfo;
-
+  ProtoTypeRequestType protoType;
 }
 
 @property (nonatomic, assign) BOOL signingUp;
 @property (nonatomic, strong) IBOutlet UIButton *noCredentialLoginButton;
 @property (nonatomic, strong) IBOutlet UIButton *signInWithEmailButotn;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *spinner;
 
 - (IBAction)signUpWithFacebook:(id)sender;
 - (IBAction)signUpWithEmail:(id)sender;

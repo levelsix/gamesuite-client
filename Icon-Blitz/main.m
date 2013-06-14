@@ -10,9 +10,16 @@
 
 #import "AppDelegate.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   @autoreleasepool {
-      return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
+    int retVal = -1;
+    @try {
+      retVal = UIApplicationMain(argc, argv, nil, nil);
+    }
+    @catch (NSException* exception) {
+      NSLog(@"Uncaught exception: %@", exception.description);
+      NSLog(@"Stack trace: %@", [exception callStackSymbols]);
+    }
+    return retVal;
   }
 }

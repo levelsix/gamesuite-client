@@ -17,6 +17,8 @@
 @class MultipleChoiceQuestionProto_Builder;
 @class PictureQuestionProto;
 @class PictureQuestionProto_Builder;
+@class QuestionAnsweredProto;
+@class QuestionAnsweredProto_Builder;
 @class QuestionProto;
 @class QuestionProto_Builder;
 @class StartRoundRequestProto;

@@ -16,10 +16,4 @@
 #define EMAIL "@Email"
 #define IN_APP_PURCHASES @"In-App"
 
-#define HOST_NAME @"amqp.lvl6.com"
-#define HOST_PORT 5672
-#define MQ_USERNAME @"lvl6client"
-#define MQ_PASSWORD @"LvL6Pr0dCl!3nT"
-#define MQ_VHOST @"prodageofchaos"
-
 #endif

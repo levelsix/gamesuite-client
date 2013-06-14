@@ -25,9 +25,7 @@ typedef enum {
 #define Minimum_UserName_Count 4
 #define Maximum_UserName_Count 15
 
-@interface CreateAccountViewController () {
-  UIActivityIndicatorView *spinner;
-}
+@interface CreateAccountViewController ()
 
 @end
 
@@ -43,7 +41,8 @@ typedef enum {
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(passwordChanged) name:UITextFieldTextDidChangeNotification object:self.passwordTextField];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(emailChanged) name:UITextFieldTextDidChangeNotification object:self.emailTextField];
 
-    listOfNonValidChar = [[NSArray alloc] initWithObjects:@"#",@"%",@"$",@"~",@"!",@"&",@"^",@"*",@"-",@"+",@"[",@"]",@"<",@">",@"?",@"/",@":",@";",@"=",@"(",@")",@"{",@"}",@"|",@"'", nil];
+  listOfNonValidChar = [[NSArray alloc] initWithObjects:@"#",@"%",@"$",@"~",@"!",@"&",@"^",@"*",@"-",@"+",@"[",@"]",@"<",@">",@"?",@"/",@":",@";",@"=",@"(",@")",@"{",@"}",@"|",@"'", nil];
+
 }
 
 - (void)usernameChanged {
@@ -81,25 +80,25 @@ typedef enum {
   }
   
   if (valid) {
-    HomeViewController *vc = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
-    [self.navigationController pushViewController:vc animated:YES];
-//    spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-//    [spinner startAnimating];
-//    SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
-//    sc.delegate = self;
-//    UserInfo *ui = [[UserInfo alloc] init];
-//    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-//    [userInfo setObject:username forKey:@"name"];
-//    [userInfo setObject:email forKey:@"email"];
-//    [userInfo setObject:[ui getUDID] forKey:@"udid"];
-//    [userInfo setObject:password forKey:@"password"];
-//    [userInfo setObject:[ui getMacAddress] forKey:@"deviceId"];
-//    [sc sendCreateAccountViaEmailMessage:[userInfo copy]];
+    [self.view endEditing:YES];
+    [self.spinner startAnimating];
+    self.loadingLabel.hidden = NO;
+    SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+    self.view.userInteractionEnabled = NO;
+    sc.delegate = self;
+    UserInfo *ui = [[UserInfo alloc] init];
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    [userInfo setObject:self.username forKey:@"name"];
+    [userInfo setObject:self.email forKey:@"email"];
+    [userInfo setObject:[ui getUDID] forKey:@"udid"];
+    [userInfo setObject:self.password forKey:@"password"];
+    [userInfo setObject:[ui getMacAddress] forKey:@"deviceId"];
+    [sc sendCreateAccountViaEmailMessage:[userInfo copy]];
   }
 }
 
 - (IBAction)back:(id)sender {
-  [self.navigationController popViewControllerAnimated:YES];
+  [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)goToHomeView:(LoginResponseProto *)proto {
@@ -108,10 +107,13 @@ typedef enum {
 }
 
 - (void)receivedProtoResponse:(PBGeneratedMessage *)message {
+  self.view.userInteractionEnabled = YES;
+  [self.spinner stopAnimating];
+  self.loadingLabel.hidden = YES;
   CreateAccountResponseProto *proto = (CreateAccountResponseProto *)message;
   if (proto.status == CreateAccountResponseProto_CreateAccountStatusSuccessAccountCreated) {
-    LoadingView *view = [[LoadingView alloc] initWithProto:proto.recipient createAccount:self loadingType:kFromCreateUpViewController];
-    [self.view addSubview:view];
+    HomeViewController *vc = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
   }
   else {
     [self receivedFailedProto:proto];
@@ -119,7 +121,7 @@ typedef enum {
 }
 
 - (void)receivedFailedProto:(CreateAccountResponseProto *)proto {
-  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:@"Cancel", nil];
+  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
   switch ((int)proto.status) {
     case CreateAccountResponseProto_CreateAccountStatusFailDuplicateFacebookId:
     case CreateAccountResponseProto_CreateAccountStatusFailDuplicateUdid:
@@ -187,7 +189,7 @@ typedef enum {
         NSString *cString = [NSString stringWithFormat:@"%c",c];
         if ([cString isEqualToString:s]) {
           valid = NO;
-          UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Incorrect username length" message:@"Please check if your username length is more than 3 and less than 16" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+          UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Incorrect username " message:@"Please check if your username is it correct format" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
           [alert show];
           break;
         }

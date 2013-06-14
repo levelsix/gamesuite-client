@@ -30,14 +30,19 @@
   NSMutableArray *usedCheatArray;
   NSMutableArray *cheatCountArray;
   NSString *correctAnswer;
+  NSString *lastQuestion;
   UIView *dragObject;
   CGRect originalLetterLocations[14];
   CGRect homePosition;
+  CGRect originalContainerViewFrame;
   
   BOOL dragging;
   BOOL moving;
   BOOL filledSlotMoving;
   BOOL isInMorethanOneRect;
+  BOOL isIconQuestion;
+  BOOL needToDisableButton;
+  int enabledTag;
   int previousTag;
   int correctLetterCount;
   int animationCounter;
@@ -54,6 +59,21 @@
 
 #pragma mark - Tutorial Methods
 
+- (id)initWithTutorialIconQuestion:(GameViewController *)game questionData:(NSDictionary *)question iconQuestion:(BOOL)isItIconQuestion {
+  if ((self = [super init])) {
+    self.game = game;
+    isIconQuestion = isItIconQuestion;
+    lastQuestion = [question objectForKey:@"question"];
+    correctLetterCount = [[question objectForKey:@"letterCount"] integerValue];
+    numberOfLines = [[question objectForKey:@"numberOfLines"] integerValue];
+    firstLineCount = [[question objectForKey:@"firstLineCount"] integerValue];
+    secondLineCount = [[question objectForKey:@"secondLineCount"] integerValue];
+    correctAnswer = [question objectForKey:@"correctAnswer"];
+    selectionSlots = [question objectForKey:@"selectionSlots"];
+  }
+  return self;
+}
+
 - (id)initWithTutorial:(GameViewController *)game question:(NSDictionary *)question {
   if ((self= [super init])) {
     self.game = game;
@@ -64,18 +84,6 @@
     secondLineCount = [[question objectForKey:@"secondLineCount"] integerValue];
     correctAnswer = [question objectForKey:@"correctAnswer"];
     selectionSlots = [question objectForKey:@"selectionSlots"];
-    
-    bottomBarArray = [NSMutableArray array];
-    answerViews = [NSMutableArray array];
-    selectedAnswerTags = [NSMutableArray array];
-    selectedLetters = [NSMutableArray array];
-    cheatArray = [NSMutableArray array];
-    usedCheatArray = [NSMutableArray array];
-    for (int i = 0 ; i < correctLetterCount; i++) {
-      [selectedAnswerTags addObject:[NSNumber numberWithInt:-1]];
-      [selectedLetters addObject:[NSNumber numberWithInt:-1]];
-    }
-
   }
   return self;
 }
@@ -105,6 +113,11 @@
   b.hidden = NO;
 }
 
+- (void)disableUserInteractionWithTag:(int)tag {
+  needToDisableButton = YES;
+  enabledTag = tag;
+}
+
 #pragma mark - Non-Tutorial Methods
 
 - (id)initWithGame:(GameViewController *)game {
@@ -116,16 +129,6 @@
     secondLineCount = 6;
     correctAnswer = @"LEVEL6ROCKS!";
     
-    bottomBarArray = [NSMutableArray array];
-    answerViews = [NSMutableArray array];
-    selectedAnswerTags = [NSMutableArray array];
-    selectedLetters = [NSMutableArray array];
-    cheatArray = [NSMutableArray array];
-    usedCheatArray = [NSMutableArray array];
-    for (int i = 0 ; i < correctLetterCount; i++) {
-      [selectedAnswerTags addObject:[NSNumber numberWithInt:-1]];
-      [selectedLetters addObject:[NSNumber numberWithInt:-1]];
-    }
     selectionSlots = [[NSMutableArray alloc] initWithObjects:@"L",@"E",@"V",@"E",@"L",@"6",@" ",@"R",@"O",@"C",@"K",@"S",@"!",@" ",nil];
   }
   return self;
@@ -134,15 +137,53 @@
 - (void)viewDidLoad
 {
   [super viewDidLoad];
+  if (isIconQuestion && self.game.isTutorial) {
+    self.questionLabel.hidden = YES;
+    self.iconView.center = CGPointMake(self.questionContainerView.center.x, self.questionContainerView.center.y + 21);
+    [self createMaskImage:@"icontest.jpg"];
+    [self.view addSubview:self.iconView];
+  }
+  else {
+    originalContainerViewFrame = self.questionContainerView.frame;
+  }
+  //[self.game animateTriviaTypeLabel];
   self.view.userInteractionEnabled = NO;
+  bottomBarArray = [NSMutableArray array];
+  answerViews = [NSMutableArray array];
+  selectedAnswerTags = [NSMutableArray array];
+  selectedLetters = [NSMutableArray array];
+  cheatArray = [NSMutableArray array];
+  usedCheatArray = [NSMutableArray array];
+  for (int i = 0 ; i < correctLetterCount; i++) {
+    [selectedAnswerTags addObject:[NSNumber numberWithInt:-1]];
+    [selectedLetters addObject:[NSNumber numberWithInt:-1]];
+  }
   [self createAnswerSlots];
   [self createSelectionSlots];
   [self generatePreCheatList];
   [self fillInCheatArray];
   animationCounter = 1;
+
+  if (self.game.isTutorial) {
+    self.questionLabel.text = lastQuestion;
+  }
+  
   [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(animateSelectionSlots:) userInfo:nil repeats:YES];
 }
 
+- (void)animateContainerView {
+  self.questionLabel.hidden = NO;
+  self.questionContainerView.frame = CGRectMake(self.questionContainerView.center.x, self.questionContainerView.frame.origin.y, 0, self.questionContainerView.frame.size.height);
+  [UIView animateWithDuration:1.0f animations:^{
+    self.questionContainerView.frame = originalContainerViewFrame;
+  }completion:NULL];
+}
+
+- (void)createMaskImage:(NSString *)imageName {
+  UIImage *image = [UIImage imageNamed:imageName];
+  self.iconImage.image = image;
+}
+ 
 - (void)generatePreCheatList {
   cheatCountArray = [NSMutableArray array];
   int ar[correctLetterCount],i,d,tmp;
@@ -187,7 +228,7 @@
     }
     
     firstLine.frame = CGRectMake(0, 0, lastSlotPosX, lastSlotPosY);
-    firstLine.center = CGPointMake(self.view.frame.size.width/2, 150);
+    firstLine.center = CGPointMake(self.view.frame.size.width/2, 170);
     [self.view addSubview:firstLine];
     
     UIView *secondLine = [[UIView alloc] init];
@@ -209,7 +250,7 @@
     firstLine.tag = kFirstLine;
     secondLine.tag = kSecondLine;
     secondLine.frame = CGRectMake(0, 0, lastSlotPosX, lastSlotPosY);
-    secondLine.center = CGPointMake(self.view.frame.size.width/2, 200);
+    secondLine.center = CGPointMake(self.view.frame.size.width/2, 215);
     [self.view addSubview:secondLine];
     
   }
@@ -232,7 +273,8 @@
     }
     firstLine.tag = kFirstLine;
     firstLine.frame = CGRectMake(0, 0, lastSlotPosX, lastSlotPosY);
-    firstLine.center = CGPointMake(self.view.frame.size.width/2, 180);
+    if (isIconQuestion) firstLine.center = CGPointMake(self.view.frame.size.width/2, 225);
+    else firstLine.center = CGPointMake(self.view.frame.size.width/2, 200);
     [self.view addSubview:firstLine];
   }
   maxUnfilledSlot = tag;
@@ -254,7 +296,7 @@
     UIImageView *topView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, top.size.width, top.size.height)];
     topView.image = top;
     
-    UIView *slotView = [[UIView alloc] initWithFrame:CGRectMake(23 + (i * WidthDifference), 245, topView.frame.size.width, topView.frame.size.height + bottomView.frame.size.height)];
+    UIView *slotView = [[UIView alloc] initWithFrame:CGRectMake(23 + (i * WidthDifference), 255, topView.frame.size.width, topView.frame.size.height + bottomView.frame.size.height)];
     
     bottomView.frame = CGRectMake(0, topView.frame.size.height - 7, 37, 11);
     [slotView addSubview:bottomView];
@@ -289,7 +331,7 @@
     UIImageView *topView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, top.size.width, top.size.height)];
     topView.image = top;
     
-    UIView *slotView = [[UIView alloc] initWithFrame:CGRectMake(23 + (i * WidthDifference), 295, topView.frame.size.width, topView.frame.size.height + bottomView.frame.size.height)];
+    UIView *slotView = [[UIView alloc] initWithFrame:CGRectMake(23 + (i * WidthDifference), 305, topView.frame.size.width, topView.frame.size.height + bottomView.frame.size.height)];
     
     bottomView.frame = CGRectMake(0, topView.frame.size.height - 7, 37, 11);
     [slotView addSubview:bottomView];
@@ -331,7 +373,7 @@
   animationCounter++;
   if (animationCounter > 14) {
     self.view.userInteractionEnabled = YES;
-    self.game.removeCheatButon.userInteractionEnabled = YES;
+    if (!self.game.isTutorial) self.game.removeCheatButon.userInteractionEnabled = YES;
     [timer invalidate];
   }
 }
@@ -343,6 +385,9 @@
   for (UIView *view in self.view.subviews) {
     if (CGRectContainsPoint(view.frame, touchLocation)) {
       if (view.tag > 0 && view.tag <= kAnswerSlotBottomEndingTag) { //touching the selection slots
+        if (needToDisableButton && view.tag != enabledTag) {
+          return;
+        }
         dragObject = view;
         [self.view bringSubviewToFront:dragObject];
         int tag = 0; //this tag is for locating the intersected tag in our selectedAnswerTag
@@ -376,6 +421,9 @@
   UITouch *touch = [[event allTouches] anyObject];
   CGPoint touchLocation = [touch locationInView:self.view];
   if (dragging) {
+    if (needToDisableButton) {
+      return;
+    }
     moving = YES;
     dragObject.center = touchLocation;
   }

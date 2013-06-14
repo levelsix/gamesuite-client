@@ -21,6 +21,7 @@
 - (void)nextLetterCallback;
 - (void)fillInAnswerCallBack:(BOOL)correct;
 - (void)tutorialCheatClicked;
+- (void)tutorialFreezeClicked;
 @end
 
 typedef enum {
@@ -51,6 +52,8 @@ typedef enum {
 @property (nonatomic, strong) NSMutableArray *questionsId;
 @property (nonatomic, strong) NSString *gameId;
 
+@property (nonatomic, strong) IBOutlet UILabel *triviaType;
+@property (nonatomic, strong) IBOutlet UIView *triviaContainer;
 @property (nonatomic, strong) IBOutlet UILabel *timeLeftLabel;
 @property (nonatomic, strong) IBOutlet UILabel *pointsLabel;
 @property (nonatomic, strong) IBOutlet UILabel *rubyLabel;
@@ -70,17 +73,23 @@ typedef enum {
 - (IBAction)cheatOneClicked:(id)sender;
 - (IBAction)cheatTwoClicked:(id)sender;
 - (QuestionType)getQuestiontype;
+- (void)animateTriviaTypeLabel;
 
 - (id)initWithTutorial;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userData:(UserInfo *)userData;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userData:(UserInfo *)userData gameId:(NSString *)gameId;
-- (id)initWithBasicRoundProto:(BasicRoundProto *)proto userInfo:(UserInfo *)userInfo;
 
 - (void)transitionWithConclusion:(BOOL)conclusion skipping:(BOOL)didSkip andNextQuestionType:(QuestionType)type;
+
+//tutorial methods
 - (void)tutorialCorrectionAnimationWithCorrect:(BOOL)isCorrect fromQuestionType:(QuestionType)type;
 - (void)animatePointsLabel;
 - (void)pushNewViewControllersWithType:(QuestionType)type;
 - (void)showNextLetterCallBack;
 - (void)resetLettersOnTutorial;
+- (void)pushToTutorialFillInIconView;
 - (void)pushToLyricsView;
+- (void)disableLetterInteraction:(int)tag;
+- (void)pushtoLastQuestion;
+- (void)enableTimer;
 @end

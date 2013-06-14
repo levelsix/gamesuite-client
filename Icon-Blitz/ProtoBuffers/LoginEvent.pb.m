@@ -618,7 +618,7 @@ BOOL LoginResponseProto_LoginResponseStatusIsValidValue(LoginResponseProto_Login
 @property int32_t defaultInitialRubies;
 @property int32_t defaultRoundsPerGame;
 @property int32_t defaultMinutesPerRound;
-@property int32_t defaultQuestionsPerRound;
+@property (retain) LoginResponseProto_LoginConstants_QuestionTypeScoringConstants* scoreTypes;
 @end
 
 @implementation LoginResponseProto_LoginConstants
@@ -651,14 +651,15 @@ BOOL LoginResponseProto_LoginResponseStatusIsValidValue(LoginResponseProto_Login
   hasDefaultMinutesPerRound_ = !!value;
 }
 @synthesize defaultMinutesPerRound;
-- (BOOL) hasDefaultQuestionsPerRound {
-  return !!hasDefaultQuestionsPerRound_;
+- (BOOL) hasScoreTypes {
+  return !!hasScoreTypes_;
 }
-- (void) setHasDefaultQuestionsPerRound:(BOOL) value {
-  hasDefaultQuestionsPerRound_ = !!value;
+- (void) setHasScoreTypes:(BOOL) value {
+  hasScoreTypes_ = !!value;
 }
-@synthesize defaultQuestionsPerRound;
+@synthesize scoreTypes;
 - (void) dealloc {
+  self.scoreTypes = nil;
   [super dealloc];
 }
 - (id) init {
@@ -667,7 +668,7 @@ BOOL LoginResponseProto_LoginResponseStatusIsValidValue(LoginResponseProto_Login
     self.defaultInitialRubies = 0;
     self.defaultRoundsPerGame = 0;
     self.defaultMinutesPerRound = 0;
-    self.defaultQuestionsPerRound = 0;
+    self.scoreTypes = [LoginResponseProto_LoginConstants_QuestionTypeScoringConstants defaultInstance];
   }
   return self;
 }
@@ -699,8 +700,8 @@ static LoginResponseProto_LoginConstants* defaultLoginResponseProto_LoginConstan
   if (self.hasDefaultMinutesPerRound) {
     [output writeInt32:4 value:self.defaultMinutesPerRound];
   }
-  if (self.hasDefaultQuestionsPerRound) {
-    [output writeInt32:5 value:self.defaultQuestionsPerRound];
+  if (self.hasScoreTypes) {
+    [output writeMessage:5 value:self.scoreTypes];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -723,8 +724,8 @@ static LoginResponseProto_LoginConstants* defaultLoginResponseProto_LoginConstan
   if (self.hasDefaultMinutesPerRound) {
     size += computeInt32Size(4, self.defaultMinutesPerRound);
   }
-  if (self.hasDefaultQuestionsPerRound) {
-    size += computeInt32Size(5, self.defaultQuestionsPerRound);
+  if (self.hasScoreTypes) {
+    size += computeMessageSize(5, self.scoreTypes);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -756,6 +757,297 @@ static LoginResponseProto_LoginConstants* defaultLoginResponseProto_LoginConstan
 }
 - (LoginResponseProto_LoginConstants_Builder*) builder {
   return [LoginResponseProto_LoginConstants builder];
+}
+@end
+
+@interface LoginResponseProto_LoginConstants_QuestionTypeScoringConstants ()
+@property int32_t mcqCorrect;
+@property int32_t mcqIncorrect;
+@property int32_t acqCorrect;
+@property int32_t acqIncorrect;
+@end
+
+@implementation LoginResponseProto_LoginConstants_QuestionTypeScoringConstants
+
+- (BOOL) hasMcqCorrect {
+  return !!hasMcqCorrect_;
+}
+- (void) setHasMcqCorrect:(BOOL) value {
+  hasMcqCorrect_ = !!value;
+}
+@synthesize mcqCorrect;
+- (BOOL) hasMcqIncorrect {
+  return !!hasMcqIncorrect_;
+}
+- (void) setHasMcqIncorrect:(BOOL) value {
+  hasMcqIncorrect_ = !!value;
+}
+@synthesize mcqIncorrect;
+- (BOOL) hasAcqCorrect {
+  return !!hasAcqCorrect_;
+}
+- (void) setHasAcqCorrect:(BOOL) value {
+  hasAcqCorrect_ = !!value;
+}
+@synthesize acqCorrect;
+- (BOOL) hasAcqIncorrect {
+  return !!hasAcqIncorrect_;
+}
+- (void) setHasAcqIncorrect:(BOOL) value {
+  hasAcqIncorrect_ = !!value;
+}
+@synthesize acqIncorrect;
+- (void) dealloc {
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.mcqCorrect = 0;
+    self.mcqIncorrect = 0;
+    self.acqCorrect = 0;
+    self.acqIncorrect = 0;
+  }
+  return self;
+}
+static LoginResponseProto_LoginConstants_QuestionTypeScoringConstants* defaultLoginResponseProto_LoginConstants_QuestionTypeScoringConstantsInstance = nil;
++ (void) initialize {
+  if (self == [LoginResponseProto_LoginConstants_QuestionTypeScoringConstants class]) {
+    defaultLoginResponseProto_LoginConstants_QuestionTypeScoringConstantsInstance = [[LoginResponseProto_LoginConstants_QuestionTypeScoringConstants alloc] init];
+  }
+}
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) defaultInstance {
+  return defaultLoginResponseProto_LoginConstants_QuestionTypeScoringConstantsInstance;
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) defaultInstance {
+  return defaultLoginResponseProto_LoginConstants_QuestionTypeScoringConstantsInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasMcqCorrect) {
+    [output writeInt32:1 value:self.mcqCorrect];
+  }
+  if (self.hasMcqIncorrect) {
+    [output writeInt32:2 value:self.mcqIncorrect];
+  }
+  if (self.hasAcqCorrect) {
+    [output writeInt32:3 value:self.acqCorrect];
+  }
+  if (self.hasAcqIncorrect) {
+    [output writeInt32:4 value:self.acqIncorrect];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasMcqCorrect) {
+    size += computeInt32Size(1, self.mcqCorrect);
+  }
+  if (self.hasMcqIncorrect) {
+    size += computeInt32Size(2, self.mcqIncorrect);
+  }
+  if (self.hasAcqCorrect) {
+    size += computeInt32Size(3, self.acqCorrect);
+  }
+  if (self.hasAcqIncorrect) {
+    size += computeInt32Size(4, self.acqIncorrect);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) parseFromData:(NSData*) data {
+  return (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*)[[[LoginResponseProto_LoginConstants_QuestionTypeScoringConstants builder] mergeFromData:data] build];
+}
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*)[[[LoginResponseProto_LoginConstants_QuestionTypeScoringConstants builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) parseFromInputStream:(NSInputStream*) input {
+  return (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*)[[[LoginResponseProto_LoginConstants_QuestionTypeScoringConstants builder] mergeFromInputStream:input] build];
+}
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*)[[[LoginResponseProto_LoginConstants_QuestionTypeScoringConstants builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*)[[[LoginResponseProto_LoginConstants_QuestionTypeScoringConstants builder] mergeFromCodedInputStream:input] build];
+}
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*)[[[LoginResponseProto_LoginConstants_QuestionTypeScoringConstants builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) builder {
+  return [[[LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder alloc] init] autorelease];
+}
++ (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) builderWithPrototype:(LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) prototype {
+  return [[LoginResponseProto_LoginConstants_QuestionTypeScoringConstants builder] mergeFrom:prototype];
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) builder {
+  return [LoginResponseProto_LoginConstants_QuestionTypeScoringConstants builder];
+}
+@end
+
+@interface LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder()
+@property (retain) LoginResponseProto_LoginConstants_QuestionTypeScoringConstants* result;
+@end
+
+@implementation LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[LoginResponseProto_LoginConstants_QuestionTypeScoringConstants alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) clear {
+  self.result = [[[LoginResponseProto_LoginConstants_QuestionTypeScoringConstants alloc] init] autorelease];
+  return self;
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) clone {
+  return [LoginResponseProto_LoginConstants_QuestionTypeScoringConstants builderWithPrototype:result];
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) defaultInstance {
+  return [LoginResponseProto_LoginConstants_QuestionTypeScoringConstants defaultInstance];
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) buildPartial {
+  LoginResponseProto_LoginConstants_QuestionTypeScoringConstants* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) mergeFrom:(LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) other {
+  if (other == [LoginResponseProto_LoginConstants_QuestionTypeScoringConstants defaultInstance]) {
+    return self;
+  }
+  if (other.hasMcqCorrect) {
+    [self setMcqCorrect:other.mcqCorrect];
+  }
+  if (other.hasMcqIncorrect) {
+    [self setMcqIncorrect:other.mcqIncorrect];
+  }
+  if (other.hasAcqCorrect) {
+    [self setAcqCorrect:other.acqCorrect];
+  }
+  if (other.hasAcqIncorrect) {
+    [self setAcqIncorrect:other.acqIncorrect];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 8: {
+        [self setMcqCorrect:[input readInt32]];
+        break;
+      }
+      case 16: {
+        [self setMcqIncorrect:[input readInt32]];
+        break;
+      }
+      case 24: {
+        [self setAcqCorrect:[input readInt32]];
+        break;
+      }
+      case 32: {
+        [self setAcqIncorrect:[input readInt32]];
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasMcqCorrect {
+  return result.hasMcqCorrect;
+}
+- (int32_t) mcqCorrect {
+  return result.mcqCorrect;
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) setMcqCorrect:(int32_t) value {
+  result.hasMcqCorrect = YES;
+  result.mcqCorrect = value;
+  return self;
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) clearMcqCorrect {
+  result.hasMcqCorrect = NO;
+  result.mcqCorrect = 0;
+  return self;
+}
+- (BOOL) hasMcqIncorrect {
+  return result.hasMcqIncorrect;
+}
+- (int32_t) mcqIncorrect {
+  return result.mcqIncorrect;
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) setMcqIncorrect:(int32_t) value {
+  result.hasMcqIncorrect = YES;
+  result.mcqIncorrect = value;
+  return self;
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) clearMcqIncorrect {
+  result.hasMcqIncorrect = NO;
+  result.mcqIncorrect = 0;
+  return self;
+}
+- (BOOL) hasAcqCorrect {
+  return result.hasAcqCorrect;
+}
+- (int32_t) acqCorrect {
+  return result.acqCorrect;
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) setAcqCorrect:(int32_t) value {
+  result.hasAcqCorrect = YES;
+  result.acqCorrect = value;
+  return self;
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) clearAcqCorrect {
+  result.hasAcqCorrect = NO;
+  result.acqCorrect = 0;
+  return self;
+}
+- (BOOL) hasAcqIncorrect {
+  return result.hasAcqIncorrect;
+}
+- (int32_t) acqIncorrect {
+  return result.acqIncorrect;
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) setAcqIncorrect:(int32_t) value {
+  result.hasAcqIncorrect = YES;
+  result.acqIncorrect = value;
+  return self;
+}
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) clearAcqIncorrect {
+  result.hasAcqIncorrect = NO;
+  result.acqIncorrect = 0;
+  return self;
 }
 @end
 
@@ -813,8 +1105,8 @@ static LoginResponseProto_LoginConstants* defaultLoginResponseProto_LoginConstan
   if (other.hasDefaultMinutesPerRound) {
     [self setDefaultMinutesPerRound:other.defaultMinutesPerRound];
   }
-  if (other.hasDefaultQuestionsPerRound) {
-    [self setDefaultQuestionsPerRound:other.defaultQuestionsPerRound];
+  if (other.hasScoreTypes) {
+    [self mergeScoreTypes:other.scoreTypes];
   }
   [self mergeUnknownFields:other.unknownFields];
   return self;
@@ -853,8 +1145,13 @@ static LoginResponseProto_LoginConstants* defaultLoginResponseProto_LoginConstan
         [self setDefaultMinutesPerRound:[input readInt32]];
         break;
       }
-      case 40: {
-        [self setDefaultQuestionsPerRound:[input readInt32]];
+      case 42: {
+        LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder* subBuilder = [LoginResponseProto_LoginConstants_QuestionTypeScoringConstants builder];
+        if (self.hasScoreTypes) {
+          [subBuilder mergeFrom:self.scoreTypes];
+        }
+        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
+        [self setScoreTypes:[subBuilder buildPartial]];
         break;
       }
     }
@@ -924,20 +1221,34 @@ static LoginResponseProto_LoginConstants* defaultLoginResponseProto_LoginConstan
   result.defaultMinutesPerRound = 0;
   return self;
 }
-- (BOOL) hasDefaultQuestionsPerRound {
-  return result.hasDefaultQuestionsPerRound;
+- (BOOL) hasScoreTypes {
+  return result.hasScoreTypes;
 }
-- (int32_t) defaultQuestionsPerRound {
-  return result.defaultQuestionsPerRound;
+- (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) scoreTypes {
+  return result.scoreTypes;
 }
-- (LoginResponseProto_LoginConstants_Builder*) setDefaultQuestionsPerRound:(int32_t) value {
-  result.hasDefaultQuestionsPerRound = YES;
-  result.defaultQuestionsPerRound = value;
+- (LoginResponseProto_LoginConstants_Builder*) setScoreTypes:(LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) value {
+  result.hasScoreTypes = YES;
+  result.scoreTypes = value;
   return self;
 }
-- (LoginResponseProto_LoginConstants_Builder*) clearDefaultQuestionsPerRound {
-  result.hasDefaultQuestionsPerRound = NO;
-  result.defaultQuestionsPerRound = 0;
+- (LoginResponseProto_LoginConstants_Builder*) setScoreTypesBuilder:(LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder*) builderForValue {
+  return [self setScoreTypes:[builderForValue build]];
+}
+- (LoginResponseProto_LoginConstants_Builder*) mergeScoreTypes:(LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) value {
+  if (result.hasScoreTypes &&
+      result.scoreTypes != [LoginResponseProto_LoginConstants_QuestionTypeScoringConstants defaultInstance]) {
+    result.scoreTypes =
+      [[[LoginResponseProto_LoginConstants_QuestionTypeScoringConstants builderWithPrototype:result.scoreTypes] mergeFrom:value] buildPartial];
+  } else {
+    result.scoreTypes = value;
+  }
+  result.hasScoreTypes = YES;
+  return self;
+}
+- (LoginResponseProto_LoginConstants_Builder*) clearScoreTypes {
+  result.hasScoreTypes = NO;
+  result.scoreTypes = [LoginResponseProto_LoginConstants_QuestionTypeScoringConstants defaultInstance];
   return self;
 }
 @end

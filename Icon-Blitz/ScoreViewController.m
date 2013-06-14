@@ -51,15 +51,17 @@
 
 @implementation ScoreViewController
 
+#pragma mark - Main Game
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil gameResultProto:(GameResultsProto *)proto basicUserProto:(BasicUserProto *)userProto completed:(BOOL)completed currentRound:(int)round;
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-      self.proto = proto;
-      self.userProto = userProto;
-      currentRound = round;
-    }
-    return self;
+  self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+  if (self) {
+    self.proto = proto;
+    self.userProto = userProto;
+    currentRound = round;
+  }
+  return self;
 }
 
 - (id)initWithOngoingGameProto:(OngoingGameProto *)gameStats userInfo:(UserInfo *)userInfo myTurn:(BOOL)isMyTurn {
@@ -283,14 +285,11 @@
   oScoreThree = 60;
   uTotalScore = 150;
   oTotalScore = 180;
-  for (int i = 14 ; i < 22; i++) {
-    UILabel *label = (UILabel *)[self.view viewWithTag:i];
-    label.text = [NSString stringWithFormat:@"0"];
-  }
   //test data
   self.userImage.image = [UIImage imageNamed:@"testimage1.jpg"];
   self.opponentImage.image = [UIImage imageNamed:@"testimage2.jpg"];
   [self updatePlayerPics];
+  
   [self startSpin];
 }
 
@@ -314,6 +313,7 @@
   [self performSelector:@selector(animateNameSection) withObject:nil afterDelay:0.3f];
 }
 
+
 - (void)receievedRetrieveScoreResponse:(Class)proto {
   [self.spinner stopAnimating];
   self.spinner.hidden = YES;
@@ -321,8 +321,7 @@
 
 - (IBAction)done:(id)sender {
   if (myTurn) {
-    BasicRoundProto *proto = self.gameStats.myNewRound;
-    GameViewController *vc = [[GameViewController alloc] initWithBasicRoundProto:proto userInfo:self.userInfo];
+    GameViewController *vc = [[GameViewController alloc] initWithNibName:nil bundle:nil userData:self.userInfo];
     [self.navigationController pushViewController:vc animated:YES];
   }
   else {
@@ -603,7 +602,8 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 - (void)changeUScoreOne:(NSTimer *)timer {
   uScoreOneBefore += 1;
   UILabel *label = (UILabel *)[self.view viewWithTag:14];
-  label.text= [NSString stringWithFormat:@"%d",uScoreOneBefore];
+  if (uScoreOne == 0) label = [NSString stringWithFormat:@"-"];
+  else label.text= [NSString stringWithFormat:@"%d",uScoreOneBefore];
   if (uScoreOneBefore >= uScoreOne) {
     userScoreLoaded = YES;
     if (opponentScoreLoaded && userScoreLoaded) {
@@ -616,7 +616,8 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 - (void)changeOScoreOne:(NSTimer *)timer {
   oScoreOneBefore += 1;
   UILabel *label = (UILabel *)[self.view viewWithTag:15];
-  label.text= [NSString stringWithFormat:@"%d",oScoreOneBefore];
+  if (oScoreOne == 0) label = [NSString stringWithFormat:@"-"];
+  else label.text= [NSString stringWithFormat:@"%d",oScoreOneBefore];
   if (oScoreOneBefore >= oScoreOne) {
     opponentScoreLoaded = YES;
     if (userScoreLoaded && opponentScoreLoaded) {
@@ -627,15 +628,15 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 }
 
 - (void)changeUScoreTwo:(NSTimer *)timer {
-  uScoreTwoBefore += 1;
+  uScoreTwoBefore++;
   UILabel *label = (UILabel *)[self.view viewWithTag:16];
-  label.text= [NSString stringWithFormat:@"%d",uScoreTwoBefore];
+  if (uScoreTwo == 0) label.text = [NSString stringWithFormat:@"-"];
+  else label.text= [NSString stringWithFormat:@"%d",uScoreTwoBefore];
   if (uScoreTwoBefore >= uScoreTwo) {
     userScoreLoaded = YES;
     if (opponentScoreLoaded && userScoreLoaded) {
       [self animateThirdRow];
     }
-
     [timer invalidate];
   }
 }
@@ -643,7 +644,8 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 - (void)changeOScoreTwo:(NSTimer *)timer {
   oScoreTwoBefore += 1;
   UILabel *label = (UILabel *)[self.view viewWithTag:17];
-  label.text= [NSString stringWithFormat:@"%d",oScoreTwoBefore];
+  if (oScoreTwo == 0) label.text = [NSString stringWithFormat:@"-"];
+  else label.text= [NSString stringWithFormat:@"%d",oScoreTwoBefore];
   if (oScoreTwoBefore >= oScoreTwo) {
     opponentScoreLoaded = YES;
     if (userScoreLoaded && opponentScoreLoaded) {
@@ -656,7 +658,8 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 - (void)changeUScoreThree:(NSTimer *)timer {
   uScoreThreeBefore += 1;
   UILabel *label = (UILabel *)[self.view viewWithTag:18];
-  label.text= [NSString stringWithFormat:@"%d",uScoreThreeBefore];
+  if (uScoreThree == 0) label.text = [NSString stringWithFormat:@"-"];
+  else label.text= [NSString stringWithFormat:@"%d",uScoreThreeBefore];
   if (uScoreThreeBefore >= uScoreThree) {
     userScoreLoaded = YES;
     if (opponentScoreLoaded && userScoreLoaded) {
@@ -669,7 +672,8 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 - (void)changeOScoreThree:(NSTimer *)timer {
   oScoreThreeBefore += 1;
   UILabel *label = (UILabel *)[self.view viewWithTag:19];
-  label.text= [NSString stringWithFormat:@"%d",oScoreThreeBefore];
+  if (oScoreThree == 0) label.text = [NSString stringWithFormat:@"-"];
+  else label.text= [NSString stringWithFormat:@"%d",oScoreThreeBefore];
   if (oScoreThreeBefore >= oScoreThree) {
     opponentScoreLoaded = YES;
     if (userScoreLoaded && opponentScoreLoaded) {
@@ -682,7 +686,8 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 - (void)changeTScoreOne:(NSTimer *)timer {
   uTotalScoreBefore += 1;
   UILabel *label = (UILabel *)[self.view viewWithTag:20];
-  label.text= [NSString stringWithFormat:@"%d",uTotalScoreBefore];
+  if (uTotalScore == 0) label.text = [NSString stringWithFormat:@"-"];
+  else label.text= [NSString stringWithFormat:@"%d",uTotalScoreBefore];
   if (uTotalScoreBefore >= uTotalScore) {
     userScoreLoaded = YES;
     if (opponentScoreLoaded && userScoreLoaded) {
@@ -695,7 +700,8 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 - (void)changeTScoreTwo:(NSTimer *)timer {
   oTotalScoreBefore += 1;
   UILabel *label = (UILabel *)[self.view viewWithTag:21];
-  label.text= [NSString stringWithFormat:@"%d",oTotalScoreBefore];
+  if (oTotalScore == 0) label.text = [NSString stringWithFormat:@"-"];
+  else label.text = [NSString stringWithFormat:@"%d",oTotalScoreBefore];
   if (oTotalScoreBefore >= oTotalScore) {
     opponentScoreLoaded = YES;
     if (userScoreLoaded && opponentScoreLoaded) {

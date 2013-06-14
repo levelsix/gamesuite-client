@@ -32,7 +32,20 @@
 			<string>Correct! If you want a little more time you can freeze the clock.</string>
 			<integer>15</integer>
 		</array>
-		<array/>
+		<array>
+			<string>Opps, thats not correct, you have now finished all the questions, we will now take you to the score screen</string>
+			<integer>11</integer>
+			<string>Congratulation, you have finished all the questions, you will now be taken to the score screen</string>
+			<integer>13</integer>
+		</array>
+		<array>
+			<string>Normal games are 3 rounds, whoever has the most points wins!</string>
+			<integer>16</integer>
+		</array>
+		<array>
+			<string>Let&apos;s find you an opponent!</string>
+			<integer>17</integer>
+		</array>
 	</array>
 </dict>
 </plist>

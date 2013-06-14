@@ -7,30 +7,28 @@ option java_outer_classname = "TriviaRoundFormatProto";
 
 
 message BasicRoundResultsProto {
-	optional string id = 5;
-	optional int32 numQuestionsSeen = 1;
-	optional int32 numQuestionsAnsweredCorrectly = 2;
-	optional int32 score = 3;
-	optional int32 roundNumber = 4;
+	optional string id = 1;
+	optional sint32 score = 2;
+	optional int32 roundNumber = 3;
 
 }
 
 message CompleteRoundResultsProto {
-	optional string id = 6;
-	optional int32 numQuestionsSeen = 1;
-	optional int32 numQuestionsAnsweredCorrectly = 2;
-	optional int32 score = 3;
-	optional int32 roundNumber = 4;
-	repeated QuestionProto questions = 5;
-	optional int64 startTime = 7;
-	optional int64 endTime = 8;
+	optional string id = 1;
+	optional sint32 score = 2;
+	optional int32 roundNumber = 3;
+	repeated QuestionAnsweredProto answers = 4;
+	optional int64 startTime = 5;
+	optional int64 endTime = 6;
 }
 
 message BasicRoundProto {
-	//this won't be set if the player is player one:
-	//player must have exited game when answering questions or something 
+	//uniquely identifies this round
 	optional string id = 1;
 	
 	repeated QuestionProto questions = 2;
 	optional int32 roundNumber = 3;
+	
+	optional int32 secondsRemaning = 4;
+	optional int32 currentQuestionNumber = 5;  
 }
