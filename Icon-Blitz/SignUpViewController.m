@@ -204,15 +204,17 @@
   NSString *macAddress = [ui getMacAddress];
   NSString *name = [self randomName];
   NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+
   [dict setObject:udid forKey:@"udid"];
   [dict setObject:macAddress forKey:@"deviceId"];
   [dict setObject:name forKey:@"name"];
+  NSLog(@"%@",dict);
   [[SocketCommunication sharedSocketCommunication] sendCreateAccountViaNoCredentialsRequestProto:[dict copy]];
 }
 
 - (NSString *)randomName {
   NSString *prefix = @"User";
-  int ran = arc4random() % 1000;
+  int ran = arc4random() % 100000;
   NSString *name = [NSString stringWithFormat:@"%@%d",prefix,ran];
   return name;
 }
