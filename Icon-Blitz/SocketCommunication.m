@@ -126,7 +126,7 @@ static NSString *udid = nil;
 }
 
 - (int)sendLoginRequestEventViaEmail:(BasicUserProto *)proto {
-  LoginRequestProto *req = [[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeEmailPassword] build];
+  LoginRequestProto *req = [[[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeEmailPassword]setInitializeAccount:YES] build];
   return [self sendData:req withMessageType:CommonEventProtocolRequestCLoginEvent];
 }
 

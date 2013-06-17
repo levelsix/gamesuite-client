@@ -12,7 +12,6 @@
 #import "SocketCommunication.h"
 #import "TextFieldIndentation.h"
 #import "HomeViewController.h"
-#import "LoadingView.h"
 
 typedef enum {
   kUserNameField = 1,
@@ -25,7 +24,13 @@ typedef enum {
 #define Minimum_UserName_Count 4
 #define Maximum_UserName_Count 15
 
-@interface CreateAccountViewController ()
+
+#define SignUpProto 2
+#define LoginProto 3
+
+@interface CreateAccountViewController () {
+  int protoType;
+}
 
 @end
 
@@ -37,6 +42,7 @@ typedef enum {
   self.emailTextField.horizontalPadding = 15;
   self.usernameTextField.horizontalPadding = 15;
   self.passwordTextField.horizontalPadding = 15;
+  protoType = SignUpProto;
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(usernameChanged) name:UITextFieldTextDidChangeNotification object:self.usernameTextField];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(passwordChanged) name:UITextFieldTextDidChangeNotification object:self.passwordTextField];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(emailChanged) name:UITextFieldTextDidChangeNotification object:self.emailTextField];
@@ -110,14 +116,32 @@ typedef enum {
   self.view.userInteractionEnabled = YES;
   [self.spinner stopAnimating];
   self.loadingLabel.hidden = YES;
-  CreateAccountResponseProto *proto = (CreateAccountResponseProto *)message;
-  if (proto.status == CreateAccountResponseProto_CreateAccountStatusSuccessAccountCreated) {
-    HomeViewController *vc = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
-    [self.navigationController pushViewController:vc animated:YES];
+  
+  if (protoType == SignUpProto) {
+    CreateAccountResponseProto *proto = (CreateAccountResponseProto *)message;
+    if (proto.status == CreateAccountResponseProto_CreateAccountStatusSuccessAccountCreated) {
+      protoType = LoginProto;
+#warning add back the spinner
+      [self.spinner startAnimating];
+      [[SocketCommunication sharedSocketCommunication] sendLoginRequestEventViaEmail:proto.recipient];
+    }
+    else {
+      [self receivedFailedProto:proto];
+    }
   }
   else {
-    [self receivedFailedProto:proto];
+    LoginResponseProto *proto = (LoginResponseProto *)message;
+    if (proto.status == LoginResponseProto_LoginResponseStatusSuccessEmailPassword) {
+      //login with email pro
+    }
+    else {
+      [self receivedLoginFailedProto:proto];
+    }
   }
+}
+
+- (void)receivedLoginFailedProto:(LoginResponseProto *)proto {
+  
 }
 
 - (void)receivedFailedProto:(CreateAccountResponseProto *)proto {

@@ -71,8 +71,8 @@ typedef enum {
       UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Placer, dont have server side yet" message:@"email = trivia@lvl6.com, password is level6" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
       [alert show];
     }
-//    BasicUserProto *proto = [[[[BasicUserProto builder] setEmail:self.email] setPassword:self.password] build];
-//    [[SocketCommunication sharedSocketCommunication] sendLoginRequestEventViaEmail:proto];
+    BasicUserProto *proto = [[[[BasicUserProto builder] setEmail:self.email] setPassword:self.password] build];
+    [[SocketCommunication sharedSocketCommunication] sendLoginRequestEventViaEmail:proto];
   }
 }
 

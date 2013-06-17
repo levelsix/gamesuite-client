@@ -52,7 +52,6 @@
 		062AD0A6174EE05B0021D892 /* User.proto in Resources */ = {isa = PBXBuildFile; fileRef = 062AD096174EE05B0021D892 /* User.proto */; };
 		0638341917586CF100A0E417 /* circleglow.png in Resources */ = {isa = PBXBuildFile; fileRef = 0638341717586CF100A0E417 /* circleglow.png */; };
 		0638341A17586CF100A0E417 /* circleglow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0638341817586CF100A0E417 /* circleglow@2x.png */; };
-		063BC1F4173B1F1200330E98 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 063BC1F3173B1F1200330E98 /* LoadingView.m */; };
 		063DEA4B1718B77B00D8ADE2 /* FullEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 063DEA4A1718B77B00D8ADE2 /* FullEvent.m */; };
 		0658A01C1734C3C1003305CA /* createaccount.png in Resources */ = {isa = PBXBuildFile; fileRef = 0658A0101734C3C1003305CA /* createaccount.png */; };
 		0658A01D1734C3C1003305CA /* createaccount@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0658A0111734C3C1003305CA /* createaccount@2x.png */; };
@@ -371,8 +370,6 @@
 		062AD096174EE05B0021D892 /* User.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = User.proto; sourceTree = "<group>"; };
 		0638341717586CF100A0E417 /* circleglow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circleglow.png; sourceTree = "<group>"; };
 		0638341817586CF100A0E417 /* circleglow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "circleglow@2x.png"; sourceTree = "<group>"; };
-		063BC1EE173B194E00330E98 /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
-		063BC1F3173B1F1200330E98 /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
 		063DEA491718B77B00D8ADE2 /* FullEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FullEvent.h; sourceTree = "<group>"; };
 		063DEA4A1718B77B00D8ADE2 /* FullEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FullEvent.m; sourceTree = "<group>"; };
 		063DEA9A1718BCC100D8ADE2 /* libProtocolBuffers.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libProtocolBuffers.a; path = "../../Library/Developer/Xcode/DerivedData/Icon-Blitz-ctsxerczwaqbnbfazmfycgtpbmfo/Build/Products/Debug-iphoneos/libProtocolBuffers.a"; sourceTree = "<group>"; };
@@ -900,8 +897,6 @@
 				068CB2A51728A3F00029E755 /* CreateAccountViewController.h */,
 				068CB2A61728A3F00029E755 /* CreateAccountViewController.m */,
 				068CB2A71728A3F00029E755 /* CreateAccountViewController.xib */,
-				063BC1EE173B194E00330E98 /* LoadingView.h */,
-				063BC1F3173B1F1200330E98 /* LoadingView.m */,
 			);
 			name = SignUp/Login;
 			sourceTree = "<group>";
@@ -1775,7 +1770,6 @@
 				0612FB711730999E00DA0D5B /* JRSwizzle.m in Sources */,
 				0612FB74173099A800DA0D5B /* UINavigationController+PushPopRotated.m in Sources */,
 				06FF59AC17385EC0003741A6 /* TextFieldIndentation.m in Sources */,
-				063BC1F4173B1F1200330E98 /* LoadingView.m in Sources */,
 				067301B6173D9805001C507A /* FillInTypeViewController.m in Sources */,
 				065EF16D174EDFDB00534D6F /* RefillTokensByWaitingEvent.pb.m in Sources */,
 				065EF16E174EDFDB00534D6F /* RetrieveNewQuestionsEvent.pb.m in Sources */,

@@ -15,7 +15,6 @@
 #import "AppDelegate.h"
 #import "UserInfo.h"
 #import "SocketCommunication.h"
-#import "LoadingView.h"
 
 @interface SignUpViewController () {
   NSMutableArray *friendIds;
@@ -34,6 +33,8 @@
 }
 
 - (IBAction)signUpWithFacebook:(id)sender {
+  [self.spinner startAnimating];
+  self.loadingLabel.hidden = NO;
   if (FBSession.activeSession.isOpen == YES) {
     [FBSession.activeSession closeAndClearTokenInformation];
   }
@@ -42,6 +43,7 @@
     AppDelegate *ad = [[UIApplication sharedApplication] delegate];
     ad.delegate = self;
     [fb facebookLogin];
+    signUpType = kFacebook;
   }
 }
 
@@ -77,8 +79,8 @@
   }];
 }
 
-
-- (void)test {
+- (void)goToHomeViewWithAnimationWithLoginResponse:(LoginResponseProto *)proto {
+#warning initialize depending on the sign up tye
   HomeViewController *vc = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
   [self.view addSubview:vc.view];
   vc.view.frame = CGRectMake(0, -vc.view.frame.size.height, vc.view.frame.size.width, vc.view.frame.size.height);
@@ -89,47 +91,57 @@
   }];
 }
 
-- (void)goToHomeView:(LoginResponseProto *)response {
-  HomeViewController *vc = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil event:response];
-  [self.navigationController pushViewController:vc animated:YES];
+- (void)loginWithNoCredential:(CreateAccountResponseProto *)proto {
+  [[SocketCommunication sharedSocketCommunication] sendLoginRequestEventViaNoCredentials:proto.recipient];
 }
 
 - (void)receivedProtoResponse:(PBGeneratedMessage *)message {
   if (protoType == kSignUp) {
     CreateAccountResponseProto *proto = (CreateAccountResponseProto *)message;
-  
     if (proto.status == CreateAccountResponseProto_CreateAccountStatusSuccessAccountCreated) {
       NSLog(@"succeeded");
       protoType = kLoginType;
-      FBRequest *friendsRequest = [FBRequest requestForMyFriends];
-      [friendsRequest startWithCompletionHandler: ^(FBRequestConnection *connection,
-                                                    NSDictionary* result,
-                                                    NSError *error) {
-        NSArray* friends = [result objectForKey:@"data"];
-        for (NSDictionary<FBGraphUser>* friend in friends) {
-          [friendIds addObject:friend.id];
-        }
-        SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
-        sc.delegate = self;
-        [sc sendLoginRequestEventViaFacebook:proto.recipient facebookFriends:friendIds];
-      }];
+      if (signUpType == kFacebook) {
+        [self getFacebookAndSendDataWithProto:proto];
+      }
+      else {
+        [self loginWithNoCredential:proto];
+      }
     }
     else {
       NSLog(@"failed");
+      [self.spinner stopAnimating];
+      self.loadingLabel.hidden = YES;
       [self receivedFailedProto:proto];
     }
   }
   else {
     LoginResponseProto *proto = (LoginResponseProto *)message;
-    
+    [self goToHomeViewWithAnimationWithLoginResponse:proto];
   }
+}
 
+- (void)getFacebookAndSendDataWithProto:(CreateAccountResponseProto *)proto {
+  FBRequest *friendsRequest = [FBRequest requestForMyFriends];
+  [friendsRequest startWithCompletionHandler: ^(FBRequestConnection *connection,
+                                                NSDictionary* result,
+                                                NSError *error) {
+    NSArray* friends = [result objectForKey:@"data"];
+    for (NSDictionary<FBGraphUser>* friend in friends) {
+      [friendIds addObject:friend.id];
+    }
+    SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+    sc.delegate = self;
+    [sc sendLoginRequestEventViaFacebook:proto.recipient facebookFriends:friendIds];
+  }];
 }
 
 - (void)receivedFailedProto:(CreateAccountResponseProto *)proto {
   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:@"Cancel", nil];
   switch ((int)proto.status) {
     case CreateAccountResponseProto_CreateAccountStatusFailDuplicateFacebookId:
+      protoType = kLoginType;
+      [self getFacebookAndSendDataWithProto:proto];
       NSLog(@"duplicate facebook id");
       return;
       break;
@@ -208,7 +220,7 @@
   [dict setObject:udid forKey:@"udid"];
   [dict setObject:macAddress forKey:@"deviceId"];
   [dict setObject:name forKey:@"name"];
-  NSLog(@"%@",dict);
+  
   [[SocketCommunication sharedSocketCommunication] sendCreateAccountViaNoCredentialsRequestProto:[dict copy]];
 }
 

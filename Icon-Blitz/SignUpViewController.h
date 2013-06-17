@@ -18,22 +18,28 @@ typedef enum {
   kLoginType
 }ProtoTypeRequestType;
 
+typedef enum {
+  kNoCredential = 5,
+  kFacebook
+}SignUpType;
+
 @interface SignUpViewController : UIViewController <UIAlertViewDelegate, ServerCallbackDelegate, FinishFacebookLogin> {
   BOOL signedIn;
   NSMutableDictionary *signupInfo;
   UserInfo *userinfo;
   ProtoTypeRequestType protoType;
+  SignUpType signUpType;
 }
 
 @property (nonatomic, assign) BOOL signingUp;
 @property (nonatomic, strong) IBOutlet UIButton *noCredentialLoginButton;
 @property (nonatomic, strong) IBOutlet UIButton *signInWithEmailButotn;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *spinner;
+@property (nonatomic, strong) IBOutlet UILabel *loadingLabel;
 
 - (IBAction)signUpWithFacebook:(id)sender;
 - (IBAction)signUpWithEmail:(id)sender;
 - (IBAction)skipSignUp:(id)sender;
 - (IBAction)login:(id)sender;
 - (void)sendOverFacebookData;
-- (void)goToHomeView:(LoginResponseProto *)response;
 @end
