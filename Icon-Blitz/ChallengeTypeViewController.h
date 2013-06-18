@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AppDelegate.h"
 
 @class UserInfo;
 
-@interface ChallengeTypeViewController : UIViewController {
+@interface ChallengeTypeViewController : UIViewController <FinishFacebookLogin> {
 
 }
 
@@ -19,6 +20,7 @@
 @property (nonatomic, strong) UserInfo *userInfo;
 @property (nonatomic, strong) NSArray *questions;
 @property (nonatomic, strong) NSArray *facebookFriends;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *spinner;
 
 - (id)initWithQuestions:(NSArray *)questions facebookFriends:(NSArray *)facebookFriends userInfo:(UserInfo *)userInfo;
 - (IBAction)facebookClicked:(UIButton *)sender;

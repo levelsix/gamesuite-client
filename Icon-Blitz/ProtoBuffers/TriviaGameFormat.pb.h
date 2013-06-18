@@ -8,8 +8,6 @@
 
 @class BasicAuthorizedDeviceProto;
 @class BasicAuthorizedDeviceProto_Builder;
-@class BasicRoundProto;
-@class BasicRoundProto_Builder;
 @class BasicRoundResultsProto;
 @class BasicRoundResultsProto_Builder;
 @class BasicUserProto;
@@ -34,6 +32,8 @@
 @class QuestionAnsweredProto_Builder;
 @class QuestionProto;
 @class QuestionProto_Builder;
+@class UnfinishedRoundProto;
+@class UnfinishedRoundProto_Builder;
 @class UserCurrencyProto;
 @class UserCurrencyProto_Builder;
 
@@ -48,12 +48,12 @@
   BOOL hasGameSoFar_:1;
   BOOL hasMyNewRound_:1;
   GameResultsProto* gameSoFar;
-  BasicRoundProto* myNewRound;
+  UnfinishedRoundProto* myNewRound;
 }
 - (BOOL) hasGameSoFar;
 - (BOOL) hasMyNewRound;
 @property (readonly, retain) GameResultsProto* gameSoFar;
-@property (readonly, retain) BasicRoundProto* myNewRound;
+@property (readonly, retain) UnfinishedRoundProto* myNewRound;
 
 + (OngoingGameProto*) defaultInstance;
 - (OngoingGameProto*) defaultInstance;
@@ -97,10 +97,10 @@
 - (OngoingGameProto_Builder*) clearGameSoFar;
 
 - (BOOL) hasMyNewRound;
-- (BasicRoundProto*) myNewRound;
-- (OngoingGameProto_Builder*) setMyNewRound:(BasicRoundProto*) value;
-- (OngoingGameProto_Builder*) setMyNewRoundBuilder:(BasicRoundProto_Builder*) builderForValue;
-- (OngoingGameProto_Builder*) mergeMyNewRound:(BasicRoundProto*) value;
+- (UnfinishedRoundProto*) myNewRound;
+- (OngoingGameProto_Builder*) setMyNewRound:(UnfinishedRoundProto*) value;
+- (OngoingGameProto_Builder*) setMyNewRoundBuilder:(UnfinishedRoundProto_Builder*) builderForValue;
+- (OngoingGameProto_Builder*) mergeMyNewRound:(UnfinishedRoundProto*) value;
 - (OngoingGameProto_Builder*) clearMyNewRound;
 @end
 

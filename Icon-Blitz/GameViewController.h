@@ -46,7 +46,7 @@ typedef enum {
 @property (nonatomic, assign) BOOL isTutorial;
 @property (nonatomic, assign) QuestionType currentType;
 @property (nonatomic, strong) UserInfo *userData;
-@property (nonatomic, strong) BasicRoundProto *proto;
+@property (nonatomic, strong) UnfinishedRoundProto *proto;
 @property (nonatomic, strong) UIViewController *currentController;
 @property (nonatomic, strong) NSArray *questions;
 @property (nonatomic, strong) NSMutableArray *questionsId;

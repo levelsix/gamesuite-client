@@ -30,7 +30,7 @@
 - (int)sendCreateAccountViaFacebookMessage:(NSDictionary *)facebookInfo;
 - (int)sendCreateAccountViaEmailMessage:(NSDictionary *)userInfo;
 - (int)sendCreateAccountViaNoCredentialsRequestProto: (NSDictionary *)deviceInfo;
-- (int)sendLoginRequestEventViaToken:(BasicUserProto *)proto;
+- (int)sendLoginRequestEventViaToken:(BasicUserProto *)proto facebookFriends:(NSArray *)facebookFriendId;
 - (int)sendLoginRequestEventViaFacebook:(BasicUserProto *)proto facebookFriends:(NSArray *)facebookFriendId;
 - (int)sendLoginRequestEventViaEmail:(BasicUserProto *)proto;
 - (int)sendLoginRequestEventViaNoCredentials:(BasicUserProto *)proto;

@@ -45,7 +45,7 @@ typedef enum {
 
 @property (nonatomic) BOOL inAppPurchasedLoaded;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil event:(LoginResponseProto *)proto;
+- (id)initWithLoginResponse:(LoginResponseProto *)proto;
 - (IBAction)startNewGame:(id)sender;
 - (IBAction)goToGame:(id)sender;
 - (IBAction)goToShop:(id)sender;

@@ -661,15 +661,16 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
 }
 @end
 
-@interface BasicRoundProto ()
+@interface UnfinishedRoundProto ()
 @property (retain) NSString* id;
 @property (retain) NSMutableArray* mutableQuestionsList;
 @property int32_t roundNumber;
 @property int32_t secondsRemaning;
 @property int32_t currentQuestionNumber;
+@property int32_t currentScore;
 @end
 
-@implementation BasicRoundProto
+@implementation UnfinishedRoundProto
 
 - (BOOL) hasId {
   return !!hasId_;
@@ -700,6 +701,13 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
   hasCurrentQuestionNumber_ = !!value;
 }
 @synthesize currentQuestionNumber;
+- (BOOL) hasCurrentScore {
+  return !!hasCurrentScore_;
+}
+- (void) setHasCurrentScore:(BOOL) value {
+  hasCurrentScore_ = !!value;
+}
+@synthesize currentScore;
 - (void) dealloc {
   self.id = nil;
   self.mutableQuestionsList = nil;
@@ -711,20 +719,21 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
     self.roundNumber = 0;
     self.secondsRemaning = 0;
     self.currentQuestionNumber = 0;
+    self.currentScore = 0;
   }
   return self;
 }
-static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
+static UnfinishedRoundProto* defaultUnfinishedRoundProtoInstance = nil;
 + (void) initialize {
-  if (self == [BasicRoundProto class]) {
-    defaultBasicRoundProtoInstance = [[BasicRoundProto alloc] init];
+  if (self == [UnfinishedRoundProto class]) {
+    defaultUnfinishedRoundProtoInstance = [[UnfinishedRoundProto alloc] init];
   }
 }
-+ (BasicRoundProto*) defaultInstance {
-  return defaultBasicRoundProtoInstance;
++ (UnfinishedRoundProto*) defaultInstance {
+  return defaultUnfinishedRoundProtoInstance;
 }
-- (BasicRoundProto*) defaultInstance {
-  return defaultBasicRoundProtoInstance;
+- (UnfinishedRoundProto*) defaultInstance {
+  return defaultUnfinishedRoundProtoInstance;
 }
 - (NSArray*) questionsList {
   return mutableQuestionsList;
@@ -752,6 +761,9 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
   if (self.hasCurrentQuestionNumber) {
     [output writeInt32:5 value:self.currentQuestionNumber];
   }
+  if (self.hasCurrentScore) {
+    [output writeInt32:6 value:self.currentScore];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -776,44 +788,47 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
   if (self.hasCurrentQuestionNumber) {
     size += computeInt32Size(5, self.currentQuestionNumber);
   }
+  if (self.hasCurrentScore) {
+    size += computeInt32Size(6, self.currentScore);
+  }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
   return size;
 }
-+ (BasicRoundProto*) parseFromData:(NSData*) data {
-  return (BasicRoundProto*)[[[BasicRoundProto builder] mergeFromData:data] build];
++ (UnfinishedRoundProto*) parseFromData:(NSData*) data {
+  return (UnfinishedRoundProto*)[[[UnfinishedRoundProto builder] mergeFromData:data] build];
 }
-+ (BasicRoundProto*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  return (BasicRoundProto*)[[[BasicRoundProto builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
++ (UnfinishedRoundProto*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (UnfinishedRoundProto*)[[[UnfinishedRoundProto builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
 }
-+ (BasicRoundProto*) parseFromInputStream:(NSInputStream*) input {
-  return (BasicRoundProto*)[[[BasicRoundProto builder] mergeFromInputStream:input] build];
++ (UnfinishedRoundProto*) parseFromInputStream:(NSInputStream*) input {
+  return (UnfinishedRoundProto*)[[[UnfinishedRoundProto builder] mergeFromInputStream:input] build];
 }
-+ (BasicRoundProto*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  return (BasicRoundProto*)[[[BasicRoundProto builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
++ (UnfinishedRoundProto*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (UnfinishedRoundProto*)[[[UnfinishedRoundProto builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
 }
-+ (BasicRoundProto*) parseFromCodedInputStream:(PBCodedInputStream*) input {
-  return (BasicRoundProto*)[[[BasicRoundProto builder] mergeFromCodedInputStream:input] build];
++ (UnfinishedRoundProto*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (UnfinishedRoundProto*)[[[UnfinishedRoundProto builder] mergeFromCodedInputStream:input] build];
 }
-+ (BasicRoundProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
-  return (BasicRoundProto*)[[[BasicRoundProto builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
++ (UnfinishedRoundProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (UnfinishedRoundProto*)[[[UnfinishedRoundProto builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
 }
-+ (BasicRoundProto_Builder*) builder {
-  return [[[BasicRoundProto_Builder alloc] init] autorelease];
++ (UnfinishedRoundProto_Builder*) builder {
+  return [[[UnfinishedRoundProto_Builder alloc] init] autorelease];
 }
-+ (BasicRoundProto_Builder*) builderWithPrototype:(BasicRoundProto*) prototype {
-  return [[BasicRoundProto builder] mergeFrom:prototype];
++ (UnfinishedRoundProto_Builder*) builderWithPrototype:(UnfinishedRoundProto*) prototype {
+  return [[UnfinishedRoundProto builder] mergeFrom:prototype];
 }
-- (BasicRoundProto_Builder*) builder {
-  return [BasicRoundProto builder];
+- (UnfinishedRoundProto_Builder*) builder {
+  return [UnfinishedRoundProto builder];
 }
 @end
 
-@interface BasicRoundProto_Builder()
-@property (retain) BasicRoundProto* result;
+@interface UnfinishedRoundProto_Builder()
+@property (retain) UnfinishedRoundProto* result;
 @end
 
-@implementation BasicRoundProto_Builder
+@implementation UnfinishedRoundProto_Builder
 @synthesize result;
 - (void) dealloc {
   self.result = nil;
@@ -821,34 +836,34 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
 }
 - (id) init {
   if ((self = [super init])) {
-    self.result = [[[BasicRoundProto alloc] init] autorelease];
+    self.result = [[[UnfinishedRoundProto alloc] init] autorelease];
   }
   return self;
 }
 - (PBGeneratedMessage*) internalGetResult {
   return result;
 }
-- (BasicRoundProto_Builder*) clear {
-  self.result = [[[BasicRoundProto alloc] init] autorelease];
+- (UnfinishedRoundProto_Builder*) clear {
+  self.result = [[[UnfinishedRoundProto alloc] init] autorelease];
   return self;
 }
-- (BasicRoundProto_Builder*) clone {
-  return [BasicRoundProto builderWithPrototype:result];
+- (UnfinishedRoundProto_Builder*) clone {
+  return [UnfinishedRoundProto builderWithPrototype:result];
 }
-- (BasicRoundProto*) defaultInstance {
-  return [BasicRoundProto defaultInstance];
+- (UnfinishedRoundProto*) defaultInstance {
+  return [UnfinishedRoundProto defaultInstance];
 }
-- (BasicRoundProto*) build {
+- (UnfinishedRoundProto*) build {
   [self checkInitialized];
   return [self buildPartial];
 }
-- (BasicRoundProto*) buildPartial {
-  BasicRoundProto* returnMe = [[result retain] autorelease];
+- (UnfinishedRoundProto*) buildPartial {
+  UnfinishedRoundProto* returnMe = [[result retain] autorelease];
   self.result = nil;
   return returnMe;
 }
-- (BasicRoundProto_Builder*) mergeFrom:(BasicRoundProto*) other {
-  if (other == [BasicRoundProto defaultInstance]) {
+- (UnfinishedRoundProto_Builder*) mergeFrom:(UnfinishedRoundProto*) other {
+  if (other == [UnfinishedRoundProto defaultInstance]) {
     return self;
   }
   if (other.hasId) {
@@ -869,13 +884,16 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
   if (other.hasCurrentQuestionNumber) {
     [self setCurrentQuestionNumber:other.currentQuestionNumber];
   }
+  if (other.hasCurrentScore) {
+    [self setCurrentScore:other.currentScore];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
-- (BasicRoundProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+- (UnfinishedRoundProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
   return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
 }
-- (BasicRoundProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+- (UnfinishedRoundProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
   PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
   while (YES) {
     int32_t tag = [input readTag];
@@ -912,6 +930,10 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
         [self setCurrentQuestionNumber:[input readInt32]];
         break;
       }
+      case 48: {
+        [self setCurrentScore:[input readInt32]];
+        break;
+      }
     }
   }
 }
@@ -921,12 +943,12 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
 - (NSString*) id {
   return result.id;
 }
-- (BasicRoundProto_Builder*) setId:(NSString*) value {
+- (UnfinishedRoundProto_Builder*) setId:(NSString*) value {
   result.hasId = YES;
   result.id = value;
   return self;
 }
-- (BasicRoundProto_Builder*) clearId {
+- (UnfinishedRoundProto_Builder*) clearId {
   result.hasId = NO;
   result.id = @"";
   return self;
@@ -938,22 +960,22 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
 - (QuestionProto*) questionsAtIndex:(int32_t) index {
   return [result questionsAtIndex:index];
 }
-- (BasicRoundProto_Builder*) replaceQuestionsAtIndex:(int32_t) index with:(QuestionProto*) value {
+- (UnfinishedRoundProto_Builder*) replaceQuestionsAtIndex:(int32_t) index with:(QuestionProto*) value {
   [result.mutableQuestionsList replaceObjectAtIndex:index withObject:value];
   return self;
 }
-- (BasicRoundProto_Builder*) addAllQuestions:(NSArray*) values {
+- (UnfinishedRoundProto_Builder*) addAllQuestions:(NSArray*) values {
   if (result.mutableQuestionsList == nil) {
     result.mutableQuestionsList = [NSMutableArray array];
   }
   [result.mutableQuestionsList addObjectsFromArray:values];
   return self;
 }
-- (BasicRoundProto_Builder*) clearQuestionsList {
+- (UnfinishedRoundProto_Builder*) clearQuestionsList {
   result.mutableQuestionsList = nil;
   return self;
 }
-- (BasicRoundProto_Builder*) addQuestions:(QuestionProto*) value {
+- (UnfinishedRoundProto_Builder*) addQuestions:(QuestionProto*) value {
   if (result.mutableQuestionsList == nil) {
     result.mutableQuestionsList = [NSMutableArray array];
   }
@@ -966,12 +988,12 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
 - (int32_t) roundNumber {
   return result.roundNumber;
 }
-- (BasicRoundProto_Builder*) setRoundNumber:(int32_t) value {
+- (UnfinishedRoundProto_Builder*) setRoundNumber:(int32_t) value {
   result.hasRoundNumber = YES;
   result.roundNumber = value;
   return self;
 }
-- (BasicRoundProto_Builder*) clearRoundNumber {
+- (UnfinishedRoundProto_Builder*) clearRoundNumber {
   result.hasRoundNumber = NO;
   result.roundNumber = 0;
   return self;
@@ -982,12 +1004,12 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
 - (int32_t) secondsRemaning {
   return result.secondsRemaning;
 }
-- (BasicRoundProto_Builder*) setSecondsRemaning:(int32_t) value {
+- (UnfinishedRoundProto_Builder*) setSecondsRemaning:(int32_t) value {
   result.hasSecondsRemaning = YES;
   result.secondsRemaning = value;
   return self;
 }
-- (BasicRoundProto_Builder*) clearSecondsRemaning {
+- (UnfinishedRoundProto_Builder*) clearSecondsRemaning {
   result.hasSecondsRemaning = NO;
   result.secondsRemaning = 0;
   return self;
@@ -998,14 +1020,30 @@ static BasicRoundProto* defaultBasicRoundProtoInstance = nil;
 - (int32_t) currentQuestionNumber {
   return result.currentQuestionNumber;
 }
-- (BasicRoundProto_Builder*) setCurrentQuestionNumber:(int32_t) value {
+- (UnfinishedRoundProto_Builder*) setCurrentQuestionNumber:(int32_t) value {
   result.hasCurrentQuestionNumber = YES;
   result.currentQuestionNumber = value;
   return self;
 }
-- (BasicRoundProto_Builder*) clearCurrentQuestionNumber {
+- (UnfinishedRoundProto_Builder*) clearCurrentQuestionNumber {
   result.hasCurrentQuestionNumber = NO;
   result.currentQuestionNumber = 0;
+  return self;
+}
+- (BOOL) hasCurrentScore {
+  return result.hasCurrentScore;
+}
+- (int32_t) currentScore {
+  return result.currentScore;
+}
+- (UnfinishedRoundProto_Builder*) setCurrentScore:(int32_t) value {
+  result.hasCurrentScore = YES;
+  result.currentScore = value;
+  return self;
+}
+- (UnfinishedRoundProto_Builder*) clearCurrentScore {
+  result.hasCurrentScore = NO;
+  result.currentScore = 0;
   return self;
 }
 @end

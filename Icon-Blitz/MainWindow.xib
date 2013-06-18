@@ -253,11 +253,16 @@
 						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="loadingLabel">UILabel</string>
 						<string key="noCredentialLoginButton">UIButton</string>
 						<string key="signInWithEmailButotn">UIButton</string>
 						<string key="spinner">UIActivityIndicatorView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="loadingLabel">
+							<string key="name">loadingLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="noCredentialLoginButton">
 							<string key="name">noCredentialLoginButton</string>
 							<string key="candidateClassName">UIButton</string>

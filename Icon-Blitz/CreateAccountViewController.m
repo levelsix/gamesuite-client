@@ -108,31 +108,38 @@ typedef enum {
 }
 
 - (void)goToHomeView:(LoginResponseProto *)proto {
-  HomeViewController *vc = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil event:proto];
-  [self.navigationController pushViewController:vc animated:YES];
+  HomeViewController *vc = [[HomeViewController alloc] initWithLoginResponse:proto];
+  [self.view addSubview:vc.view];
+  vc.view.frame = CGRectMake(0, -vc.view.frame.size.height, vc.view.frame.size.width, vc.view.frame.size.height);
+  [UIView animateWithDuration:0.3f delay:0.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    vc.view.frame = CGRectMake(0, 0, vc.view.frame.size.width, vc.view.frame.size.height);
+  } completion:^(BOOL finished) {
+    [self.navigationController pushViewController:vc animated:NO];
+  }];
 }
 
 - (void)receivedProtoResponse:(PBGeneratedMessage *)message {
   self.view.userInteractionEnabled = YES;
   [self.spinner stopAnimating];
   self.loadingLabel.hidden = YES;
-  
   if (protoType == SignUpProto) {
     CreateAccountResponseProto *proto = (CreateAccountResponseProto *)message;
     if (proto.status == CreateAccountResponseProto_CreateAccountStatusSuccessAccountCreated) {
       protoType = LoginProto;
-#warning add back the spinner
       [self.spinner startAnimating];
-      [[SocketCommunication sharedSocketCommunication] sendLoginRequestEventViaEmail:proto.recipient];
+      [[SocketCommunication sharedSocketCommunication] sendLoginRequestEventViaToken:proto.recipient facebookFriends:NULL];
     }
     else {
       [self receivedFailedProto:proto];
     }
   }
   else {
+    [self.spinner startAnimating];
+    self.loadingLabel.hidden = NO;
+    self.loadingLabel.text = [NSString stringWithFormat:@"Logging in"];
     LoginResponseProto *proto = (LoginResponseProto *)message;
-    if (proto.status == LoginResponseProto_LoginResponseStatusSuccessEmailPassword) {
-      //login with email pro
+    if (proto.status == LoginResponseProto_LoginResponseStatusSuccessLoginToken) {
+      [self goToHomeView:proto];
     }
     else {
       [self receivedLoginFailedProto:proto];
@@ -141,7 +148,7 @@ typedef enum {
 }
 
 - (void)receivedLoginFailedProto:(LoginResponseProto *)proto {
-  
+  NSLog(@"error");
 }
 
 - (void)receivedFailedProto:(CreateAccountResponseProto *)proto {

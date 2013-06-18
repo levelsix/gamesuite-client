@@ -22,7 +22,7 @@ message CompleteRoundResultsProto {
 	optional int64 endTime = 6;
 }
 
-message BasicRoundProto {
+message UnfinishedRoundProto {
 	//uniquely identifies this round
 	optional string id = 1;
 	
@@ -31,4 +31,6 @@ message BasicRoundProto {
 	
 	optional int32 secondsRemaning = 4;
 	optional int32 currentQuestionNumber = 5;  
+	optional int32 currentScore = 6;
 }
+

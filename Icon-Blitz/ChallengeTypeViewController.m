@@ -12,6 +12,7 @@
 #import "UINavigationController+PushPopRotated.h"
 #import "UserInfo.h"
 #import <Twitter/Twitter.h>
+#import "AppDelegate.h"
 
 @interface ChallengeTypeViewController ()
 
@@ -30,8 +31,8 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+  [super viewDidLoad];
+  self.facebookData = [NSMutableArray array];
 }
 
 - (IBAction)back:(UIButton *)sender {
@@ -39,38 +40,41 @@
 }
 
 - (IBAction)facebookClicked:(UIButton *)sender {
-  //self.userInfo.goldCoins--;
-  __block NSMutableArray *friendIds = [[NSMutableArray alloc] init];
+  [self.spinner startAnimating];
   self.view.userInteractionEnabled = NO;
-  if (!self.loaded) {
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    spinner.center = CGPointMake(160,360);
-    [self.view addSubview:spinner];
-    [spinner startAnimating];
-    self.facebookData = [NSMutableArray array];
+  if (!FBSession.activeSession.isOpen) {
+    NSLog(@"not logged in");
+    AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+    delegate.delegate = self;
     FacebookObject *fb = [[FacebookObject alloc] init];
     [fb facebookLogin];
-    FBRequest* friendsRequest = [FBRequest requestForMyFriends];
-    
-    [friendsRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-      if (!error) {
-        self.facebookData = [result objectForKey:@"data"];
-        for (NSDictionary<FBGraphUser>* friend in self.facebookData) {
-          [friendIds addObject:friend.id];
-        }
-        self.userInfo.listOfFacebookFriends = friendIds;
-        [self showFriends:self.facebookData];
-        [spinner stopAnimating];
-        [spinner removeFromSuperview];
-        self.loaded = YES;
-      }
-      else {
-      }
-    }];
   }
   else {
-    [self showFriends:self.facebookData];
+    [self requestForFriend];
   }
+}
+
+- (void)finishedFBLogin {
+  
+}
+
+- (void)requestForFriend {
+  __block NSMutableArray *friendIds = [[NSMutableArray alloc] init];
+  FBRequest* friendsRequest = [FBRequest requestForMyFriends];
+  [friendsRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    if (!error) {
+      self.facebookData = [result objectForKey:@"data"];
+      for (NSDictionary<FBGraphUser>* friend in self.facebookData) {
+        [friendIds addObject:friend.id];
+      }
+      self.userInfo.listOfFacebookFriends = friendIds;
+      [self showFriends:self.facebookData];
+      [self.spinner stopAnimating];
+    }
+    else {
+      
+    }
+  }];
 }
 
 - (void)showFriends:(NSArray *)friendData {

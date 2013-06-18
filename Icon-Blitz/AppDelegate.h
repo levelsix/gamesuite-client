@@ -12,7 +12,6 @@
 @protocol FinishFacebookLogin <NSObject>
 
 - (void)finishedFBLogin;
-
 @end
 
 @class HomeViewController;

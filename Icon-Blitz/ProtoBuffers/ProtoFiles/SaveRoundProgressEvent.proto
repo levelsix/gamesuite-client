@@ -1,0 +1,25 @@
+import "TriviaQuestionFormat.proto";
+import "TriviaRoundFormat.proto";
+import "User.proto";
+
+package proto;
+
+option java_package = "com.lvl6.pictures.eventprotos";
+option java_outer_classname = "SaveRoundProgressEventProto";
+
+message SaveRoundProgressRequestProto {
+	optional BasicUserProto sender = 1;
+	optional string gameId = 2;
+	optional UnfinishedRoundProto round = 3;
+}
+
+message SaveRoundProgressResponseProto {
+	optional BasicUserProto recipient = 1;
+	optional string gameId = 2;
+	optional SaveRoundStatus status = 3;
+	
+	enum SaveRoundStatus {
+		SUCCESS = 1;
+		FAIL_OTHER = 2;
+	}
+}

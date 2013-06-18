@@ -8,8 +8,6 @@
 
 @class BasicAuthorizedDeviceProto;
 @class BasicAuthorizedDeviceProto_Builder;
-@class BasicRoundProto;
-@class BasicRoundProto_Builder;
 @class BasicRoundResultsProto;
 @class BasicRoundResultsProto_Builder;
 @class BasicUserProto;
@@ -42,6 +40,8 @@
 @class QuestionAnsweredProto_Builder;
 @class QuestionProto;
 @class QuestionProto_Builder;
+@class UnfinishedRoundProto;
+@class UnfinishedRoundProto_Builder;
 @class UserCurrencyProto;
 @class UserCurrencyProto_Builder;
 typedef enum {

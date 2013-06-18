@@ -36,9 +36,11 @@
   [self.spinner startAnimating];
   self.loadingLabel.hidden = NO;
   if (FBSession.activeSession.isOpen == YES) {
+    NSLog(@"cleared facebook data");
     [FBSession.activeSession closeAndClearTokenInformation];
   }
   else {
+    self.view.userInteractionEnabled = NO;
     FacebookObject *fb = [[FacebookObject alloc] init];
     AppDelegate *ad = [[UIApplication sharedApplication] delegate];
     ad.delegate = self;
@@ -60,15 +62,14 @@
   __block NSString *name = @"";
   __block NSString *facebookId = @"";
   __block NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-  FBRequest *me = [FBRequest requestForMe];
-  [me startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+  [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
     if (!error) {
-      [self.spinner stopAnimating];
-      NSDictionary <FBGraphUser> *my = (NSDictionary<FBGraphUser>*)result;
-      name = [NSString stringWithFormat:@"%@ %@", my.first_name, my.last_name];
-      facebookId = my.id;
+      facebookId = user.id;
+      name = [NSString stringWithFormat:@"%@ %@",user.first_name, user.last_name];
+      NSString *email = [user objectForKey:@"email"];
       [dict setObject:name forKey:@"name"];
       [dict setObject:facebookId forKey:@"facebookId"];
+      [dict setObject:email forKey:@"email"];
       [sc sendCreateAccountViaFacebookMessage:[dict copy]];
     }
     else {
@@ -79,49 +80,7 @@
   }];
 }
 
-- (void)goToHomeViewWithAnimationWithLoginResponse:(LoginResponseProto *)proto {
-#warning initialize depending on the sign up tye
-  HomeViewController *vc = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
-  [self.view addSubview:vc.view];
-  vc.view.frame = CGRectMake(0, -vc.view.frame.size.height, vc.view.frame.size.width, vc.view.frame.size.height);
-  [UIView animateWithDuration:0.3f delay:0.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
-    vc.view.frame = CGRectMake(0, 0, vc.view.frame.size.width, vc.view.frame.size.height);
-  } completion:^(BOOL finished) {
-    [self.navigationController pushViewController:vc animated:NO];
-  }];
-}
-
-- (void)loginWithNoCredential:(CreateAccountResponseProto *)proto {
-  [[SocketCommunication sharedSocketCommunication] sendLoginRequestEventViaNoCredentials:proto.recipient];
-}
-
-- (void)receivedProtoResponse:(PBGeneratedMessage *)message {
-  if (protoType == kSignUp) {
-    CreateAccountResponseProto *proto = (CreateAccountResponseProto *)message;
-    if (proto.status == CreateAccountResponseProto_CreateAccountStatusSuccessAccountCreated) {
-      NSLog(@"succeeded");
-      protoType = kLoginType;
-      if (signUpType == kFacebook) {
-        [self getFacebookAndSendDataWithProto:proto];
-      }
-      else {
-        [self loginWithNoCredential:proto];
-      }
-    }
-    else {
-      NSLog(@"failed");
-      [self.spinner stopAnimating];
-      self.loadingLabel.hidden = YES;
-      [self receivedFailedProto:proto];
-    }
-  }
-  else {
-    LoginResponseProto *proto = (LoginResponseProto *)message;
-    [self goToHomeViewWithAnimationWithLoginResponse:proto];
-  }
-}
-
-- (void)getFacebookAndSendDataWithProto:(CreateAccountResponseProto *)proto {
+- (void)getFacebookFriendsAndSendDataWithProto:(CreateAccountResponseProto *)proto {
   FBRequest *friendsRequest = [FBRequest requestForMyFriends];
   [friendsRequest startWithCompletionHandler: ^(FBRequestConnection *connection,
                                                 NSDictionary* result,
@@ -132,17 +91,110 @@
     }
     SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
     sc.delegate = self;
-    [sc sendLoginRequestEventViaFacebook:proto.recipient facebookFriends:friendIds];
+    [sc sendLoginRequestEventViaToken:proto.recipient facebookFriends:friendIds];
   }];
 }
 
+- (void)goToHomeViewWithAnimationWithLoginResponse:(LoginResponseProto *)proto {
+  HomeViewController *vc = [[HomeViewController alloc] initWithLoginResponse:proto];
+  [self.view addSubview:vc.view];
+  vc.view.frame = CGRectMake(0, -vc.view.frame.size.height, vc.view.frame.size.width, vc.view.frame.size.height);
+  [UIView animateWithDuration:0.3f delay:0.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    vc.view.frame = CGRectMake(0, 0, vc.view.frame.size.width, vc.view.frame.size.height);
+  } completion:^(BOOL finished) {
+    [self.navigationController pushViewController:vc animated:NO];
+  }];
+}
+
+- (void)loginWithToken:(CreateAccountResponseProto *)proto {
+  [[SocketCommunication sharedSocketCommunication] sendLoginRequestEventViaToken:proto.recipient facebookFriends:nil];
+}
+
+- (void)receivedProtoResponse:(PBGeneratedMessage *)message {
+  [self.spinner stopAnimating];
+  self.loadingLabel.hidden = YES;
+  if (protoType == kSignUp) {
+    CreateAccountResponseProto *proto = (CreateAccountResponseProto *)message;
+    if (proto.status == CreateAccountResponseProto_CreateAccountStatusSuccessAccountCreated) {
+      NSLog(@"success");
+      NSLog(@"logging in");
+      [self.spinner startAnimating];
+      self.loadingLabel.hidden = NO;
+      self.loadingLabel.text = [NSString stringWithFormat:@"Logging in..."];
+      self.view.userInteractionEnabled = NO;
+      protoType = kLoginType;
+      if (signUpType == kFacebook) {
+        //login with facebook
+        [self getFacebookFriendsAndSendDataWithProto:proto];
+      }
+      else {
+        //login with no credential
+        [self loginWithToken:proto];
+      }
+    }
+    else {
+      //sign up failed
+      self.view.userInteractionEnabled = YES;
+      [self receivedFailedProto:proto];
+    }
+  }
+  else {
+    NSLog(@"received log in response");
+    LoginResponseProto *proto = (LoginResponseProto *)message;
+    if (proto.status == LoginResponseProto_LoginResponseStatusSuccessLoginToken ||
+        proto.status == LoginResponseProto_LoginResponseStatusSuccessFacebookId ||
+        proto.status == LoginResponseProto_LoginResponseStatusSuccessEmailPassword ||
+        proto.status == LoginResponseProto_LoginResponseStatusSuccessNoCredentials)
+    {
+      [self goToHomeViewWithAnimationWithLoginResponse:proto];
+    }
+    else {
+      self.view.userInteractionEnabled = YES;
+      [self loginFailed:proto];
+    }
+  }
+}
+
+- (void)loginFailed:(LoginResponseProto *)proto {
+  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+  switch ((int)proto.status) {
+    case LoginResponseProto_LoginResponseStatusInvalidEmailPassword:
+      alert.title = @"Invalid email or password";
+      alert.message = @"Please check if your email or password is correct";
+      break;
+      
+    case LoginResponseProto_LoginResponseStatusInvalidFacebookId:
+      alert.title = @"Invalid Facebook Id";
+      alert.message = @"An error has occured while logging in with Facebook, please try again or send us an email";
+      break;
+      
+    case LoginResponseProto_LoginResponseStatusInvalidLoginToken:
+      alert.title = @"Invalid login token";
+      alert.message = @"Invalid login token";
+      break;
+      
+    case LoginResponseProto_LoginResponseStatusInvalidNoCredentials:
+      alert.title = @"Invalid no credentials";
+      alert.message = @"Invalid no credential";
+      break;
+      
+    case LoginResponseProto_LoginResponseStatusFailOther:
+      alert.title = @"Fail other";
+      alert.message = @"I have no idea whats going on";
+      break;
+
+    default:
+      break;
+  }
+  [alert show];
+}
+
 - (void)receivedFailedProto:(CreateAccountResponseProto *)proto {
-  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:@"Cancel", nil];
+  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
   switch ((int)proto.status) {
     case CreateAccountResponseProto_CreateAccountStatusFailDuplicateFacebookId:
       protoType = kLoginType;
-      [self getFacebookAndSendDataWithProto:proto];
-      NSLog(@"duplicate facebook id");
+      [self getFacebookFriendsAndSendDataWithProto:proto];
       return;
       break;
     case CreateAccountResponseProto_CreateAccountStatusFailDuplicateUdid:
@@ -209,6 +261,9 @@
 }
 
 - (IBAction)skipSignUp:(id)sender {
+  [self.spinner startAnimating];
+  self.loadingLabel.hidden = NO;
+  self.view.userInteractionEnabled = NO;
   SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
   sc.delegate = self;
   UserInfo *ui = [[UserInfo alloc] init];
@@ -217,6 +272,8 @@
   NSString *name = [self randomName];
   NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 
+  signUpType = kNoCredential;
+  
   [dict setObject:udid forKey:@"udid"];
   [dict setObject:macAddress forKey:@"deviceId"];
   [dict setObject:name forKey:@"name"];

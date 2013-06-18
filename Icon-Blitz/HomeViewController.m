@@ -40,10 +40,10 @@
   CFTimeInterval _ticks;
 }
 
-- (id) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil event:(LoginResponseProto *)proto {
-  self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-  if (self) {
+- (id)initWithLoginResponse:(LoginResponseProto *)proto {
+  if ((self = [super init])) {
     self.loginProto = proto;
+    
     self.completedGames = proto.completedGamesList;
     self.myTurns = proto.myTurnList;
     self.questions = proto.newQuestionsList;

@@ -24,7 +24,7 @@ static PBExtensionRegistry* extensionRegistry = nil;
 
 @interface OngoingGameProto ()
 @property (retain) GameResultsProto* gameSoFar;
-@property (retain) BasicRoundProto* myNewRound;
+@property (retain) UnfinishedRoundProto* myNewRound;
 @end
 
 @implementation OngoingGameProto
@@ -51,7 +51,7 @@ static PBExtensionRegistry* extensionRegistry = nil;
 - (id) init {
   if ((self = [super init])) {
     self.gameSoFar = [GameResultsProto defaultInstance];
-    self.myNewRound = [BasicRoundProto defaultInstance];
+    self.myNewRound = [UnfinishedRoundProto defaultInstance];
   }
   return self;
 }
@@ -204,7 +204,7 @@ static OngoingGameProto* defaultOngoingGameProtoInstance = nil;
         break;
       }
       case 18: {
-        BasicRoundProto_Builder* subBuilder = [BasicRoundProto builder];
+        UnfinishedRoundProto_Builder* subBuilder = [UnfinishedRoundProto builder];
         if (self.hasMyNewRound) {
           [subBuilder mergeFrom:self.myNewRound];
         }
@@ -248,22 +248,22 @@ static OngoingGameProto* defaultOngoingGameProtoInstance = nil;
 - (BOOL) hasMyNewRound {
   return result.hasMyNewRound;
 }
-- (BasicRoundProto*) myNewRound {
+- (UnfinishedRoundProto*) myNewRound {
   return result.myNewRound;
 }
-- (OngoingGameProto_Builder*) setMyNewRound:(BasicRoundProto*) value {
+- (OngoingGameProto_Builder*) setMyNewRound:(UnfinishedRoundProto*) value {
   result.hasMyNewRound = YES;
   result.myNewRound = value;
   return self;
 }
-- (OngoingGameProto_Builder*) setMyNewRoundBuilder:(BasicRoundProto_Builder*) builderForValue {
+- (OngoingGameProto_Builder*) setMyNewRoundBuilder:(UnfinishedRoundProto_Builder*) builderForValue {
   return [self setMyNewRound:[builderForValue build]];
 }
-- (OngoingGameProto_Builder*) mergeMyNewRound:(BasicRoundProto*) value {
+- (OngoingGameProto_Builder*) mergeMyNewRound:(UnfinishedRoundProto*) value {
   if (result.hasMyNewRound &&
-      result.myNewRound != [BasicRoundProto defaultInstance]) {
+      result.myNewRound != [UnfinishedRoundProto defaultInstance]) {
     result.myNewRound =
-      [[[BasicRoundProto builderWithPrototype:result.myNewRound] mergeFrom:value] buildPartial];
+      [[[UnfinishedRoundProto builderWithPrototype:result.myNewRound] mergeFrom:value] buildPartial];
   } else {
     result.myNewRound = value;
   }
@@ -272,7 +272,7 @@ static OngoingGameProto* defaultOngoingGameProtoInstance = nil;
 }
 - (OngoingGameProto_Builder*) clearMyNewRound {
   result.hasMyNewRound = NO;
-  result.myNewRound = [BasicRoundProto defaultInstance];
+  result.myNewRound = [UnfinishedRoundProto defaultInstance];
   return self;
 }
 @end

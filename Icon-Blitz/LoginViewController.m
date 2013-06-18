@@ -63,27 +63,14 @@ typedef enum {
 
 - (IBAction)login:(id)sender {
   if ([self checkIfEmailIsValid] && [self checkIfPasswordIsValid]) {
-    if ([self.email isEqualToString:TempEmail] && [self.password isEqualToString:TempPass]) {
-      HomeViewController *vc = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
-      [self.navigationController pushViewController:vc animated:YES];
-    }
-    else {
-      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Placer, dont have server side yet" message:@"email = trivia@lvl6.com, password is level6" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
-      [alert show];
-    }
     BasicUserProto *proto = [[[[BasicUserProto builder] setEmail:self.email] setPassword:self.password] build];
     [[SocketCommunication sharedSocketCommunication] sendLoginRequestEventViaEmail:proto];
   }
 }
 
-- (void)loginWithToken {
-  BasicUserProto *proto = [[[BasicUserProto builder] setBadp:self.proto.recipient.badp] build];
-  [[SocketCommunication sharedSocketCommunication] sendLoginRequestEventViaToken:proto];
-}
-
 -(BOOL) NSStringIsValidEmail:(NSString *)checkString
 {
-  BOOL stricterFilter = YES; // Discussion http://blog.logichigh.com/2010/09/02/validating-an-e-mail-address/
+  BOOL stricterFilter = YES;
   NSString *stricterFilterString = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
   NSString *laxString = @".+@.+\\.[A-Za-z]{2}[A-Za-z]*";
   NSString *emailRegex = stricterFilter ? stricterFilterString : laxString;
@@ -93,7 +80,6 @@ typedef enum {
 
 - (BOOL)checkIfEmailIsValid {
   BOOL valid = YES;
-  
   if (![self NSStringIsValidEmail:self.email]) {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Incorrect username " message:@"Please check if your username is in correct format" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
     [alert show];
@@ -130,18 +116,13 @@ typedef enum {
 - (void)receivedProtoResponse:(PBGeneratedMessage *)message {
   LoginResponseProto *proto = (LoginResponseProto *)message;
   if (proto.status == LoginResponseProto_LoginResponseStatusSuccessFacebookId || proto.status == LoginResponseProto_LoginResponseStatusSuccessEmailPassword || proto.status == LoginResponseProto_LoginResponseStatusSuccessNoCredentials || proto.status == LoginResponseProto_LoginResponseStatusSuccessLoginToken) {
-    HomeViewController *vc = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil event:proto];
+    HomeViewController *vc = [[HomeViewController alloc] initWithLoginResponse:proto];
     [self.navigationController pushViewController:vc animated:YES];
   }
   else {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid email or password" message:@"Please check if your email or password is correct" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
     [alert show];
   }
-}
-
-
-- (IBAction)forgotPassword:(id)sender {
-  
 }
 
 #pragma mark - UITextFieldDelegate Methods
@@ -199,6 +180,5 @@ typedef enum {
   }
   return YES;
 }
-
 
 @end

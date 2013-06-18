@@ -4,8 +4,6 @@
 
 #import "TriviaQuestionFormat.pb.h"
 
-@class BasicRoundProto;
-@class BasicRoundProto_Builder;
 @class BasicRoundResultsProto;
 @class BasicRoundResultsProto_Builder;
 @class CompleteRoundResultsProto;
@@ -20,6 +18,8 @@
 @class QuestionAnsweredProto_Builder;
 @class QuestionProto;
 @class QuestionProto_Builder;
+@class UnfinishedRoundProto;
+@class UnfinishedRoundProto_Builder;
 
 @interface TriviaRoundFormatRoot : NSObject {
 }
@@ -187,15 +187,17 @@
 - (CompleteRoundResultsProto_Builder*) clearEndTime;
 @end
 
-@interface BasicRoundProto : PBGeneratedMessage {
+@interface UnfinishedRoundProto : PBGeneratedMessage {
 @private
   BOOL hasRoundNumber_:1;
   BOOL hasSecondsRemaning_:1;
   BOOL hasCurrentQuestionNumber_:1;
+  BOOL hasCurrentScore_:1;
   BOOL hasId_:1;
   int32_t roundNumber;
   int32_t secondsRemaning;
   int32_t currentQuestionNumber;
+  int32_t currentScore;
   NSString* id;
   NSMutableArray* mutableQuestionsList;
 }
@@ -203,72 +205,79 @@
 - (BOOL) hasRoundNumber;
 - (BOOL) hasSecondsRemaning;
 - (BOOL) hasCurrentQuestionNumber;
+- (BOOL) hasCurrentScore;
 @property (readonly, retain) NSString* id;
 @property (readonly) int32_t roundNumber;
 @property (readonly) int32_t secondsRemaning;
 @property (readonly) int32_t currentQuestionNumber;
+@property (readonly) int32_t currentScore;
 - (NSArray*) questionsList;
 - (QuestionProto*) questionsAtIndex:(int32_t) index;
 
-+ (BasicRoundProto*) defaultInstance;
-- (BasicRoundProto*) defaultInstance;
++ (UnfinishedRoundProto*) defaultInstance;
+- (UnfinishedRoundProto*) defaultInstance;
 
 - (BOOL) isInitialized;
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
-- (BasicRoundProto_Builder*) builder;
-+ (BasicRoundProto_Builder*) builder;
-+ (BasicRoundProto_Builder*) builderWithPrototype:(BasicRoundProto*) prototype;
+- (UnfinishedRoundProto_Builder*) builder;
++ (UnfinishedRoundProto_Builder*) builder;
++ (UnfinishedRoundProto_Builder*) builderWithPrototype:(UnfinishedRoundProto*) prototype;
 
-+ (BasicRoundProto*) parseFromData:(NSData*) data;
-+ (BasicRoundProto*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-+ (BasicRoundProto*) parseFromInputStream:(NSInputStream*) input;
-+ (BasicRoundProto*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-+ (BasicRoundProto*) parseFromCodedInputStream:(PBCodedInputStream*) input;
-+ (BasicRoundProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (UnfinishedRoundProto*) parseFromData:(NSData*) data;
++ (UnfinishedRoundProto*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (UnfinishedRoundProto*) parseFromInputStream:(NSInputStream*) input;
++ (UnfinishedRoundProto*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (UnfinishedRoundProto*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (UnfinishedRoundProto*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 @end
 
-@interface BasicRoundProto_Builder : PBGeneratedMessage_Builder {
+@interface UnfinishedRoundProto_Builder : PBGeneratedMessage_Builder {
 @private
-  BasicRoundProto* result;
+  UnfinishedRoundProto* result;
 }
 
-- (BasicRoundProto*) defaultInstance;
+- (UnfinishedRoundProto*) defaultInstance;
 
-- (BasicRoundProto_Builder*) clear;
-- (BasicRoundProto_Builder*) clone;
+- (UnfinishedRoundProto_Builder*) clear;
+- (UnfinishedRoundProto_Builder*) clone;
 
-- (BasicRoundProto*) build;
-- (BasicRoundProto*) buildPartial;
+- (UnfinishedRoundProto*) build;
+- (UnfinishedRoundProto*) buildPartial;
 
-- (BasicRoundProto_Builder*) mergeFrom:(BasicRoundProto*) other;
-- (BasicRoundProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
-- (BasicRoundProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+- (UnfinishedRoundProto_Builder*) mergeFrom:(UnfinishedRoundProto*) other;
+- (UnfinishedRoundProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (UnfinishedRoundProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 
 - (BOOL) hasId;
 - (NSString*) id;
-- (BasicRoundProto_Builder*) setId:(NSString*) value;
-- (BasicRoundProto_Builder*) clearId;
+- (UnfinishedRoundProto_Builder*) setId:(NSString*) value;
+- (UnfinishedRoundProto_Builder*) clearId;
 
 - (NSArray*) questionsList;
 - (QuestionProto*) questionsAtIndex:(int32_t) index;
-- (BasicRoundProto_Builder*) replaceQuestionsAtIndex:(int32_t) index with:(QuestionProto*) value;
-- (BasicRoundProto_Builder*) addQuestions:(QuestionProto*) value;
-- (BasicRoundProto_Builder*) addAllQuestions:(NSArray*) values;
-- (BasicRoundProto_Builder*) clearQuestionsList;
+- (UnfinishedRoundProto_Builder*) replaceQuestionsAtIndex:(int32_t) index with:(QuestionProto*) value;
+- (UnfinishedRoundProto_Builder*) addQuestions:(QuestionProto*) value;
+- (UnfinishedRoundProto_Builder*) addAllQuestions:(NSArray*) values;
+- (UnfinishedRoundProto_Builder*) clearQuestionsList;
 
 - (BOOL) hasRoundNumber;
 - (int32_t) roundNumber;
-- (BasicRoundProto_Builder*) setRoundNumber:(int32_t) value;
-- (BasicRoundProto_Builder*) clearRoundNumber;
+- (UnfinishedRoundProto_Builder*) setRoundNumber:(int32_t) value;
+- (UnfinishedRoundProto_Builder*) clearRoundNumber;
 
 - (BOOL) hasSecondsRemaning;
 - (int32_t) secondsRemaning;
-- (BasicRoundProto_Builder*) setSecondsRemaning:(int32_t) value;
-- (BasicRoundProto_Builder*) clearSecondsRemaning;
+- (UnfinishedRoundProto_Builder*) setSecondsRemaning:(int32_t) value;
+- (UnfinishedRoundProto_Builder*) clearSecondsRemaning;
 
 - (BOOL) hasCurrentQuestionNumber;
 - (int32_t) currentQuestionNumber;
-- (BasicRoundProto_Builder*) setCurrentQuestionNumber:(int32_t) value;
-- (BasicRoundProto_Builder*) clearCurrentQuestionNumber;
+- (UnfinishedRoundProto_Builder*) setCurrentQuestionNumber:(int32_t) value;
+- (UnfinishedRoundProto_Builder*) clearCurrentQuestionNumber;
+
+- (BOOL) hasCurrentScore;
+- (int32_t) currentScore;
+- (UnfinishedRoundProto_Builder*) setCurrentScore:(int32_t) value;
+- (UnfinishedRoundProto_Builder*) clearCurrentScore;
 @end
 

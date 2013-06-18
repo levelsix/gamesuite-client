@@ -83,15 +83,14 @@ static NSString *udid = nil;
   return self;
 }
 
-#warning change it that if they have email set it, otherwise set null
 - (int)sendCreateAccountViaFacebookMessage:(NSDictionary *)facebookInfo{
   UserInfo *ui = [[UserInfo alloc] init];
   NSString *facebookId = [facebookInfo objectForKey:@"facebookId"];
   NSString *name = [facebookInfo objectForKey:@"name"];
-  //NSString *email = [facebookInfo objectForKey:@"email"];
+  NSString *email = [facebookInfo objectForKey:@"email"];
   NSString *udid = [ui getUDID];
   NSString *deviceId = [ui getMacAddress];
-  CreateAccountViaFacebookRequestProto *req = [[[[[[[CreateAccountViaFacebookRequestProto builder] setFacebookId:facebookId] setNameFriendsSee:name] setEmail:NULL]setUdid:udid]setDeviceId:deviceId] build];
+  CreateAccountViaFacebookRequestProto *req = [[[[[[[CreateAccountViaFacebookRequestProto builder] setFacebookId:facebookId] setNameFriendsSee:name] setEmail:email]setUdid:udid]setDeviceId:deviceId] build];
   return [self sendData:req withMessageType:CommonEventProtocolRequestCCreateAccountViaFacebookEvent];
 }
 
@@ -115,9 +114,16 @@ static NSString *udid = nil;
   return [self sendData:req withMessageType:CommonEventProtocolRequestCCreateAccountViaNoCredentialsEvent];
 }
 
-- (int)sendLoginRequestEventViaToken:(BasicUserProto *)proto {
-  LoginRequestProto *req = [[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeLoginToken] build];
-  return [self sendData:req withMessageType:CommonEventProtocolRequestCLoginEvent];
+- (int)sendLoginRequestEventViaToken:(BasicUserProto *)proto facebookFriends:(NSArray *)facebookFriendId {
+  if (facebookFriendId) {
+    LoginRequestProto *req = [[[[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeLoginToken] setInitializeAccount:YES] addAllFacebookFriendIds:facebookFriendId]build];
+    return [self sendData:req withMessageType:CommonEventProtocolRequestCLoginEvent];
+  }
+  else {
+    LoginRequestProto *req = [[[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeLoginToken] setInitializeAccount:YES] build];
+    return [self sendData:req withMessageType:CommonEventProtocolRequestCLoginEvent];
+  }
+  return 0;
 }
 
 - (int)sendLoginRequestEventViaFacebook:(BasicUserProto *)proto facebookFriends:(NSArray *)facebookFriendId {
