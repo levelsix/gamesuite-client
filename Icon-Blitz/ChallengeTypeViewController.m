@@ -20,10 +20,8 @@
 
 @implementation ChallengeTypeViewController
 
-- (id)initWithQuestions:(NSArray *)questions facebookFriends:(NSArray *)facebookFriends userInfo:(UserInfo *)userInfo {
+- (id)initWithUserInfo:(UserInfo *)userInfo {
   if ((self = [super init])) {
-    self.questions = questions;
-    self.facebookFriends = facebookFriends;
     self.userInfo = userInfo;
   }
   return self;
@@ -43,7 +41,6 @@
   [self.spinner startAnimating];
   self.view.userInteractionEnabled = NO;
   if (!FBSession.activeSession.isOpen) {
-    NSLog(@"not logged in");
     AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
     delegate.delegate = self;
     FacebookObject *fb = [[FacebookObject alloc] init];
@@ -55,7 +52,7 @@
 }
 
 - (void)finishedFBLogin {
-  
+  [self requestForFriend];
 }
 
 - (void)requestForFriend {
@@ -72,7 +69,7 @@
       [self.spinner stopAnimating];
     }
     else {
-      
+      NSLog(@"%@",error);
     }
   }];
 }

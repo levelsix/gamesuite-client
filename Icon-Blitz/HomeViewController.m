@@ -24,6 +24,7 @@
 @interface HomeViewController () {
   NSTimer *newCoinTimer;
   NSInteger addNewCoinTime;
+  BOOL fromSignUp;
   int amountOfRubies;
   int amountOfGoldCoins;
   int yourTurnAmt;
@@ -43,15 +44,87 @@
 - (id)initWithLoginResponse:(LoginResponseProto *)proto {
   if ((self = [super init])) {
     self.loginProto = proto;
-    
     self.completedGames = proto.completedGamesList;
     self.myTurns = proto.myTurnList;
     self.questions = proto.newQuestionsList;
     self.userInfo = [[UserInfo alloc] initWithCompleteUserProto:proto.recipient];
     self.userInfo.facebookFriends = proto.facebookFriendsWithAccountsList;
     self.userInfo.questions = proto.newQuestionsList;
+    [self saveTokenWithProto:proto.recipient];
+    fromSignUp = YES;
   }
   return self;
+}
+
+- (void)saveTokenWithProto:(CompleteUserProto *)proto {
+  NSMutableDictionary *completeUserDict = [NSMutableDictionary dictionary];
+  [completeUserDict setObject:proto.userId forKey:@"userId"];
+  [completeUserDict setObject:proto.nameStrangersSee forKey:@"nameStrangersSee"];
+  [completeUserDict setObject:proto.nameFriendsSee forKey:@"nameFriendsSee"];
+  [completeUserDict setObject:proto.email forKey:@"email"];
+  [completeUserDict setObject:proto.password forKey:@"password"];
+  [completeUserDict setObject:proto.facebookId forKey:@"facebookId"];
+  [completeUserDict setObject:[NSNumber numberWithInt:proto.lastLogin] forKey:@"lastLogin"];
+  [completeUserDict setObject:[NSNumber numberWithInt:proto.signupDate] forKey:@"signupDate"];
+
+  NSMutableDictionary *tokenDict = [NSMutableDictionary dictionary];
+  
+  [tokenDict setObject:proto.badp.basicAuthorizedDeviceId forKey:@"basicAuthorizedDeviceId"];
+  [tokenDict setObject:proto.badp.userId forKey:@"tokenUserId"];
+  [tokenDict setObject:proto.badp.loginToken forKey:@"loginToken"];
+  [tokenDict setObject:[NSNumber numberWithInt:proto.badp.expirationDate] forKey:@"expirationDate"];
+  [tokenDict setObject:proto.badp.udid forKey:@"udid"];
+  [tokenDict setObject:proto.badp.deviceId forKey:@"deviceId"];
+  
+  
+  [[NSUserDefaults standardUserDefaults] setObject:[completeUserDict copy] forKey:COMPLETE_USER_INFO];
+  [[NSUserDefaults standardUserDefaults] setObject:[tokenDict copy] forKey:LOGIN_TOKEN];
+  [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)loginWithToken {
+  NSDictionary *completeUser = [[NSUserDefaults standardUserDefaults] objectForKey:COMPLETE_USER_INFO];
+  NSDictionary *token = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_TOKEN];
+  
+  if (completeUser && token) {    
+    NSString *userId = [completeUser objectForKey:@"userId"];
+    NSString *nameStrangersSee = [completeUser objectForKey:@"nameStrangersSee"];
+    NSString *nameFriendsSee = [completeUser objectForKey:@"nameFriendsSee"];
+    NSString *email = [completeUser objectForKey:@"email"];
+    NSString *facebookId = [completeUser objectForKey:@"facebookId"];
+    NSString *password = [completeUser objectForKey:@"password"];
+    
+    NSString *basicAuthorizedDeviceId = [token objectForKey:@"basicAuthorizedDeviceId"];
+    NSString *tokenUserId = [token objectForKey:@"tokenUserId"];
+    NSString *loginToken = [token objectForKey:@"loginToken"];
+    int64_t expirationDate = [[token objectForKey:@"expirationDate"] integerValue];
+    NSString *udid = [token objectForKey:@"udid"];
+    NSString *deviceId = [token objectForKey:@"deviceId"];
+    
+    NSLog(@"%d",expirationDate);
+    
+    BasicAuthorizedDeviceProto *deviceProto = [[[[[[[[BasicAuthorizedDeviceProto builder] setBasicAuthorizedDeviceId:basicAuthorizedDeviceId] setUserId:tokenUserId] setLoginToken:loginToken] setExpirationDate:expirationDate] setUdid:udid] setDeviceId:deviceId] build];
+    
+    BasicUserProto *basicProto = [[[[[[[[[BasicUserProto builder] setUserId:userId] setNameStrangersSee:nameStrangersSee] setNameFriendsSee:nameFriendsSee] setEmail:email] setPassword:password] setFacebookId:facebookId] setBadp:deviceProto] build];
+    
+    SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+    sc.delegate = self;
+    
+    [sc sendLoginRequestEventViaToken:basicProto facebookFriends:NULL];
+  
+  }
+  else {
+    NSLog(@"not saved");
+  }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+  if (fromSignUp) {
+    fromSignUp = NO;
+  }
+  else {
+    [self loginWithToken];    
+  }
 }
 
 - (void)viewDidLoad
@@ -81,11 +154,6 @@
   [self.view addSubview:_bannerView];
   [self layoutAnimated:NO];
 }
-
-- (void)viewDidAppear:(BOOL)animated {
-  [super viewDidAppear:animated];
-}
-
 
 - (void)layoutAnimated:(BOOL)animated
 {
@@ -219,8 +287,8 @@
   if(![newCoinTimer isValid]) {
     newCoinTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(coinCountDown) userInfo:nil repeats:YES];    
   }
-//  ChallengeTypeViewController *vc = [[ChallengeTypeViewController alloc] initWithQuestions:self.loginProto.newQuestionsList facebookFriends:self.loginProto.facebookFriendsWithAccountsList userInfo:self.userInfo];
-  ChallengeTypeViewController *vc = [[ChallengeTypeViewController alloc] initWithNibName:@"ChallengeTypeViewController" bundle:nil];
+
+  ChallengeTypeViewController *vc = [[ChallengeTypeViewController alloc] initWithUserInfo:self.userInfo];
   [self.navigationController pushViewController:vc rotated:YES];
 }
 
@@ -309,7 +377,8 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 #pragma mark Protocol Buffers methods
 
 - (void)receivedProtoResponse:(PBGeneratedMessage *)message {
-  
+  LoginResponseProto *proto = (LoginResponseProto *)message;
+  NSLog(@"%d",(int)proto.status);
 }
 
 - (void)getNewQuestions {
@@ -323,9 +392,6 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
   if (onGoingGame.myNewRound) {
     
   }
-  
-  //SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
-//  [sc sendStartRoundRequest:self.userInfo.basicProto isRandomPlayer:NO opponent: gameId:<#(NSString *)#> roundNumber:<#(int32_t)#> isPlayerOne:<#(BOOL)#> startTime:<#(int64_t)#> questions:<#(QuestionProto *)#> images:<#(NSArray *)#>]
 }
 
 #pragma mark UITableView Delegate Methods

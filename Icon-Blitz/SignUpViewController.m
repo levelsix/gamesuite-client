@@ -15,9 +15,11 @@
 #import "AppDelegate.h"
 #import "UserInfo.h"
 #import "SocketCommunication.h"
+#import "StaticProperties.h"
 
 @interface SignUpViewController () {
   NSMutableArray *friendIds;
+  NSString *facebookId;
 }
 
 @end
@@ -60,7 +62,6 @@
   [self.spinner startAnimating];
   
   __block NSString *name = @"";
-  __block NSString *facebookId = @"";
   __block NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
   [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
     if (!error) {
@@ -96,6 +97,9 @@
 }
 
 - (void)goToHomeViewWithAnimationWithLoginResponse:(LoginResponseProto *)proto {
+  [[NSUserDefaults standardUserDefaults] setBool:YES forKey:IS_LOGGED_IN];
+  [[NSUserDefaults standardUserDefaults] synchronize];
+  
   HomeViewController *vc = [[HomeViewController alloc] initWithLoginResponse:proto];
   [self.view addSubview:vc.view];
   vc.view.frame = CGRectMake(0, -vc.view.frame.size.height, vc.view.frame.size.width, vc.view.frame.size.height);
@@ -116,8 +120,6 @@
   if (protoType == kSignUp) {
     CreateAccountResponseProto *proto = (CreateAccountResponseProto *)message;
     if (proto.status == CreateAccountResponseProto_CreateAccountStatusSuccessAccountCreated) {
-      NSLog(@"success");
-      NSLog(@"logging in");
       [self.spinner startAnimating];
       self.loadingLabel.hidden = NO;
       self.loadingLabel.text = [NSString stringWithFormat:@"Logging in..."];
@@ -139,7 +141,6 @@
     }
   }
   else {
-    NSLog(@"received log in response");
     LoginResponseProto *proto = (LoginResponseProto *)message;
     if (proto.status == LoginResponseProto_LoginResponseStatusSuccessLoginToken ||
         proto.status == LoginResponseProto_LoginResponseStatusSuccessFacebookId ||
@@ -189,12 +190,29 @@
   [alert show];
 }
 
+- (void)loginWithFacebook:(CreateAccountResponseProto *)proto {
+  BasicUserProto *newProto = [[[[[[[[[BasicUserProto builder] setBadp:proto.recipient.badp] setEmail:proto.recipient.email] setFacebookId:facebookId] setPassword:proto.recipient.password] setNameFriendsSee:proto.recipient.nameFriendsSee] setNameStrangersSee:proto.recipient.nameStrangersSee] setUserId:proto.recipient.userId] build];
+  FBRequest *friendsRequest = [FBRequest requestForMyFriends];
+  friendIds = [NSMutableArray array];
+  [friendsRequest startWithCompletionHandler: ^(FBRequestConnection *connection,
+                                                NSDictionary* result,
+                                                NSError *error) {
+    NSArray* friends = [result objectForKey:@"data"];
+    for (NSDictionary<FBGraphUser>* friend in friends) {
+      [friendIds addObject:friend.id];
+    }
+    SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+    sc.delegate = self;
+    [sc sendLoginRequestEventViaFacebook:newProto facebookFriends:friendIds];
+  }];
+}
+
 - (void)receivedFailedProto:(CreateAccountResponseProto *)proto {
   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
   switch ((int)proto.status) {
     case CreateAccountResponseProto_CreateAccountStatusFailDuplicateFacebookId:
       protoType = kLoginType;
-      [self getFacebookFriendsAndSendDataWithProto:proto];
+      [self loginWithFacebook:proto];
       return;
       break;
     case CreateAccountResponseProto_CreateAccountStatusFailDuplicateUdid:

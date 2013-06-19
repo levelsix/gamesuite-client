@@ -127,6 +127,9 @@ typedef enum {
     if (proto.status == CreateAccountResponseProto_CreateAccountStatusSuccessAccountCreated) {
       protoType = LoginProto;
       [self.spinner startAnimating];
+      [self.spinner startAnimating];
+      self.loadingLabel.hidden = NO;
+      self.loadingLabel.text = [NSString stringWithFormat:@"Logging in"];
       [[SocketCommunication sharedSocketCommunication] sendLoginRequestEventViaToken:proto.recipient facebookFriends:NULL];
     }
     else {
@@ -134,14 +137,13 @@ typedef enum {
     }
   }
   else {
-    [self.spinner startAnimating];
-    self.loadingLabel.hidden = NO;
-    self.loadingLabel.text = [NSString stringWithFormat:@"Logging in"];
     LoginResponseProto *proto = (LoginResponseProto *)message;
     if (proto.status == LoginResponseProto_LoginResponseStatusSuccessLoginToken) {
       [self goToHomeView:proto];
     }
     else {
+      [self.spinner stopAnimating];
+      self.loadingLabel.hidden = YES;
       [self receivedLoginFailedProto:proto];
     }
   }

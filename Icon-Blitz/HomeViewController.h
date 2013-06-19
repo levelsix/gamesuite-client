@@ -53,5 +53,6 @@ typedef enum {
 
 - (void)updateGoldCoin:(int)value;
 - (void)updateRuby:(int)value;
+- (void)loginWithToken;
 
 @end

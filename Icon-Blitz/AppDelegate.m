@@ -15,6 +15,7 @@
 #import "HomeViewController.h"
 #import "TriviaBlitzIAPHelper.h"
 #import "SocketCommunication.h" 
+#import "StaticProperties.h"
 
 NSString *const FBSessionStateChangedNotification =
 @"com.bestfunfreegames.Icon-Blitz:FBSessionStateChangedNotification";
@@ -93,8 +94,15 @@ NSString *const FBSessionStateChangedNotification =
   self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   // Override point for customization after application launch.
   
-  self.viewController = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
-  [[self window] setRootViewController:self.navController];
+  
+  BOOL isLoggedin = [[NSUserDefaults standardUserDefaults] boolForKey:IS_LOGGED_IN];
+  if (isLoggedin) {
+    self.viewController = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
+    [[self window] setRootViewController:self.viewController];
+  }
+  else {
+    [[self window] setRootViewController:self.navController];
+  }
   
   SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
   [sc initNetworkCommunication];
@@ -111,18 +119,24 @@ NSString *const FBSessionStateChangedNotification =
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-  // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-  // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+  
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-  // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
   // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+  
+  NSString *currentView = NSStringFromClass([self.navController.visibleViewController class]);
+  if ([currentView isEqualToString:@"HomeViewController"]) {
+    NSLog(@"refrshing data");
+    HomeViewController *vc = (HomeViewController *)self.navController.visibleViewController;
+    [vc loginWithToken];
+  }
+  
   Chartboost *cb = [Chartboost sharedChartboost];
   cb.appId = @"516c632616ba47e621000006";
   cb.appSignature = @"880b5192eaa11e1e9ad617ee5bb55af22ebf31d0";
@@ -137,7 +151,6 @@ NSString *const FBSessionStateChangedNotification =
 - (void)applicationWillTerminate:(UIApplication *)application
 {
   // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-  //[FBSession.activeSession close];
 }
 
 @end

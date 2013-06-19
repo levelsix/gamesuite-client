@@ -16,13 +16,10 @@
 }
 
 @property (nonatomic, strong) NSMutableArray *facebookData;
-@property (nonatomic, assign) BOOL loaded;
 @property (nonatomic, strong) UserInfo *userInfo;
-@property (nonatomic, strong) NSArray *questions;
-@property (nonatomic, strong) NSArray *facebookFriends;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *spinner;
 
-- (id)initWithQuestions:(NSArray *)questions facebookFriends:(NSArray *)facebookFriends userInfo:(UserInfo *)userInfo;
+- (id)initWithUserInfo:(UserInfo *)userInfo;
 - (IBAction)facebookClicked:(UIButton *)sender;
 - (IBAction)twitterClicked:(UIButton *)sender;
 - (IBAction)userNameClicked:(UIButton *)sender;

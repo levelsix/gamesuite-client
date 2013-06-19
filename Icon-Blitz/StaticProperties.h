@@ -15,5 +15,8 @@
 #define USER_ID @"UserId"
 #define EMAIL "@Email"
 #define IN_APP_PURCHASES @"In-App"
+#define IS_LOGGED_IN @"LoggedIn"
+
+#define COMPLETE_USER_INFO @"Complete-User-Info"
 
 #endif
