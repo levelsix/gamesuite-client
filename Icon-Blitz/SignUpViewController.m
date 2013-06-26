@@ -38,7 +38,6 @@
   [self.spinner startAnimating];
   self.loadingLabel.hidden = NO;
   if (FBSession.activeSession.isOpen == YES) {
-    NSLog(@"cleared facebook data");
     [FBSession.activeSession closeAndClearTokenInformation];
   }
   else {
@@ -82,6 +81,8 @@
 }
 
 - (void)getFacebookFriendsAndSendDataWithProto:(CreateAccountResponseProto *)proto {
+  [[NSUserDefaults standardUserDefaults] setBool:YES forKey:DID_FACEBOOK_SIGNUP];
+  [[NSUserDefaults standardUserDefaults] synchronize];
   FBRequest *friendsRequest = [FBRequest requestForMyFriends];
   [friendsRequest startWithCompletionHandler: ^(FBRequestConnection *connection,
                                                 NSDictionary* result,
@@ -120,6 +121,7 @@
   if (protoType == kSignUp) {
     CreateAccountResponseProto *proto = (CreateAccountResponseProto *)message;
     if (proto.status == CreateAccountResponseProto_CreateAccountStatusSuccessAccountCreated) {
+      NSLog(@"signed up success");
       [self.spinner startAnimating];
       self.loadingLabel.hidden = NO;
       self.loadingLabel.text = [NSString stringWithFormat:@"Logging in..."];
@@ -131,6 +133,7 @@
       }
       else {
         //login with no credential
+        NSLog(@"signed up failed");
         [self loginWithToken:proto];
       }
     }

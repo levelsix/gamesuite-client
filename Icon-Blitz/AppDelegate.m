@@ -20,13 +20,12 @@
 NSString *const FBSessionStateChangedNotification =
 @"com.bestfunfreegames.Icon-Blitz:FBSessionStateChangedNotification";
 
-#define kFirstTime @"FirstTime"
-
 @implementation AppDelegate
 
 /*
  * Callback for session changes.
  */
+
 - (void)sessionStateChanged:(FBSession *)session
                       state:(FBSessionState) state
                       error:(NSError *)error
@@ -86,23 +85,23 @@ NSString *const FBSessionStateChangedNotification =
   [FBSession.activeSession closeAndClearTokenInformation];
 }
 
-
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [TriviaBlitzIAPHelper sharedInstance];
   self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   // Override point for customization after application launch.
-  
-  
+    
   BOOL isLoggedin = [[NSUserDefaults standardUserDefaults] boolForKey:IS_LOGGED_IN];
   if (isLoggedin) {
     self.viewController = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
-    [[self window] setRootViewController:self.viewController];
   }
   else {
-    [[self window] setRootViewController:self.navController];
+    self.viewController = [[SignUpViewController alloc] initWithNibName:@"SignUpViewController" bundle:nil];
   }
+  self.navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+  self.window.rootViewController = self.navController;
+
+  self.navController.navigationBar.hidden = YES;
   
   SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
   [sc initNetworkCommunication];
@@ -120,10 +119,25 @@ NSString *const FBSessionStateChangedNotification =
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
   
+  BOOL isLoggedin = [[NSUserDefaults standardUserDefaults] boolForKey:IS_LOGGED_IN];
+  
+  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+  [sc sendLogoutRequest];
+  
+  NSString *currentView = NSStringFromClass([self.navController.visibleViewController class]);
+  if (![currentView isEqualToString:@"HomeViewController"]) {
+    if (isLoggedin) {
+      self.viewController = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
+      self.window.rootViewController = self.navController;
+      self.navController.navigationBar.hidden = YES;
+    }
+    [self.navController popToRootViewControllerAnimated:NO];
+  }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+  
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -131,8 +145,8 @@ NSString *const FBSessionStateChangedNotification =
   // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
   
   NSString *currentView = NSStringFromClass([self.navController.visibleViewController class]);
-  if ([currentView isEqualToString:@"HomeViewController"]) {
-    NSLog(@"refrshing data");
+  if ([currentView isEqualToString:@"HomeViewController"]){
+    NSLog(@"refreshing data");
     HomeViewController *vc = (HomeViewController *)self.navController.visibleViewController;
     [vc loginWithToken];
   }

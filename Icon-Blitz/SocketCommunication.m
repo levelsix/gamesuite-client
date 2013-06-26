@@ -13,6 +13,7 @@
 #import "CreateAccountViewController.h"
 #import "FullEvent.h"
 #import "ClientProperties.h"
+#import "HomeViewController.h"
 
 #define HEADER_SIZE 12
 
@@ -115,12 +116,16 @@ static NSString *udid = nil;
 }
 
 - (int)sendLoginRequestEventViaToken:(BasicUserProto *)proto facebookFriends:(NSArray *)facebookFriendId {
+  BOOL isLoggedin = [[NSUserDefaults standardUserDefaults] boolForKey:IS_LOGGED_IN];
+  BOOL initialize;
+  if (isLoggedin) initialize = NO;
+  else initialize = YES;
   if (facebookFriendId) {
-    LoginRequestProto *req = [[[[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeLoginToken] setInitializeAccount:YES] addAllFacebookFriendIds:facebookFriendId]build];
+    LoginRequestProto *req = [[[[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeLoginToken] setInitializeAccount:initialize] addAllFacebookFriendIds:facebookFriendId]build];
     return [self sendData:req withMessageType:CommonEventProtocolRequestCLoginEvent];
   }
   else {
-    LoginRequestProto *req = [[[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeLoginToken] setInitializeAccount:YES] build];
+    LoginRequestProto *req = [[[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeLoginToken] setInitializeAccount:initialize] build];
     return [self sendData:req withMessageType:CommonEventProtocolRequestCLoginEvent];
   }
   return 0;
@@ -146,12 +151,12 @@ static NSString *udid = nil;
   return [self sendData:req withMessageType:PicturesEventProtocolRequestCRetrieveNewQuestionsEvent];
 }
 
-- (int)sendCompleteRoundRequest:(BasicUserProto *)sender gameId:(NSString *)gameId results:(CompleteRoundResultsProto *)results {
-  CompletedRoundRequestProto *req = [[[[[CompletedRoundRequestProto builder]setSender:sender] setGameId:gameId] setResults:results]build];
+- (int)sendCompleteRoundRequest:(BasicUserProto *)sender opponent:(BasicUserProto *)opponent gameId:(NSString *)gameId results:(CompleteRoundResultsProto *)results {
+  CompletedRoundRequestProto *req = [[[[[[CompletedRoundRequestProto builder]setSender:sender]setOpponent:opponent ]setGameId:gameId] setResults:results]build];
   return [self sendData:req withMessageType:PicturesEventProtocolRequestCCompletedRoundEvent];
 } 
 
-- (int)sendStartRoundRequest:(BasicUserProto *)sender isRandomPlayer:(BOOL)isRandomPlayer opponent:(NSString *)opponent gameId:(NSString *)gameId roundNumber:(int32_t)roundNumber isPlayerOne:(BOOL)isPlayerOne startTime:(int64_t)startTime questions:(NSArray *)questions{
+- (int)sendStartRoundRequest:(BasicUserProto *)sender isRandomPlayer:(BOOL)isRandomPlayer opponent:(NSString *)opponent gameId:(NSString *)gameId roundNumber:(int32_t)roundNumber isPlayerOne:(BOOL)isPlayerOne startTime:(int64_t)startTime questions:(NSArray *)questions {
   StartRoundRequestProto *req = [[[[[[[[[[StartRoundRequestProto builder] setSender:sender] setIsRandomPlayer:isRandomPlayer] setOpponent:opponent] setGameId:gameId] setRoundNumber:roundNumber] setIsPlayerOne:isPlayerOne] setStartTime:startTime] addAllQuestions:questions] build];
   return [self sendData:req withMessageType:PicturesEventProtocolRequestCStartRoundEvent];
 }
@@ -169,6 +174,12 @@ static NSString *udid = nil;
 - (int)sendSpendRubies:(BasicUserProto *)sender amountSpent:(int32_t)amountSpent {
   SpendRubiesRequestProto *req = [[[[SpendRubiesRequestProto builder] setSender:sender] setAmountSpent:amountSpent] build];
   return [self sendData:req withMessageType:PicturesEventProtocolRequestCSpendRubiesEvent];
+}
+
+- (int)sendLogoutRequest {
+  BasicUserProto *basicProto = [self buildSender];
+  LogoutRequestProto *req = [[[LogoutRequestProto builder] setSender:basicProto] build];
+  return [self sendData:req withMessageType:CommonEventProtocolRequestCLogoutEvent];
 }
 
 - (void)amqpConsumerThreadReceivedNewMessage:(AMQPMessage *)theMessage {
@@ -205,6 +216,18 @@ static NSString *udid = nil;
 
 }
 
+- (BasicUserProto *)buildSender {
+  NSDictionary *completeUser = [[NSUserDefaults standardUserDefaults] objectForKey:COMPLETE_USER_INFO];
+  NSString *userId = [completeUser objectForKey:@"userId"];
+  NSString *nameStrangersSee = [completeUser objectForKey:@"nameStrangersSee"];
+  NSString *nameFriendsSee = [completeUser objectForKey:@"nameFriendsSee"];
+  NSString *email = [completeUser objectForKey:@"email"];
+  NSString *facebookId = [completeUser objectForKey:@"facebookId"];
+  NSString *password = [completeUser objectForKey:@"password"];
+  
+  BasicUserProto *basicProto = [[[[[[[[BasicUserProto builder] setUserId:userId] setNameStrangersSee:nameStrangersSee] setNameFriendsSee:nameFriendsSee] setEmail:email] setPassword:password] setFacebookId:facebookId] build];
+  return basicProto;
+}
 
 - (int)sendData:(PBGeneratedMessage *)msg withMessageType:(int)type {
   if (_sender.userId == 0) {

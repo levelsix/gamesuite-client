@@ -26,18 +26,16 @@ typedef enum {
 @property (nonatomic, strong) NSString *facebookId;
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *email;
-@property (nonatomic, strong) NSArray *facebookFriends;
-@property (nonatomic, strong) NSArray *questions;
+@property (nonatomic, copy) NSArray *questions;
+@property (nonatomic, copy) NSArray *listOfFacebookFriends;
 @property (nonatomic, assign) LoginType loginType;
 @property (nonatomic, assign) int rubies;
 @property (nonatomic, assign) int goldCoins;
 @property (nonatomic, strong) BasicAuthorizedDeviceProto *loginToken;
 @property (nonatomic, assign) int64_t lastLogin;
 @property (nonatomic, assign) int32_t signupDate;
-@property (nonatomic, strong) NSArray *listOfFacebookFriends;
-@property (nonatomic, strong) BasicUserProto *basicProto;
+@property (nonatomic, assign) int64_t lastTokenRefillTime;
 
-- (id)initWithBasicUserInfo:(BasicUserProto *)proto;
 - (id)initWithCompleteUserProto:(CompleteUserProto *)proto;
 
 - (NSString *)getUDID;

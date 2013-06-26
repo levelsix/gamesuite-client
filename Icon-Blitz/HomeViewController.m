@@ -31,6 +31,13 @@
   int theirTurnAmt;
   int completedAmt;
   int rubyBefore;
+    
+  BOOL myTurnHasNoGames;
+  BOOL theirTurnHasNoGames;
+  BOOL completedHasNoGames;
+  
+  BasicUserProto *basicProto;
+
 }
 
 @end
@@ -44,13 +51,14 @@
 - (id)initWithLoginResponse:(LoginResponseProto *)proto {
   if ((self = [super init])) {
     self.loginProto = proto;
-    self.completedGames = proto.completedGamesList;
+    self.completedGames = [proto.completedGamesList copy];
     self.myTurns = proto.myTurnList;
     self.questions = proto.newQuestionsList;
     self.userInfo = [[UserInfo alloc] initWithCompleteUserProto:proto.recipient];
-    self.userInfo.facebookFriends = proto.facebookFriendsWithAccountsList;
+    self.userInfo.listOfFacebookFriends = proto.facebookFriendsWithAccountsList;
     self.userInfo.questions = proto.newQuestionsList;
     [self saveTokenWithProto:proto.recipient];
+    [self addArraysTogether];
     fromSignUp = YES;
   }
   return self;
@@ -64,15 +72,15 @@
   [completeUserDict setObject:proto.email forKey:@"email"];
   [completeUserDict setObject:proto.password forKey:@"password"];
   [completeUserDict setObject:proto.facebookId forKey:@"facebookId"];
-  [completeUserDict setObject:[NSNumber numberWithInt:proto.lastLogin] forKey:@"lastLogin"];
-  [completeUserDict setObject:[NSNumber numberWithInt:proto.signupDate] forKey:@"signupDate"];
+  [completeUserDict setObject:[NSNumber numberWithLongLong:proto.lastLogin] forKey:@"lastLogin"];
+  [completeUserDict setObject:[NSNumber numberWithLongLong:proto.signupDate] forKey:@"signupDate"];
 
   NSMutableDictionary *tokenDict = [NSMutableDictionary dictionary];
   
   [tokenDict setObject:proto.badp.basicAuthorizedDeviceId forKey:@"basicAuthorizedDeviceId"];
   [tokenDict setObject:proto.badp.userId forKey:@"tokenUserId"];
   [tokenDict setObject:proto.badp.loginToken forKey:@"loginToken"];
-  [tokenDict setObject:[NSNumber numberWithInt:proto.badp.expirationDate] forKey:@"expirationDate"];
+  [tokenDict setObject:[NSNumber numberWithLongLong:proto.badp.expirationDate] forKey:@"expirationDate"];
   [tokenDict setObject:proto.badp.udid forKey:@"udid"];
   [tokenDict setObject:proto.badp.deviceId forKey:@"deviceId"];
   
@@ -83,6 +91,11 @@
 }
 
 - (void)loginWithToken {
+  [self.view addSubview:self.updatingView];
+  [self.updatingSpinner startAnimating];
+  self.updatingView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
+  self.view.userInteractionEnabled = NO;
+  
   NSDictionary *completeUser = [[NSUserDefaults standardUserDefaults] objectForKey:COMPLETE_USER_INFO];
   NSDictionary *token = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_TOKEN];
   
@@ -97,34 +110,56 @@
     NSString *basicAuthorizedDeviceId = [token objectForKey:@"basicAuthorizedDeviceId"];
     NSString *tokenUserId = [token objectForKey:@"tokenUserId"];
     NSString *loginToken = [token objectForKey:@"loginToken"];
-    int64_t expirationDate = [[token objectForKey:@"expirationDate"] integerValue];
+    long long int expirationDate = [[token objectForKey:@"expirationDate"] longLongValue];
+    
     NSString *udid = [token objectForKey:@"udid"];
     NSString *deviceId = [token objectForKey:@"deviceId"];
     
-    NSLog(@"%d",expirationDate);
     
     BasicAuthorizedDeviceProto *deviceProto = [[[[[[[[BasicAuthorizedDeviceProto builder] setBasicAuthorizedDeviceId:basicAuthorizedDeviceId] setUserId:tokenUserId] setLoginToken:loginToken] setExpirationDate:expirationDate] setUdid:udid] setDeviceId:deviceId] build];
     
-    BasicUserProto *basicProto = [[[[[[[[[BasicUserProto builder] setUserId:userId] setNameStrangersSee:nameStrangersSee] setNameFriendsSee:nameFriendsSee] setEmail:email] setPassword:password] setFacebookId:facebookId] setBadp:deviceProto] build];
+    basicProto = [[[[[[[[[BasicUserProto builder] setUserId:userId] setNameStrangersSee:nameStrangersSee] setNameFriendsSee:nameFriendsSee] setEmail:email] setPassword:password] setFacebookId:facebookId] setBadp:deviceProto] build];
     
     SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
     sc.delegate = self;
     
-    [sc sendLoginRequestEventViaToken:basicProto facebookFriends:NULL];
-  
-  }
-  else {
-    NSLog(@"not saved");
+    BOOL didFacebookLogin = [[NSUserDefaults standardUserDefaults] boolForKey:DID_FACEBOOK_SIGNUP];
+    if (didFacebookLogin) {
+      if (!FBSession.activeSession.isOpen) {
+        FacebookObject *fb = [[FacebookObject alloc] init];
+        AppDelegate *ad = [[UIApplication sharedApplication] delegate];
+        ad.delegate = self;
+        [fb facebookLogin];
+      }
+      else {
+        [self finishedFBLogin];
+      }
+    }
+    else {
+      [sc sendLoginRequestEventViaToken:basicProto facebookFriends:NULL];
+    }
   }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-  if (fromSignUp) {
-    fromSignUp = NO;
-  }
-  else {
-    [self loginWithToken];    
-  }
+- (void)finishedFBLogin {
+  NSMutableArray *friendIds = [NSMutableArray array];
+  FBRequest *friendsRequest = [FBRequest requestForMyFriends];
+  [friendsRequest startWithCompletionHandler: ^(FBRequestConnection *connection,
+                                                NSDictionary* result,
+                                                NSError *error) {
+    if (!error) {
+      NSArray* friends = [result objectForKey:@"data"];
+      for (NSDictionary<FBGraphUser>* friend in friends) {
+        [friendIds addObject:friend.id];
+      }
+      SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+      sc.delegate = self;
+      [sc sendLoginRequestEventViaToken:basicProto facebookFriends:friendIds];
+    }
+    else {
+      NSLog(@"%@",error);
+    }
+  }];
 }
 
 - (void)viewDidLoad
@@ -142,7 +177,6 @@
     newCoinTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(coinCountDown) userInfo:nil repeats:YES];  
   }
   [self coinManagement:YES];
-  [self addArraysTogether];
   
   if ([ADBannerView instancesRespondToSelector:@selector(initWithAdType:)]) {
     _bannerView = [[ADBannerView alloc] initWithAdType:ADAdTypeBanner];
@@ -179,14 +213,31 @@
 }
 
 - (void)addArraysTogether {
+  myTurnHasNoGames = NO;
+  theirTurnHasNoGames = NO;
+  completedHasNoGames = NO;
   self.wholeArray = [[NSMutableArray alloc] init];
   NSArray *newArray = [self.wholeArray arrayByAddingObjectsFromArray:self.myTurns];
   NSArray *secondArray = [newArray arrayByAddingObjectsFromArray:self.notMyTurns];
   NSArray *thirdArray = [secondArray arrayByAddingObjectsFromArray:self.completedGames];
   self.wholeArray = [[NSMutableArray alloc] initWithArray:thirdArray];
-  yourTurnAmt = 2;
-  theirTurnAmt = 5;
-  completedAmt = 8;
+  yourTurnAmt = newArray.count;
+  theirTurnAmt = secondArray.count;
+  completedAmt = thirdArray.count;
+  
+  if (yourTurnAmt == 0) {
+    yourTurnAmt = 1;
+    myTurnHasNoGames = YES;
+  }
+  if (theirTurnAmt == 0) {
+    theirTurnAmt = 1;
+    theirTurnHasNoGames = YES;
+  }
+  if (completedAmt == 0) {
+    completedAmt = 1;
+    completedHasNoGames = YES;
+  }
+  [self.tableView reloadData];
 }
 
 - (void)updateUI {
@@ -289,6 +340,7 @@
   }
 
   ChallengeTypeViewController *vc = [[ChallengeTypeViewController alloc] initWithUserInfo:self.userInfo];
+  vc.delegate = self;
   [self.navigationController pushViewController:vc rotated:YES];
 }
 
@@ -297,9 +349,8 @@
 
   if (b.tag > theirTurnAmt && b.tag <= completedAmt) {
     //view completed games
-//    GameResultsProto *finishedData = (GameResultsProto *)[self.wholeArray objectAtIndex:b.tag];
-//    ScoreViewController *vc = [[ScoreViewController alloc] initWithGameResultsProto:finishedData userInfo:self.userInfo];
-//    [self.navigationController pushViewController:vc rotated:YES];
+
+
   }
   else if (b.tag <= yourTurnAmt) {
     //go into my turn
@@ -374,16 +425,39 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
   }
 }
 
+- (void)passDataBackToRootView:(UserInfo *)userInfo {
+  self.userInfo = userInfo;
+}
+
 #pragma mark Protocol Buffers methods
+
+- (void)refreshDataWithProto:(LoginResponseProto *)proto {
+  self.userInfo = [[UserInfo alloc] initWithCompleteUserProto:proto.recipient];
+  self.userInfo.listOfFacebookFriends = proto.facebookFriendsWithAccountsList;
+  self.userInfo.questions = proto.newQuestionsList;
+  self.myTurns = proto.myTurnList;
+  self.notMyTurns = proto.notMyTurnList;
+  self.completedGames = proto.completedGamesList;
+  [self addArraysTogether];
+}
 
 - (void)receivedProtoResponse:(PBGeneratedMessage *)message {
   LoginResponseProto *proto = (LoginResponseProto *)message;
-  NSLog(@"%d",(int)proto.status);
+  [self.updatingSpinner stopAnimating];
+  [self.updatingView removeFromSuperview];
+  self.view.userInteractionEnabled = YES;
+  if (proto.status == LoginResponseProto_LoginResponseStatusSuccessLoginToken || proto.status == LoginResponseProto_LoginResponseStatusSuccessFacebookId || proto.status == LoginResponseProto_LoginResponseStatusSuccessEmailPassword || proto.status == LoginResponseProto_LoginResponseStatusSuccessNoCredentials) {
+    [self saveTokenWithProto:proto.recipient];
+    [self refreshDataWithProto:proto];
+  }
+  else {
+    //implemente fail sceneario
+    NSLog(@"log in failed");
+  }
 }
 
 - (void)getNewQuestions {
-  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
-  [sc sendRetrieveNewQuestions:self.userInfo.basicProto numQuestionsWanted:50];
+
 }
 
 - (void)startNewRoundWithTag:(int)tag {
@@ -407,18 +481,15 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
       break;
       
     case kYourTurn:
-      return 3;
-      //return self.myTurns.count;
+      return yourTurnAmt;
       break;
       
     case kTheirTurn:
-      return 3;
-      //return self.notMyTurns.count;
+      return theirTurnAmt;
       break;
       
     case kCompletedGames:
-      return 3;
-      //return self.completedGames.count;
+      return completedAmt;
       break;
       
     default:
@@ -472,7 +543,6 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
   return headerView;
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   static NSString *CellIdentifier1 = @"NewGame";
   static NSString *CellIdentifier2 = @"TurnCells";
@@ -480,7 +550,6 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
   NSInteger lastCellIndex = [tableView numberOfRowsInSection:indexPath.section] -1;
   if (indexPath.section == kNewGame) {
     StartGameCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier1];
-    
     if (cell == nil) {
       [[NSBundle mainBundle] loadNibNamed:@"HomeCell" owner:self options:nil];
       cell = self.startCell;
@@ -493,29 +562,62 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
       [[NSBundle mainBundle] loadNibNamed:@"HomeCell" owner:self options:nil];
       cell = self.lastCell;
     }
-
+    
     switch (indexPath.section) {
         int tag;
         int previousRowAmt;
       case kYourTurn:
-        tag = [tableView numberOfRowsInSection:kYourTurn];
-        cell.gameButton.tag = tag -1;
+        if (myTurnHasNoGames) {
+          cell.playerPic.hidden = YES;
+          cell.arrow.hidden = YES;
+          cell.timeLabel.hidden = YES;
+          cell.turnLabel.hidden = YES;
+          cell.nameLabel.hidden = YES;
+          cell.longerLabel.hidden = NO;
+          cell.longerLabel.numberOfLines = 0;
+          cell.longerLabel.text = [NSString stringWithFormat:@"You have no games right now \nStart a new game >>"];
+        }
+        else {
+          tag = [tableView numberOfRowsInSection:kYourTurn];
+          cell.gameButton.tag = tag -1;
+        }
         break;
         
-        case kTheirTurn:
-        previousRowAmt = [tableView numberOfRowsInSection:kYourTurn];
-        tag = [tableView numberOfRowsInSection:kTheirTurn];
-        cell.gameButton.tag = previousRowAmt + tag -1;
+      case kTheirTurn:
+        if (theirTurnHasNoGames) {
+          cell.playerPic.hidden = YES;
+          cell.arrow.hidden = YES;
+          cell.timeLabel.hidden = YES;
+          cell.turnLabel.hidden = YES;
+          cell.nameLabel.hidden = YES;
+          cell.noGameLabel.hidden = NO;
+          cell.noGameLabel.text = [NSString stringWithFormat:@"No one finished their turn yet"];
+          cell.gameButton.userInteractionEnabled = NO;
+        }
+        else {
+          previousRowAmt = [tableView numberOfRowsInSection:kYourTurn];
+          tag = [tableView numberOfRowsInSection:kTheirTurn];
+          cell.gameButton.tag = previousRowAmt + tag -1;
+        }
         break;
         
-        case kCompletedGames:
-        previousRowAmt = [tableView numberOfRowsInSection:kYourTurn];
-        previousRowAmt = previousRowAmt + [tableView numberOfRowsInSection:kTheirTurn];
-        tag = [tableView numberOfRowsInSection:kCompletedGames];
-        cell.gameButton.tag = previousRowAmt + tag -1;
-        break;
-        
-      default:
+      case kCompletedGames:
+        if (completedHasNoGames) {
+          cell.playerPic.hidden = YES;
+          cell.arrow.hidden = YES;
+          cell.timeLabel.hidden = YES;
+          cell.turnLabel.hidden = YES;
+          cell.nameLabel.hidden = YES;
+          cell.noGameLabel.hidden = NO;
+          cell.noGameLabel.text = [NSString stringWithFormat:@"You have no games finished recently"];
+          cell.gameButton.userInteractionEnabled = NO;
+        }
+        else {
+          previousRowAmt = [tableView numberOfRowsInSection:kYourTurn];
+          previousRowAmt = previousRowAmt + [tableView numberOfRowsInSection:kTheirTurn];
+          tag = [tableView numberOfRowsInSection:kCompletedGames];
+          cell.gameButton.tag = previousRowAmt + tag -1;
+        }
         break;
     }
     

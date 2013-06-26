@@ -53,13 +53,10 @@
 
 #pragma mark - Main Game
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil gameResultProto:(GameResultsProto *)proto basicUserProto:(BasicUserProto *)userProto completed:(BOOL)completed currentRound:(int)round;
-{
-  self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-  if (self) {
-    self.proto = proto;
-    self.userProto = userProto;
-    currentRound = round;
+
+- (id)initWithRoundOneUserInfo:(UserInfo *)userInfo completedRoundResponse:(CompletedRoundResponseProto *)proto {
+  if ((self = [super init])) {
+  
   }
   return self;
 }

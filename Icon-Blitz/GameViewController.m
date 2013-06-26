@@ -24,11 +24,13 @@
   int pointsBefore;
   int pointsAfter;
   int timeAfter;
+  long long int endTime;
   NSTimer *freezeTimer;
   CGRect gameRect;
   CGRect originalTriviaLabelFrame;
+  ProtoType protoType;
+  UsedCheatType usedCheatType;
 }
-- (void)youLose;
 @end
 
 @implementation GameViewController
@@ -265,18 +267,24 @@
     self.currentController.view.center = CGPointMake(self.currentController.view.center.x, self.currentController.view.center.y+56);
     [self.view addSubview:self.currentController.view];    
     gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
+    protoType = kProtoTypeNone;
+    usedCheatType = kCheatNone;
   }
   return self;
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userData:(UserInfo *)userData gameId:(NSString *)gameId{
-  if ((self = [super init])) {
-    self.userData = userData;
+- (id)initWithUserInfo:(UserInfo *)userInfo gameId:(NSString *)gameId recipient:(BasicUserProto *)recipent opponent:(BasicUserProto *)opponent startTime:(long long)startTime roundNumber:(int)roundNumber {
+  if (self = [super init]) {
+    self.userData = userInfo;
     self.gameId = gameId;
+    self.recipient = recipent;
+    self.opponent = opponent;
+    self.startTime = startTime;
+    self.roundNumber = roundNumber;
+    self.questionsAnswered = [[NSMutableArray alloc] init];
   }
   return self;
 }
-
 
 - (void)viewDidLoad
 {
@@ -290,6 +298,16 @@
   self.triviaType.font = [UIFont fontWithName:@"Avenir Next Lt Pro" size:14];
   //originalTriviaLabelFrame =  self.triviaContainer.frame;
   //self.triviaContainer.frame = CGRectMake(self.triviaContainer.center.x, self.triviaContainer.frame.origin.y, 0, self.triviaContainer.frame.size.height);
+}
+
+#pragma mark - Helper Methods
+
+- (NSTimeInterval)getUsersTimeInSeconds {
+  NSTimeZone* local = [NSTimeZone localTimeZone];
+  NSInteger secondsOffset = [local secondsFromGMTForDate:[NSDate date]];
+  NSDate *date = [[NSDate alloc] init];
+  NSTimeInterval time = [date timeIntervalSince1970];
+  return time +secondsOffset;
 }
 
 - (void)startTimer {
@@ -332,7 +350,7 @@
     self.timeLeftLabel.text = [NSString stringWithFormat:@"%d",self.timeLeft];
     self.view.userInteractionEnabled = NO;
     [self.gameTimer invalidate];
-    [self youLose];
+    [self completRound];
   }
 }
 
@@ -375,12 +393,6 @@
     [self performSelector:@selector(changePoints) withObject:nil afterDelay:.05 + delay];
     delay += 0.01;
   }
-}
-
-- (void)youLose {
-  self.view.userInteractionEnabled = YES;
-  ScoreViewController *vc = [[ScoreViewController alloc] initWithNibName:@"ScoreViewController" bundle:nil];
-  [self.navigationController pushViewController:vc rotated:YES];
 }
 
 - (void)publish {
@@ -433,6 +445,8 @@
   }];
 }
 
+#pragma mark - Iboutlet Methods
+
 - (IBAction)skipSelected:(id)sender {
   timeAfter = self.timeLeft - 10;
   if (timeAfter <= 0) timeAfter = 0;
@@ -442,38 +456,54 @@
   [self transitionWithConclusion:NO skipping:NO andNextQuestionType:kFillIn];
 }
 
-- (IBAction)cheatOneClicked:(id)sender {
-  //need to check if user has enough rubies
+- (IBAction)cheatOneClicked:(id)sender {  
+  if (self.userData.rubies < CheatCost) {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not enough rubies" message:@"You don't have enough rubies, you can buy them after this game!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    [alert show];
+    return;
+  }
   
-  self.currentType = kMultipleChoice;
-  if (self.currentType = kFillIn) {
-    FillInTypeViewController *vc = (FillInTypeViewController *)self.currentController;
-    [vc removeOptions];
-  }
-  else {
-    MultipleChoiceViewController *vc = (MultipleChoiceViewController *)self.currentController;
-    [vc removeOptions];
-  }
-  if (self.isTutorial) {
-    [self tutorialCheatUsed];
-  }
+  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+  sc.delegate = self;
+  
+  BasicUserProto *proto = [sc buildSender];
+  [sc sendSpendRubies:proto amountSpent:CheatCost];
+  
+  protoType = kSpendRubyProto;
+  usedCheatType = kRemoveCheat;
 }
 
 - (IBAction)cheatTwoClicked:(id)sender {
-  
-  if (self.isTutorial) [self tutorialFreezeUsed];
+  //if its tutorual, we dont need rubies
+  if (self.isTutorial) {
+    self.freezeButton.userInteractionEnabled = NO;
+    self.freezeButton.alpha = 0.5f;
+    freezeCounter = 10;
+    self.freezeCountDownLabel.text = [NSString stringWithFormat:@"%d",freezeCounter];
+    if ([self.gameTimer isValid]) {
+      [self.gameTimer invalidate];
+    }
+    freezeTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(freezeCountDown) userInfo:nil repeats:YES];
+    self.freezeCountDownLabel.hidden = NO;
+    [self tutorialFreezeUsed];
+    return;
+  }
   
   //need to check if user has enough rubies
-  
-  self.freezeButton.userInteractionEnabled = NO;
-  self.freezeButton.alpha = 0.5f;
-  freezeCounter = 10;
-  self.freezeCountDownLabel.text = [NSString stringWithFormat:@"%d",freezeCounter];
-  if ([self.gameTimer isValid]) {
-    [self.gameTimer invalidate];
+  if (self.userData.rubies < FreezeCost && !self.isTutorial) {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not enough rubies" message:@"You don't have enough rubies, you can buy them after this game!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    [alert show];
+    return;
   }
-  freezeTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(freezeCountDown) userInfo:nil repeats:YES];
-  self.freezeCountDownLabel.hidden = NO;
+  protoType = kSpendRubyProto;
+  usedCheatType = kFreezeCheat;
+  
+  if (!self.isTutorial) {
+    SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+    sc.delegate = self;
+    BasicUserProto *sender = [sc buildSender];
+    [sc sendSpendRubies:sender amountSpent:FreezeCost];
+  }
 }
 
 - (void)freezeCountDown {
@@ -529,6 +559,18 @@
 - (void)transitionWithConclusion:(BOOL)conclusion skipping:(BOOL)didSkip andNextQuestionType:(QuestionType)type {
   self.removeCheatButon.userInteractionEnabled = NO;
   self.view.userInteractionEnabled = NO;
+  
+  QuestionProto *qProto = (QuestionProto *)[self.userData.questions objectAtIndex:self.currentQuestion];
+  
+  QuestionAnsweredProto_AnswerType answerType;
+  if (didSkip) answerType = QuestionAnsweredProto_AnswerTypeSkipped;
+  else if (conclusion) answerType = QuestionAnsweredProto_AnswerTypeCorrect;
+  else answerType = QuestionAnsweredProto_AnswerTypeIncorrect;
+  
+  QuestionAnsweredProto *proto = [[[[[QuestionAnsweredProto builder] setQuestionId:qProto.id] setAnswerType:answerType] setQuestionNumber:self.currentQuestion] build];
+  
+  [self.questionsAnswered addObject:proto];
+  
   if(!didSkip) {
     if (conclusion) {
       pointsAfter += 10;
@@ -568,20 +610,100 @@
   }
 }
 
-#pragma mark Protocol Buffer Stuff
+#pragma mark - Protocol Buffer Stuff
+
+- (void)cheatOneSucess {
+  self.currentType = [self getQuestiontype];
+  if (self.currentType = kFillIn) {
+    FillInTypeViewController *vc = (FillInTypeViewController *)self.currentController;
+    [vc removeOptions];
+  }
+  else {
+    MultipleChoiceViewController *vc = (MultipleChoiceViewController *)self.currentController;
+    [vc removeOptions];
+  }
+  if (self.isTutorial) {
+    [self tutorialCheatUsed];
+  }
+}
+
+- (void)cheatTwoSucess {
+  self.freezeButton.userInteractionEnabled = NO;
+  self.freezeButton.alpha = 0.5f;
+  freezeCounter = 10;
+  self.freezeCountDownLabel.text = [NSString stringWithFormat:@"%d",freezeCounter];
+  if ([self.gameTimer isValid]) {
+    [self.gameTimer invalidate];
+  }
+  freezeTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(freezeCountDown) userInfo:nil repeats:YES];
+  self.freezeCountDownLabel.hidden = NO;
+  [self tutorialFreezeUsed];
+}
+
+- (void)cheatFailed:(SpendRubiesResponseProto *)proto {
+  UIAlertView *alert;
+  if (proto.status == SpendRubiesResponseProto_SpendRubiesStatusFailNotEnoughRubies) {
+    alert = [[UIAlertView alloc] initWithTitle:@"Not enough rubies" message:@"You dont have enough rubies, you can buy more after this game" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+  }
+  else if (proto.status == SpendRubiesResponseProto_SpendRubiesStatusFailOther) {
+    alert = [[UIAlertView alloc] initWithTitle:@"Error accessing error" message:@"There is an error accessing the server right now, please try again later" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+  }
+  [alert show];
+}
+
+- (void)completeRoundFail:(CompletedRoundResponseProto *)proto {
+  if (proto.status == CompletedRoundResponseProto_CompletedRoundStatusFailGameDoesNotExist) {
+    
+  }
+  else if (proto.status == CompletedRoundResponseProto_CompletedRoundStatusFailGameAlreadyCompleted) {
+    
+  }
+  else if (proto.status == CompletedRoundResponseProto_CompletedRoundStatusFailOther) {
+    
+  }
+}
 
 - (void)receivedProtoResponse:(PBGeneratedMessage *)message {
-  
+  if (protoType == kSpendRubyProto) {
+    SpendRubiesResponseProto *proto = (SpendRubiesResponseProto *)message;
+    if (proto.status == SpendRubiesResponseProto_SpendRubiesStatusSuccess) {
+      self.userData.rubies = proto.currentFunds.numRubies;
+      self.userData.goldCoins = proto.currentFunds.numTokens;
+      if (usedCheatType == kRemoveCheat) [self cheatOneSucess];
+      else if (usedCheatType == kFreezeCheat) [self cheatTwoSucess];
+    }
+    else {
+      [self cheatFailed:proto];
+    }
+  }
+  else if (protoType == kCompleteRoundProto) {
+    [self.spinner stopAnimating];
+    self.spinnerView.hidden = YES;
+    CompletedRoundResponseProto *proto = (CompletedRoundResponseProto *)message;
+    if (proto.status == CompletedRoundResponseProto_CompletedRoundStatusSuccess) {
+      ScoreViewController *vc = [[ScoreViewController alloc] initWithRoundOneUserInfo:self.userData completedRoundResponse:proto];
+      [self.navigationController pushViewController:vc animated:YES];
+    }
+    else {
+      [self completeRoundFail:proto];
+    }
+  }
 }
 
 - (void)completRound {
-//  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
-//  [sc sendStartRoundRequest:<#(BasicUserProto *)#> isRandomPlayer:<#(BOOL)#> opponent:<#(NSString *)#> gameId:<#(NSString *)#> roundNumber:<#(int32_t)#> isPlayerOne:<#(BOOL)#> startTime:<#(int64_t)#> questions:<#(QuestionProto *)#> images:<#(NSArray *)#>];
-}
-
-- (void)spendRubiesWithAmount:(int32_t)amount {
+  self.view.userInteractionEnabled = NO;
+  protoType = kCompleteRoundProto;
   SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
-  [sc sendSpendRubies:self.userData.basicProto amountSpent:amount];
+  sc.delegate = self;
+  BasicUserProto *user = [sc buildSender];
+  
+  endTime = (long long)[self getUsersTimeInSeconds];
+  
+  self.spinnerView.hidden = NO;
+  [self.spinner startAnimating];
+  
+  CompleteRoundResultsProto *proto = [[[[[[[CompleteRoundResultsProto builder] setId:NULL] setRoundNumber:self.roundNumber] setStartTime:self.startTime] setEndTime:endTime] addAllAnswers:self.questionsAnswered] build];
+  [sc sendCompleteRoundRequest:user opponent:self.opponent gameId:self.gameId results:proto];
 }
 
 @end

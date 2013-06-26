@@ -29,6 +29,9 @@
 @property (nonatomic, strong) IBOutlet UILabel *nameLabel;
 @property (nonatomic, strong) IBOutlet UILabel *turnLabel;
 @property (nonatomic, strong) IBOutlet UILabel *timeLabel;
+@property (nonatomic, strong) IBOutlet UILabel *noGameLabel;
+@property (nonatomic, strong) IBOutlet UILabel *longerLabel;
+@property (nonatomic, strong) IBOutlet UIImageView *arrow;
 @property (nonatomic, strong) IBOutlet UIImageView *playerPic;
 @property (nonatomic, strong) IBOutlet UIButton *gameButton;
 

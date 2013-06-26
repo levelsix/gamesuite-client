@@ -7,6 +7,7 @@ typedef enum {
   CommonEventProtocolRequestCCreateAccountViaEmailEvent = 2,
   CommonEventProtocolRequestCCreateAccountViaNoCredentialsEvent = 3,
   CommonEventProtocolRequestCLoginEvent = 4,
+  CommonEventProtocolRequestCLogoutEvent = 51,
 } CommonEventProtocolRequest;
 
 BOOL CommonEventProtocolRequestIsValidValue(CommonEventProtocolRequest value);

@@ -23,6 +23,7 @@ static PBExtensionRegistry* extensionRegistry = nil;
 
 @interface CompletedRoundRequestProto ()
 @property (retain) BasicUserProto* sender;
+@property (retain) BasicUserProto* opponent;
 @property (retain) NSString* gameId;
 @property (retain) CompleteRoundResultsProto* results;
 @end
@@ -36,6 +37,13 @@ static PBExtensionRegistry* extensionRegistry = nil;
   hasSender_ = !!value;
 }
 @synthesize sender;
+- (BOOL) hasOpponent {
+  return !!hasOpponent_;
+}
+- (void) setHasOpponent:(BOOL) value {
+  hasOpponent_ = !!value;
+}
+@synthesize opponent;
 - (BOOL) hasGameId {
   return !!hasGameId_;
 }
@@ -52,6 +60,7 @@ static PBExtensionRegistry* extensionRegistry = nil;
 @synthesize results;
 - (void) dealloc {
   self.sender = nil;
+  self.opponent = nil;
   self.gameId = nil;
   self.results = nil;
   [super dealloc];
@@ -59,6 +68,7 @@ static PBExtensionRegistry* extensionRegistry = nil;
 - (id) init {
   if ((self = [super init])) {
     self.sender = [BasicUserProto defaultInstance];
+    self.opponent = [BasicUserProto defaultInstance];
     self.gameId = @"";
     self.results = [CompleteRoundResultsProto defaultInstance];
   }
@@ -89,6 +99,9 @@ static CompletedRoundRequestProto* defaultCompletedRoundRequestProtoInstance = n
   if (self.hasResults) {
     [output writeMessage:3 value:self.results];
   }
+  if (self.hasOpponent) {
+    [output writeMessage:4 value:self.opponent];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -106,6 +119,9 @@ static CompletedRoundRequestProto* defaultCompletedRoundRequestProtoInstance = n
   }
   if (self.hasResults) {
     size += computeMessageSize(3, self.results);
+  }
+  if (self.hasOpponent) {
+    size += computeMessageSize(4, self.opponent);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -185,6 +201,9 @@ static CompletedRoundRequestProto* defaultCompletedRoundRequestProtoInstance = n
   if (other.hasSender) {
     [self mergeSender:other.sender];
   }
+  if (other.hasOpponent) {
+    [self mergeOpponent:other.opponent];
+  }
   if (other.hasGameId) {
     [self setGameId:other.gameId];
   }
@@ -234,6 +253,15 @@ static CompletedRoundRequestProto* defaultCompletedRoundRequestProtoInstance = n
         [self setResults:[subBuilder buildPartial]];
         break;
       }
+      case 34: {
+        BasicUserProto_Builder* subBuilder = [BasicUserProto builder];
+        if (self.hasOpponent) {
+          [subBuilder mergeFrom:self.opponent];
+        }
+        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
+        [self setOpponent:[subBuilder buildPartial]];
+        break;
+      }
     }
   }
 }
@@ -265,6 +293,36 @@ static CompletedRoundRequestProto* defaultCompletedRoundRequestProtoInstance = n
 - (CompletedRoundRequestProto_Builder*) clearSender {
   result.hasSender = NO;
   result.sender = [BasicUserProto defaultInstance];
+  return self;
+}
+- (BOOL) hasOpponent {
+  return result.hasOpponent;
+}
+- (BasicUserProto*) opponent {
+  return result.opponent;
+}
+- (CompletedRoundRequestProto_Builder*) setOpponent:(BasicUserProto*) value {
+  result.hasOpponent = YES;
+  result.opponent = value;
+  return self;
+}
+- (CompletedRoundRequestProto_Builder*) setOpponentBuilder:(BasicUserProto_Builder*) builderForValue {
+  return [self setOpponent:[builderForValue build]];
+}
+- (CompletedRoundRequestProto_Builder*) mergeOpponent:(BasicUserProto*) value {
+  if (result.hasOpponent &&
+      result.opponent != [BasicUserProto defaultInstance]) {
+    result.opponent =
+      [[[BasicUserProto builderWithPrototype:result.opponent] mergeFrom:value] buildPartial];
+  } else {
+    result.opponent = value;
+  }
+  result.hasOpponent = YES;
+  return self;
+}
+- (CompletedRoundRequestProto_Builder*) clearOpponent {
+  result.hasOpponent = NO;
+  result.opponent = [BasicUserProto defaultInstance];
   return self;
 }
 - (BOOL) hasGameId {
@@ -316,7 +374,8 @@ static CompletedRoundRequestProto* defaultCompletedRoundRequestProtoInstance = n
 @end
 
 @interface CompletedRoundResponseProto ()
-@property (retain) BasicUserProto* recipient;
+@property (retain) BasicUserProto* sender;
+@property (retain) BasicUserProto* opponent;
 @property (retain) NSString* gameId;
 @property (retain) BasicRoundResultsProto* results;
 @property CompletedRoundResponseProto_CompletedRoundStatus status;
@@ -324,13 +383,20 @@ static CompletedRoundRequestProto* defaultCompletedRoundRequestProtoInstance = n
 
 @implementation CompletedRoundResponseProto
 
-- (BOOL) hasRecipient {
-  return !!hasRecipient_;
+- (BOOL) hasSender {
+  return !!hasSender_;
 }
-- (void) setHasRecipient:(BOOL) value {
-  hasRecipient_ = !!value;
+- (void) setHasSender:(BOOL) value {
+  hasSender_ = !!value;
 }
-@synthesize recipient;
+@synthesize sender;
+- (BOOL) hasOpponent {
+  return !!hasOpponent_;
+}
+- (void) setHasOpponent:(BOOL) value {
+  hasOpponent_ = !!value;
+}
+@synthesize opponent;
 - (BOOL) hasGameId {
   return !!hasGameId_;
 }
@@ -353,14 +419,16 @@ static CompletedRoundRequestProto* defaultCompletedRoundRequestProtoInstance = n
 }
 @synthesize status;
 - (void) dealloc {
-  self.recipient = nil;
+  self.sender = nil;
+  self.opponent = nil;
   self.gameId = nil;
   self.results = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
-    self.recipient = [BasicUserProto defaultInstance];
+    self.sender = [BasicUserProto defaultInstance];
+    self.opponent = [BasicUserProto defaultInstance];
     self.gameId = @"";
     self.results = [BasicRoundResultsProto defaultInstance];
     self.status = CompletedRoundResponseProto_CompletedRoundStatusSuccess;
@@ -383,8 +451,8 @@ static CompletedRoundResponseProto* defaultCompletedRoundResponseProtoInstance =
   return YES;
 }
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
-  if (self.hasRecipient) {
-    [output writeMessage:1 value:self.recipient];
+  if (self.hasSender) {
+    [output writeMessage:1 value:self.sender];
   }
   if (self.hasGameId) {
     [output writeString:2 value:self.gameId];
@@ -395,6 +463,9 @@ static CompletedRoundResponseProto* defaultCompletedRoundResponseProtoInstance =
   if (self.hasStatus) {
     [output writeEnum:4 value:self.status];
   }
+  if (self.hasOpponent) {
+    [output writeMessage:5 value:self.opponent];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -404,8 +475,8 @@ static CompletedRoundResponseProto* defaultCompletedRoundResponseProtoInstance =
   }
 
   size = 0;
-  if (self.hasRecipient) {
-    size += computeMessageSize(1, self.recipient);
+  if (self.hasSender) {
+    size += computeMessageSize(1, self.sender);
   }
   if (self.hasGameId) {
     size += computeStringSize(2, self.gameId);
@@ -415,6 +486,9 @@ static CompletedRoundResponseProto* defaultCompletedRoundResponseProtoInstance =
   }
   if (self.hasStatus) {
     size += computeEnumSize(4, self.status);
+  }
+  if (self.hasOpponent) {
+    size += computeMessageSize(5, self.opponent);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -502,8 +576,11 @@ BOOL CompletedRoundResponseProto_CompletedRoundStatusIsValidValue(CompletedRound
   if (other == [CompletedRoundResponseProto defaultInstance]) {
     return self;
   }
-  if (other.hasRecipient) {
-    [self mergeRecipient:other.recipient];
+  if (other.hasSender) {
+    [self mergeSender:other.sender];
+  }
+  if (other.hasOpponent) {
+    [self mergeOpponent:other.opponent];
   }
   if (other.hasGameId) {
     [self setGameId:other.gameId];
@@ -537,11 +614,11 @@ BOOL CompletedRoundResponseProto_CompletedRoundStatusIsValidValue(CompletedRound
       }
       case 10: {
         BasicUserProto_Builder* subBuilder = [BasicUserProto builder];
-        if (self.hasRecipient) {
-          [subBuilder mergeFrom:self.recipient];
+        if (self.hasSender) {
+          [subBuilder mergeFrom:self.sender];
         }
         [input readMessage:subBuilder extensionRegistry:extensionRegistry];
-        [self setRecipient:[subBuilder buildPartial]];
+        [self setSender:[subBuilder buildPartial]];
         break;
       }
       case 18: {
@@ -566,37 +643,76 @@ BOOL CompletedRoundResponseProto_CompletedRoundStatusIsValidValue(CompletedRound
         }
         break;
       }
+      case 42: {
+        BasicUserProto_Builder* subBuilder = [BasicUserProto builder];
+        if (self.hasOpponent) {
+          [subBuilder mergeFrom:self.opponent];
+        }
+        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
+        [self setOpponent:[subBuilder buildPartial]];
+        break;
+      }
     }
   }
 }
-- (BOOL) hasRecipient {
-  return result.hasRecipient;
+- (BOOL) hasSender {
+  return result.hasSender;
 }
-- (BasicUserProto*) recipient {
-  return result.recipient;
+- (BasicUserProto*) sender {
+  return result.sender;
 }
-- (CompletedRoundResponseProto_Builder*) setRecipient:(BasicUserProto*) value {
-  result.hasRecipient = YES;
-  result.recipient = value;
+- (CompletedRoundResponseProto_Builder*) setSender:(BasicUserProto*) value {
+  result.hasSender = YES;
+  result.sender = value;
   return self;
 }
-- (CompletedRoundResponseProto_Builder*) setRecipientBuilder:(BasicUserProto_Builder*) builderForValue {
-  return [self setRecipient:[builderForValue build]];
+- (CompletedRoundResponseProto_Builder*) setSenderBuilder:(BasicUserProto_Builder*) builderForValue {
+  return [self setSender:[builderForValue build]];
 }
-- (CompletedRoundResponseProto_Builder*) mergeRecipient:(BasicUserProto*) value {
-  if (result.hasRecipient &&
-      result.recipient != [BasicUserProto defaultInstance]) {
-    result.recipient =
-      [[[BasicUserProto builderWithPrototype:result.recipient] mergeFrom:value] buildPartial];
+- (CompletedRoundResponseProto_Builder*) mergeSender:(BasicUserProto*) value {
+  if (result.hasSender &&
+      result.sender != [BasicUserProto defaultInstance]) {
+    result.sender =
+      [[[BasicUserProto builderWithPrototype:result.sender] mergeFrom:value] buildPartial];
   } else {
-    result.recipient = value;
+    result.sender = value;
   }
-  result.hasRecipient = YES;
+  result.hasSender = YES;
   return self;
 }
-- (CompletedRoundResponseProto_Builder*) clearRecipient {
-  result.hasRecipient = NO;
-  result.recipient = [BasicUserProto defaultInstance];
+- (CompletedRoundResponseProto_Builder*) clearSender {
+  result.hasSender = NO;
+  result.sender = [BasicUserProto defaultInstance];
+  return self;
+}
+- (BOOL) hasOpponent {
+  return result.hasOpponent;
+}
+- (BasicUserProto*) opponent {
+  return result.opponent;
+}
+- (CompletedRoundResponseProto_Builder*) setOpponent:(BasicUserProto*) value {
+  result.hasOpponent = YES;
+  result.opponent = value;
+  return self;
+}
+- (CompletedRoundResponseProto_Builder*) setOpponentBuilder:(BasicUserProto_Builder*) builderForValue {
+  return [self setOpponent:[builderForValue build]];
+}
+- (CompletedRoundResponseProto_Builder*) mergeOpponent:(BasicUserProto*) value {
+  if (result.hasOpponent &&
+      result.opponent != [BasicUserProto defaultInstance]) {
+    result.opponent =
+      [[[BasicUserProto builderWithPrototype:result.opponent] mergeFrom:value] buildPartial];
+  } else {
+    result.opponent = value;
+  }
+  result.hasOpponent = YES;
+  return self;
+}
+- (CompletedRoundResponseProto_Builder*) clearOpponent {
+  result.hasOpponent = NO;
+  result.opponent = [BasicUserProto defaultInstance];
   return self;
 }
 - (BOOL) hasGameId {

@@ -71,40 +71,6 @@
 		0673C40D16F037D900B5A586 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0673C40A16F037D900B5A586 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		0673C40E16F037D900B5A586 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0673C40B16F037D900B5A586 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		0673C40F16F037D900B5A586 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0673C40C16F037D900B5A586 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		067448F7176FC41000622525 /* CommonEventProtocol.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448D6176FC41000622525 /* CommonEventProtocol.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		067448F8176FC41000622525 /* CompletedRoundEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448D8176FC41000622525 /* CompletedRoundEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		067448F9176FC41000622525 /* CreateAccountEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448DA176FC41000622525 /* CreateAccountEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		067448FA176FC41000622525 /* Example.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448DC176FC41000622525 /* Example.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		067448FB176FC41000622525 /* ForceLogout.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448DE176FC41000622525 /* ForceLogout.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		067448FC176FC41000622525 /* LoginEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448E0176FC41000622525 /* LoginEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		067448FD176FC41000622525 /* PicturesEventProtocol.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448E2176FC41000622525 /* PicturesEventProtocol.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		067448FE176FC41000622525 /* RefillTokensByWaitingEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448E4176FC41000622525 /* RefillTokensByWaitingEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		067448FF176FC41000622525 /* RetrieveNewQuestionsEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448E6176FC41000622525 /* RetrieveNewQuestionsEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		06744900176FC41000622525 /* SaveRoundProgressEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448E8176FC41000622525 /* SaveRoundProgressEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		06744901176FC41000622525 /* SearchForUserEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448EA176FC41000622525 /* SearchForUserEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		06744902176FC41000622525 /* SpendRubiesEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448EC176FC41000622525 /* SpendRubiesEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		06744903176FC41000622525 /* StartRoundEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448EE176FC41000622525 /* StartRoundEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		06744904176FC41000622525 /* TriviaGameFormat.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448F0176FC41000622525 /* TriviaGameFormat.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		06744905176FC41000622525 /* TriviaQuestionFormat.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448F2176FC41000622525 /* TriviaQuestionFormat.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		06744906176FC41000622525 /* TriviaRoundFormat.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448F4176FC41000622525 /* TriviaRoundFormat.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		06744907176FC41000622525 /* User.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 067448F6176FC41000622525 /* User.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		06744919176FC41D00622525 /* CommonEventProtocol.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06744908176FC41D00622525 /* CommonEventProtocol.proto */; };
-		0674491A176FC41D00622525 /* CompletedRoundEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06744909176FC41D00622525 /* CompletedRoundEvent.proto */; };
-		0674491B176FC41D00622525 /* CreateAccountEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 0674490A176FC41D00622525 /* CreateAccountEvent.proto */; };
-		0674491C176FC41D00622525 /* Example.proto in Resources */ = {isa = PBXBuildFile; fileRef = 0674490B176FC41D00622525 /* Example.proto */; };
-		0674491D176FC41D00622525 /* ForceLogout.proto in Resources */ = {isa = PBXBuildFile; fileRef = 0674490C176FC41D00622525 /* ForceLogout.proto */; };
-		0674491E176FC41D00622525 /* LoginEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 0674490D176FC41D00622525 /* LoginEvent.proto */; };
-		0674491F176FC41D00622525 /* PicturesEventProtocol.proto in Resources */ = {isa = PBXBuildFile; fileRef = 0674490E176FC41D00622525 /* PicturesEventProtocol.proto */; };
-		06744920176FC41D00622525 /* RefillTokensByWaitingEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 0674490F176FC41D00622525 /* RefillTokensByWaitingEvent.proto */; };
-		06744921176FC41D00622525 /* RetrieveNewQuestionsEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06744910176FC41D00622525 /* RetrieveNewQuestionsEvent.proto */; };
-		06744922176FC41D00622525 /* SaveRoundProgressEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06744911176FC41D00622525 /* SaveRoundProgressEvent.proto */; };
-		06744923176FC41D00622525 /* SearchForUserEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06744912176FC41D00622525 /* SearchForUserEvent.proto */; };
-		06744924176FC41D00622525 /* SpendRubiesEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06744913176FC41D00622525 /* SpendRubiesEvent.proto */; };
-		06744925176FC41D00622525 /* StartRoundEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06744914176FC41D00622525 /* StartRoundEvent.proto */; };
-		06744926176FC41D00622525 /* TriviaGameFormat.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06744915176FC41D00622525 /* TriviaGameFormat.proto */; };
-		06744927176FC41D00622525 /* TriviaQuestionFormat.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06744916176FC41D00622525 /* TriviaQuestionFormat.proto */; };
-		06744928176FC41D00622525 /* TriviaRoundFormat.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06744917176FC41D00622525 /* TriviaRoundFormat.proto */; };
-		06744929176FC41D00622525 /* User.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06744918176FC41D00622525 /* User.proto */; };
 		06773A68172243FC00B11F3F /* blueplayer.png in Resources */ = {isa = PBXBuildFile; fileRef = 06773A5C172243FC00B11F3F /* blueplayer.png */; };
 		06773A69172243FC00B11F3F /* blueplayer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 06773A5D172243FC00B11F3F /* blueplayer@2x.png */; };
 		06773A6A172243FC00B11F3F /* donebutton.png in Resources */ = {isa = PBXBuildFile; fileRef = 06773A5E172243FC00B11F3F /* donebutton.png */; };
@@ -144,6 +110,44 @@
 		0680E43C1758555700BCFCF7 /* speechbubble@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0680E4301758555700BCFCF7 /* speechbubble@2x.png */; };
 		0682262516F7CF7900F92076 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0682262316F7CF7900F92076 /* GameViewController.m */; };
 		0682262616F7CF7900F92076 /* GameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0682262416F7CF7900F92076 /* GameViewController.xib */; };
+		06848EDA1773CBF900351FB9 /* CommonEventProtocol.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848EB71773CBF900351FB9 /* CommonEventProtocol.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EDB1773CBF900351FB9 /* CompletedRoundEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848EB91773CBF900351FB9 /* CompletedRoundEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EDC1773CBF900351FB9 /* CreateAccountEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848EBB1773CBF900351FB9 /* CreateAccountEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EDD1773CBF900351FB9 /* Example.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848EBD1773CBF900351FB9 /* Example.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EDE1773CBF900351FB9 /* ForceLogout.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848EBF1773CBF900351FB9 /* ForceLogout.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EDF1773CBF900351FB9 /* LoginEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848EC11773CBF900351FB9 /* LoginEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EE01773CBF900351FB9 /* Logout.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848EC31773CBF900351FB9 /* Logout.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EE11773CBF900351FB9 /* PicturesEventProtocol.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848EC51773CBF900351FB9 /* PicturesEventProtocol.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EE21773CBF900351FB9 /* RefillTokensByWaitingEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848EC71773CBF900351FB9 /* RefillTokensByWaitingEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EE31773CBF900351FB9 /* RetrieveNewQuestionsEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848EC91773CBF900351FB9 /* RetrieveNewQuestionsEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EE41773CBF900351FB9 /* SaveRoundProgressEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848ECB1773CBF900351FB9 /* SaveRoundProgressEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EE51773CBF900351FB9 /* SearchForUserEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848ECD1773CBF900351FB9 /* SearchForUserEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EE61773CBF900351FB9 /* SpendRubiesEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848ECF1773CBF900351FB9 /* SpendRubiesEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EE71773CBF900351FB9 /* StartRoundEvent.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848ED11773CBF900351FB9 /* StartRoundEvent.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EE81773CBF900351FB9 /* TriviaGameFormat.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848ED31773CBF900351FB9 /* TriviaGameFormat.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EE91773CBF900351FB9 /* TriviaQuestionFormat.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848ED51773CBF900351FB9 /* TriviaQuestionFormat.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EEA1773CBF900351FB9 /* TriviaRoundFormat.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848ED71773CBF900351FB9 /* TriviaRoundFormat.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EEB1773CBF900351FB9 /* User.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 06848ED91773CBF900351FB9 /* User.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		06848EFE1773CC0300351FB9 /* CommonEventProtocol.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EEC1773CC0300351FB9 /* CommonEventProtocol.proto */; };
+		06848EFF1773CC0300351FB9 /* CompletedRoundEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EED1773CC0300351FB9 /* CompletedRoundEvent.proto */; };
+		06848F001773CC0300351FB9 /* CreateAccountEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EEE1773CC0300351FB9 /* CreateAccountEvent.proto */; };
+		06848F011773CC0300351FB9 /* Example.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EEF1773CC0300351FB9 /* Example.proto */; };
+		06848F021773CC0300351FB9 /* ForceLogout.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EF01773CC0300351FB9 /* ForceLogout.proto */; };
+		06848F031773CC0300351FB9 /* LoginEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EF11773CC0300351FB9 /* LoginEvent.proto */; };
+		06848F041773CC0300351FB9 /* Logout.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EF21773CC0300351FB9 /* Logout.proto */; };
+		06848F051773CC0300351FB9 /* PicturesEventProtocol.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EF31773CC0300351FB9 /* PicturesEventProtocol.proto */; };
+		06848F061773CC0300351FB9 /* RefillTokensByWaitingEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EF41773CC0300351FB9 /* RefillTokensByWaitingEvent.proto */; };
+		06848F071773CC0300351FB9 /* RetrieveNewQuestionsEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EF51773CC0300351FB9 /* RetrieveNewQuestionsEvent.proto */; };
+		06848F081773CC0300351FB9 /* SaveRoundProgressEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EF61773CC0300351FB9 /* SaveRoundProgressEvent.proto */; };
+		06848F091773CC0300351FB9 /* SearchForUserEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EF71773CC0300351FB9 /* SearchForUserEvent.proto */; };
+		06848F0A1773CC0300351FB9 /* SpendRubiesEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EF81773CC0300351FB9 /* SpendRubiesEvent.proto */; };
+		06848F0B1773CC0300351FB9 /* StartRoundEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EF91773CC0300351FB9 /* StartRoundEvent.proto */; };
+		06848F0C1773CC0300351FB9 /* TriviaGameFormat.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EFA1773CC0300351FB9 /* TriviaGameFormat.proto */; };
+		06848F0D1773CC0300351FB9 /* TriviaQuestionFormat.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EFB1773CC0300351FB9 /* TriviaQuestionFormat.proto */; };
+		06848F0E1773CC0300351FB9 /* TriviaRoundFormat.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EFC1773CC0300351FB9 /* TriviaRoundFormat.proto */; };
+		06848F0F1773CC0300351FB9 /* User.proto in Resources */ = {isa = PBXBuildFile; fileRef = 06848EFD1773CC0300351FB9 /* User.proto */; };
+		06848F121773D13400351FB9 /* updating.png in Resources */ = {isa = PBXBuildFile; fileRef = 06848F101773D13400351FB9 /* updating.png */; };
+		06848F131773D13400351FB9 /* updating@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 06848F111773D13400351FB9 /* updating@2x.png */; };
 		068AF4BD171E1C550090E4DB /* libProtocolBuffers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 068AF4B6171E1C390090E4DB /* libProtocolBuffers.a */; };
 		068AF4C0171E36330090E4DB /* SocketCommunication.m in Sources */ = {isa = PBXBuildFile; fileRef = 068AF4BF171E36330090E4DB /* SocketCommunication.m */; };
 		068AF4D2171E4CBF0090E4DB /* Userinfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 068AF4D1171E4CBF0090E4DB /* Userinfo.m */; };
@@ -393,57 +397,6 @@
 		0673C40A16F037D900B5A586 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		0673C40B16F037D900B5A586 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		0673C40C16F037D900B5A586 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
-		067448D5176FC41000622525 /* CommonEventProtocol.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonEventProtocol.pb.h; sourceTree = "<group>"; };
-		067448D6176FC41000622525 /* CommonEventProtocol.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonEventProtocol.pb.m; sourceTree = "<group>"; };
-		067448D7176FC41000622525 /* CompletedRoundEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompletedRoundEvent.pb.h; sourceTree = "<group>"; };
-		067448D8176FC41000622525 /* CompletedRoundEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompletedRoundEvent.pb.m; sourceTree = "<group>"; };
-		067448D9176FC41000622525 /* CreateAccountEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateAccountEvent.pb.h; sourceTree = "<group>"; };
-		067448DA176FC41000622525 /* CreateAccountEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateAccountEvent.pb.m; sourceTree = "<group>"; };
-		067448DB176FC41000622525 /* Example.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Example.pb.h; sourceTree = "<group>"; };
-		067448DC176FC41000622525 /* Example.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Example.pb.m; sourceTree = "<group>"; };
-		067448DD176FC41000622525 /* ForceLogout.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForceLogout.pb.h; sourceTree = "<group>"; };
-		067448DE176FC41000622525 /* ForceLogout.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForceLogout.pb.m; sourceTree = "<group>"; };
-		067448DF176FC41000622525 /* LoginEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginEvent.pb.h; sourceTree = "<group>"; };
-		067448E0176FC41000622525 /* LoginEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginEvent.pb.m; sourceTree = "<group>"; };
-		067448E1176FC41000622525 /* PicturesEventProtocol.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicturesEventProtocol.pb.h; sourceTree = "<group>"; };
-		067448E2176FC41000622525 /* PicturesEventProtocol.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PicturesEventProtocol.pb.m; sourceTree = "<group>"; };
-		067448E3176FC41000622525 /* RefillTokensByWaitingEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefillTokensByWaitingEvent.pb.h; sourceTree = "<group>"; };
-		067448E4176FC41000622525 /* RefillTokensByWaitingEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefillTokensByWaitingEvent.pb.m; sourceTree = "<group>"; };
-		067448E5176FC41000622525 /* RetrieveNewQuestionsEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RetrieveNewQuestionsEvent.pb.h; sourceTree = "<group>"; };
-		067448E6176FC41000622525 /* RetrieveNewQuestionsEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RetrieveNewQuestionsEvent.pb.m; sourceTree = "<group>"; };
-		067448E7176FC41000622525 /* SaveRoundProgressEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveRoundProgressEvent.pb.h; sourceTree = "<group>"; };
-		067448E8176FC41000622525 /* SaveRoundProgressEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveRoundProgressEvent.pb.m; sourceTree = "<group>"; };
-		067448E9176FC41000622525 /* SearchForUserEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchForUserEvent.pb.h; sourceTree = "<group>"; };
-		067448EA176FC41000622525 /* SearchForUserEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchForUserEvent.pb.m; sourceTree = "<group>"; };
-		067448EB176FC41000622525 /* SpendRubiesEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpendRubiesEvent.pb.h; sourceTree = "<group>"; };
-		067448EC176FC41000622525 /* SpendRubiesEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpendRubiesEvent.pb.m; sourceTree = "<group>"; };
-		067448ED176FC41000622525 /* StartRoundEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartRoundEvent.pb.h; sourceTree = "<group>"; };
-		067448EE176FC41000622525 /* StartRoundEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartRoundEvent.pb.m; sourceTree = "<group>"; };
-		067448EF176FC41000622525 /* TriviaGameFormat.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriviaGameFormat.pb.h; sourceTree = "<group>"; };
-		067448F0176FC41000622525 /* TriviaGameFormat.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriviaGameFormat.pb.m; sourceTree = "<group>"; };
-		067448F1176FC41000622525 /* TriviaQuestionFormat.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriviaQuestionFormat.pb.h; sourceTree = "<group>"; };
-		067448F2176FC41000622525 /* TriviaQuestionFormat.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriviaQuestionFormat.pb.m; sourceTree = "<group>"; };
-		067448F3176FC41000622525 /* TriviaRoundFormat.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriviaRoundFormat.pb.h; sourceTree = "<group>"; };
-		067448F4176FC41000622525 /* TriviaRoundFormat.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriviaRoundFormat.pb.m; sourceTree = "<group>"; };
-		067448F5176FC41000622525 /* User.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.pb.h; sourceTree = "<group>"; };
-		067448F6176FC41000622525 /* User.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.pb.m; sourceTree = "<group>"; };
-		06744908176FC41D00622525 /* CommonEventProtocol.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CommonEventProtocol.proto; sourceTree = "<group>"; };
-		06744909176FC41D00622525 /* CompletedRoundEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CompletedRoundEvent.proto; sourceTree = "<group>"; };
-		0674490A176FC41D00622525 /* CreateAccountEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CreateAccountEvent.proto; sourceTree = "<group>"; };
-		0674490B176FC41D00622525 /* Example.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Example.proto; sourceTree = "<group>"; };
-		0674490C176FC41D00622525 /* ForceLogout.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ForceLogout.proto; sourceTree = "<group>"; };
-		0674490D176FC41D00622525 /* LoginEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LoginEvent.proto; sourceTree = "<group>"; };
-		0674490E176FC41D00622525 /* PicturesEventProtocol.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PicturesEventProtocol.proto; sourceTree = "<group>"; };
-		0674490F176FC41D00622525 /* RefillTokensByWaitingEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RefillTokensByWaitingEvent.proto; sourceTree = "<group>"; };
-		06744910176FC41D00622525 /* RetrieveNewQuestionsEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RetrieveNewQuestionsEvent.proto; sourceTree = "<group>"; };
-		06744911176FC41D00622525 /* SaveRoundProgressEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SaveRoundProgressEvent.proto; sourceTree = "<group>"; };
-		06744912176FC41D00622525 /* SearchForUserEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SearchForUserEvent.proto; sourceTree = "<group>"; };
-		06744913176FC41D00622525 /* SpendRubiesEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SpendRubiesEvent.proto; sourceTree = "<group>"; };
-		06744914176FC41D00622525 /* StartRoundEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StartRoundEvent.proto; sourceTree = "<group>"; };
-		06744915176FC41D00622525 /* TriviaGameFormat.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TriviaGameFormat.proto; sourceTree = "<group>"; };
-		06744916176FC41D00622525 /* TriviaQuestionFormat.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TriviaQuestionFormat.proto; sourceTree = "<group>"; };
-		06744917176FC41D00622525 /* TriviaRoundFormat.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TriviaRoundFormat.proto; sourceTree = "<group>"; };
-		06744918176FC41D00622525 /* User.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = User.proto; sourceTree = "<group>"; };
 		06773A5C172243FC00B11F3F /* blueplayer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueplayer.png; sourceTree = "<group>"; };
 		06773A5D172243FC00B11F3F /* blueplayer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blueplayer@2x.png"; sourceTree = "<group>"; };
 		06773A5E172243FC00B11F3F /* donebutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = donebutton.png; sourceTree = "<group>"; };
@@ -488,6 +441,62 @@
 		0682262216F7CF7900F92076 /* GameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
 		0682262316F7CF7900F92076 /* GameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
 		0682262416F7CF7900F92076 /* GameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameViewController.xib; sourceTree = "<group>"; };
+		06848EB61773CBF900351FB9 /* CommonEventProtocol.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonEventProtocol.pb.h; sourceTree = "<group>"; };
+		06848EB71773CBF900351FB9 /* CommonEventProtocol.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonEventProtocol.pb.m; sourceTree = "<group>"; };
+		06848EB81773CBF900351FB9 /* CompletedRoundEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompletedRoundEvent.pb.h; sourceTree = "<group>"; };
+		06848EB91773CBF900351FB9 /* CompletedRoundEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompletedRoundEvent.pb.m; sourceTree = "<group>"; };
+		06848EBA1773CBF900351FB9 /* CreateAccountEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateAccountEvent.pb.h; sourceTree = "<group>"; };
+		06848EBB1773CBF900351FB9 /* CreateAccountEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateAccountEvent.pb.m; sourceTree = "<group>"; };
+		06848EBC1773CBF900351FB9 /* Example.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Example.pb.h; sourceTree = "<group>"; };
+		06848EBD1773CBF900351FB9 /* Example.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Example.pb.m; sourceTree = "<group>"; };
+		06848EBE1773CBF900351FB9 /* ForceLogout.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForceLogout.pb.h; sourceTree = "<group>"; };
+		06848EBF1773CBF900351FB9 /* ForceLogout.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForceLogout.pb.m; sourceTree = "<group>"; };
+		06848EC01773CBF900351FB9 /* LoginEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginEvent.pb.h; sourceTree = "<group>"; };
+		06848EC11773CBF900351FB9 /* LoginEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginEvent.pb.m; sourceTree = "<group>"; };
+		06848EC21773CBF900351FB9 /* Logout.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logout.pb.h; sourceTree = "<group>"; };
+		06848EC31773CBF900351FB9 /* Logout.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Logout.pb.m; sourceTree = "<group>"; };
+		06848EC41773CBF900351FB9 /* PicturesEventProtocol.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicturesEventProtocol.pb.h; sourceTree = "<group>"; };
+		06848EC51773CBF900351FB9 /* PicturesEventProtocol.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PicturesEventProtocol.pb.m; sourceTree = "<group>"; };
+		06848EC61773CBF900351FB9 /* RefillTokensByWaitingEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefillTokensByWaitingEvent.pb.h; sourceTree = "<group>"; };
+		06848EC71773CBF900351FB9 /* RefillTokensByWaitingEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefillTokensByWaitingEvent.pb.m; sourceTree = "<group>"; };
+		06848EC81773CBF900351FB9 /* RetrieveNewQuestionsEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RetrieveNewQuestionsEvent.pb.h; sourceTree = "<group>"; };
+		06848EC91773CBF900351FB9 /* RetrieveNewQuestionsEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RetrieveNewQuestionsEvent.pb.m; sourceTree = "<group>"; };
+		06848ECA1773CBF900351FB9 /* SaveRoundProgressEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveRoundProgressEvent.pb.h; sourceTree = "<group>"; };
+		06848ECB1773CBF900351FB9 /* SaveRoundProgressEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveRoundProgressEvent.pb.m; sourceTree = "<group>"; };
+		06848ECC1773CBF900351FB9 /* SearchForUserEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchForUserEvent.pb.h; sourceTree = "<group>"; };
+		06848ECD1773CBF900351FB9 /* SearchForUserEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchForUserEvent.pb.m; sourceTree = "<group>"; };
+		06848ECE1773CBF900351FB9 /* SpendRubiesEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpendRubiesEvent.pb.h; sourceTree = "<group>"; };
+		06848ECF1773CBF900351FB9 /* SpendRubiesEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpendRubiesEvent.pb.m; sourceTree = "<group>"; };
+		06848ED01773CBF900351FB9 /* StartRoundEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartRoundEvent.pb.h; sourceTree = "<group>"; };
+		06848ED11773CBF900351FB9 /* StartRoundEvent.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartRoundEvent.pb.m; sourceTree = "<group>"; };
+		06848ED21773CBF900351FB9 /* TriviaGameFormat.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriviaGameFormat.pb.h; sourceTree = "<group>"; };
+		06848ED31773CBF900351FB9 /* TriviaGameFormat.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriviaGameFormat.pb.m; sourceTree = "<group>"; };
+		06848ED41773CBF900351FB9 /* TriviaQuestionFormat.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriviaQuestionFormat.pb.h; sourceTree = "<group>"; };
+		06848ED51773CBF900351FB9 /* TriviaQuestionFormat.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriviaQuestionFormat.pb.m; sourceTree = "<group>"; };
+		06848ED61773CBF900351FB9 /* TriviaRoundFormat.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriviaRoundFormat.pb.h; sourceTree = "<group>"; };
+		06848ED71773CBF900351FB9 /* TriviaRoundFormat.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriviaRoundFormat.pb.m; sourceTree = "<group>"; };
+		06848ED81773CBF900351FB9 /* User.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.pb.h; sourceTree = "<group>"; };
+		06848ED91773CBF900351FB9 /* User.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.pb.m; sourceTree = "<group>"; };
+		06848EEC1773CC0300351FB9 /* CommonEventProtocol.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CommonEventProtocol.proto; sourceTree = "<group>"; };
+		06848EED1773CC0300351FB9 /* CompletedRoundEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CompletedRoundEvent.proto; sourceTree = "<group>"; };
+		06848EEE1773CC0300351FB9 /* CreateAccountEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CreateAccountEvent.proto; sourceTree = "<group>"; };
+		06848EEF1773CC0300351FB9 /* Example.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Example.proto; sourceTree = "<group>"; };
+		06848EF01773CC0300351FB9 /* ForceLogout.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ForceLogout.proto; sourceTree = "<group>"; };
+		06848EF11773CC0300351FB9 /* LoginEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LoginEvent.proto; sourceTree = "<group>"; };
+		06848EF21773CC0300351FB9 /* Logout.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Logout.proto; sourceTree = "<group>"; };
+		06848EF31773CC0300351FB9 /* PicturesEventProtocol.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PicturesEventProtocol.proto; sourceTree = "<group>"; };
+		06848EF41773CC0300351FB9 /* RefillTokensByWaitingEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RefillTokensByWaitingEvent.proto; sourceTree = "<group>"; };
+		06848EF51773CC0300351FB9 /* RetrieveNewQuestionsEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RetrieveNewQuestionsEvent.proto; sourceTree = "<group>"; };
+		06848EF61773CC0300351FB9 /* SaveRoundProgressEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SaveRoundProgressEvent.proto; sourceTree = "<group>"; };
+		06848EF71773CC0300351FB9 /* SearchForUserEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SearchForUserEvent.proto; sourceTree = "<group>"; };
+		06848EF81773CC0300351FB9 /* SpendRubiesEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SpendRubiesEvent.proto; sourceTree = "<group>"; };
+		06848EF91773CC0300351FB9 /* StartRoundEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StartRoundEvent.proto; sourceTree = "<group>"; };
+		06848EFA1773CC0300351FB9 /* TriviaGameFormat.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TriviaGameFormat.proto; sourceTree = "<group>"; };
+		06848EFB1773CC0300351FB9 /* TriviaQuestionFormat.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TriviaQuestionFormat.proto; sourceTree = "<group>"; };
+		06848EFC1773CC0300351FB9 /* TriviaRoundFormat.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TriviaRoundFormat.proto; sourceTree = "<group>"; };
+		06848EFD1773CC0300351FB9 /* User.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = User.proto; sourceTree = "<group>"; };
+		06848F101773D13400351FB9 /* updating.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = updating.png; sourceTree = "<group>"; };
+		06848F111773D13400351FB9 /* updating@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "updating@2x.png"; sourceTree = "<group>"; };
 		068AF3CC171E058F0090E4DB /* ProtoHeaders.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProtoHeaders.h; sourceTree = "<group>"; };
 		068AF4AB171E1C390090E4DB /* ProtocolBuffers.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ProtocolBuffers.xcodeproj; path = ProtocolBuffers/ProtocolBuffers.xcodeproj; sourceTree = "<group>"; };
 		068AF4BE171E36330090E4DB /* SocketCommunication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocketCommunication.h; sourceTree = "<group>"; };
@@ -830,40 +839,42 @@
 		066B424B171CCA9900B26CE4 /* ProtoBuffers */ = {
 			isa = PBXGroup;
 			children = (
-				067448D5176FC41000622525 /* CommonEventProtocol.pb.h */,
-				067448D6176FC41000622525 /* CommonEventProtocol.pb.m */,
-				067448D7176FC41000622525 /* CompletedRoundEvent.pb.h */,
-				067448D8176FC41000622525 /* CompletedRoundEvent.pb.m */,
-				067448D9176FC41000622525 /* CreateAccountEvent.pb.h */,
-				067448DA176FC41000622525 /* CreateAccountEvent.pb.m */,
-				067448DB176FC41000622525 /* Example.pb.h */,
-				067448DC176FC41000622525 /* Example.pb.m */,
-				067448DD176FC41000622525 /* ForceLogout.pb.h */,
-				067448DE176FC41000622525 /* ForceLogout.pb.m */,
-				067448DF176FC41000622525 /* LoginEvent.pb.h */,
-				067448E0176FC41000622525 /* LoginEvent.pb.m */,
-				067448E1176FC41000622525 /* PicturesEventProtocol.pb.h */,
-				067448E2176FC41000622525 /* PicturesEventProtocol.pb.m */,
-				067448E3176FC41000622525 /* RefillTokensByWaitingEvent.pb.h */,
-				067448E4176FC41000622525 /* RefillTokensByWaitingEvent.pb.m */,
-				067448E5176FC41000622525 /* RetrieveNewQuestionsEvent.pb.h */,
-				067448E6176FC41000622525 /* RetrieveNewQuestionsEvent.pb.m */,
-				067448E7176FC41000622525 /* SaveRoundProgressEvent.pb.h */,
-				067448E8176FC41000622525 /* SaveRoundProgressEvent.pb.m */,
-				067448E9176FC41000622525 /* SearchForUserEvent.pb.h */,
-				067448EA176FC41000622525 /* SearchForUserEvent.pb.m */,
-				067448EB176FC41000622525 /* SpendRubiesEvent.pb.h */,
-				067448EC176FC41000622525 /* SpendRubiesEvent.pb.m */,
-				067448ED176FC41000622525 /* StartRoundEvent.pb.h */,
-				067448EE176FC41000622525 /* StartRoundEvent.pb.m */,
-				067448EF176FC41000622525 /* TriviaGameFormat.pb.h */,
-				067448F0176FC41000622525 /* TriviaGameFormat.pb.m */,
-				067448F1176FC41000622525 /* TriviaQuestionFormat.pb.h */,
-				067448F2176FC41000622525 /* TriviaQuestionFormat.pb.m */,
-				067448F3176FC41000622525 /* TriviaRoundFormat.pb.h */,
-				067448F4176FC41000622525 /* TriviaRoundFormat.pb.m */,
-				067448F5176FC41000622525 /* User.pb.h */,
-				067448F6176FC41000622525 /* User.pb.m */,
+				06848EB61773CBF900351FB9 /* CommonEventProtocol.pb.h */,
+				06848EB71773CBF900351FB9 /* CommonEventProtocol.pb.m */,
+				06848EB81773CBF900351FB9 /* CompletedRoundEvent.pb.h */,
+				06848EB91773CBF900351FB9 /* CompletedRoundEvent.pb.m */,
+				06848EBA1773CBF900351FB9 /* CreateAccountEvent.pb.h */,
+				06848EBB1773CBF900351FB9 /* CreateAccountEvent.pb.m */,
+				06848EBC1773CBF900351FB9 /* Example.pb.h */,
+				06848EBD1773CBF900351FB9 /* Example.pb.m */,
+				06848EBE1773CBF900351FB9 /* ForceLogout.pb.h */,
+				06848EBF1773CBF900351FB9 /* ForceLogout.pb.m */,
+				06848EC01773CBF900351FB9 /* LoginEvent.pb.h */,
+				06848EC11773CBF900351FB9 /* LoginEvent.pb.m */,
+				06848EC21773CBF900351FB9 /* Logout.pb.h */,
+				06848EC31773CBF900351FB9 /* Logout.pb.m */,
+				06848EC41773CBF900351FB9 /* PicturesEventProtocol.pb.h */,
+				06848EC51773CBF900351FB9 /* PicturesEventProtocol.pb.m */,
+				06848EC61773CBF900351FB9 /* RefillTokensByWaitingEvent.pb.h */,
+				06848EC71773CBF900351FB9 /* RefillTokensByWaitingEvent.pb.m */,
+				06848EC81773CBF900351FB9 /* RetrieveNewQuestionsEvent.pb.h */,
+				06848EC91773CBF900351FB9 /* RetrieveNewQuestionsEvent.pb.m */,
+				06848ECA1773CBF900351FB9 /* SaveRoundProgressEvent.pb.h */,
+				06848ECB1773CBF900351FB9 /* SaveRoundProgressEvent.pb.m */,
+				06848ECC1773CBF900351FB9 /* SearchForUserEvent.pb.h */,
+				06848ECD1773CBF900351FB9 /* SearchForUserEvent.pb.m */,
+				06848ECE1773CBF900351FB9 /* SpendRubiesEvent.pb.h */,
+				06848ECF1773CBF900351FB9 /* SpendRubiesEvent.pb.m */,
+				06848ED01773CBF900351FB9 /* StartRoundEvent.pb.h */,
+				06848ED11773CBF900351FB9 /* StartRoundEvent.pb.m */,
+				06848ED21773CBF900351FB9 /* TriviaGameFormat.pb.h */,
+				06848ED31773CBF900351FB9 /* TriviaGameFormat.pb.m */,
+				06848ED41773CBF900351FB9 /* TriviaQuestionFormat.pb.h */,
+				06848ED51773CBF900351FB9 /* TriviaQuestionFormat.pb.m */,
+				06848ED61773CBF900351FB9 /* TriviaRoundFormat.pb.h */,
+				06848ED71773CBF900351FB9 /* TriviaRoundFormat.pb.m */,
+				06848ED81773CBF900351FB9 /* User.pb.h */,
+				06848ED91773CBF900351FB9 /* User.pb.m */,
 				066B425A171CCA9900B26CE4 /* ProtoFiles */,
 			);
 			path = ProtoBuffers;
@@ -872,23 +883,24 @@
 		066B425A171CCA9900B26CE4 /* ProtoFiles */ = {
 			isa = PBXGroup;
 			children = (
-				06744908176FC41D00622525 /* CommonEventProtocol.proto */,
-				06744909176FC41D00622525 /* CompletedRoundEvent.proto */,
-				0674490A176FC41D00622525 /* CreateAccountEvent.proto */,
-				0674490B176FC41D00622525 /* Example.proto */,
-				0674490C176FC41D00622525 /* ForceLogout.proto */,
-				0674490D176FC41D00622525 /* LoginEvent.proto */,
-				0674490E176FC41D00622525 /* PicturesEventProtocol.proto */,
-				0674490F176FC41D00622525 /* RefillTokensByWaitingEvent.proto */,
-				06744910176FC41D00622525 /* RetrieveNewQuestionsEvent.proto */,
-				06744911176FC41D00622525 /* SaveRoundProgressEvent.proto */,
-				06744912176FC41D00622525 /* SearchForUserEvent.proto */,
-				06744913176FC41D00622525 /* SpendRubiesEvent.proto */,
-				06744914176FC41D00622525 /* StartRoundEvent.proto */,
-				06744915176FC41D00622525 /* TriviaGameFormat.proto */,
-				06744916176FC41D00622525 /* TriviaQuestionFormat.proto */,
-				06744917176FC41D00622525 /* TriviaRoundFormat.proto */,
-				06744918176FC41D00622525 /* User.proto */,
+				06848EEC1773CC0300351FB9 /* CommonEventProtocol.proto */,
+				06848EED1773CC0300351FB9 /* CompletedRoundEvent.proto */,
+				06848EEE1773CC0300351FB9 /* CreateAccountEvent.proto */,
+				06848EEF1773CC0300351FB9 /* Example.proto */,
+				06848EF01773CC0300351FB9 /* ForceLogout.proto */,
+				06848EF11773CC0300351FB9 /* LoginEvent.proto */,
+				06848EF21773CC0300351FB9 /* Logout.proto */,
+				06848EF31773CC0300351FB9 /* PicturesEventProtocol.proto */,
+				06848EF41773CC0300351FB9 /* RefillTokensByWaitingEvent.proto */,
+				06848EF51773CC0300351FB9 /* RetrieveNewQuestionsEvent.proto */,
+				06848EF61773CC0300351FB9 /* SaveRoundProgressEvent.proto */,
+				06848EF71773CC0300351FB9 /* SearchForUserEvent.proto */,
+				06848EF81773CC0300351FB9 /* SpendRubiesEvent.proto */,
+				06848EF91773CC0300351FB9 /* StartRoundEvent.proto */,
+				06848EFA1773CC0300351FB9 /* TriviaGameFormat.proto */,
+				06848EFB1773CC0300351FB9 /* TriviaQuestionFormat.proto */,
+				06848EFC1773CC0300351FB9 /* TriviaRoundFormat.proto */,
+				06848EFD1773CC0300351FB9 /* User.proto */,
 			);
 			path = ProtoFiles;
 			sourceTree = "<group>";
@@ -1066,6 +1078,8 @@
 		068CB2CB1728CAC10029E755 /* Homestuff */ = {
 			isa = PBXGroup;
 			children = (
+				06848F101773D13400351FB9 /* updating.png */,
+				06848F111773D13400351FB9 /* updating@2x.png */,
 				06CBE8B7172A248500DCA20C /* coinoverlay.png */,
 				06CBE8B8172A248500DCA20C /* coinoverlay@2x.png */,
 				068CB2F81728DCBC0029E755 /* completegamesbg.png */,
@@ -1704,23 +1718,26 @@
 				06AE01551762AFA0009ACBBE /* minidiv@2x.png in Resources */,
 				06216B01176AB0ED002DA5DE /* 3darrow.png in Resources */,
 				06216B02176AB0ED002DA5DE /* 3darrow@2x.png in Resources */,
-				06744919176FC41D00622525 /* CommonEventProtocol.proto in Resources */,
-				0674491A176FC41D00622525 /* CompletedRoundEvent.proto in Resources */,
-				0674491B176FC41D00622525 /* CreateAccountEvent.proto in Resources */,
-				0674491C176FC41D00622525 /* Example.proto in Resources */,
-				0674491D176FC41D00622525 /* ForceLogout.proto in Resources */,
-				0674491E176FC41D00622525 /* LoginEvent.proto in Resources */,
-				0674491F176FC41D00622525 /* PicturesEventProtocol.proto in Resources */,
-				06744920176FC41D00622525 /* RefillTokensByWaitingEvent.proto in Resources */,
-				06744921176FC41D00622525 /* RetrieveNewQuestionsEvent.proto in Resources */,
-				06744922176FC41D00622525 /* SaveRoundProgressEvent.proto in Resources */,
-				06744923176FC41D00622525 /* SearchForUserEvent.proto in Resources */,
-				06744924176FC41D00622525 /* SpendRubiesEvent.proto in Resources */,
-				06744925176FC41D00622525 /* StartRoundEvent.proto in Resources */,
-				06744926176FC41D00622525 /* TriviaGameFormat.proto in Resources */,
-				06744927176FC41D00622525 /* TriviaQuestionFormat.proto in Resources */,
-				06744928176FC41D00622525 /* TriviaRoundFormat.proto in Resources */,
-				06744929176FC41D00622525 /* User.proto in Resources */,
+				06848EFE1773CC0300351FB9 /* CommonEventProtocol.proto in Resources */,
+				06848EFF1773CC0300351FB9 /* CompletedRoundEvent.proto in Resources */,
+				06848F001773CC0300351FB9 /* CreateAccountEvent.proto in Resources */,
+				06848F011773CC0300351FB9 /* Example.proto in Resources */,
+				06848F021773CC0300351FB9 /* ForceLogout.proto in Resources */,
+				06848F031773CC0300351FB9 /* LoginEvent.proto in Resources */,
+				06848F041773CC0300351FB9 /* Logout.proto in Resources */,
+				06848F051773CC0300351FB9 /* PicturesEventProtocol.proto in Resources */,
+				06848F061773CC0300351FB9 /* RefillTokensByWaitingEvent.proto in Resources */,
+				06848F071773CC0300351FB9 /* RetrieveNewQuestionsEvent.proto in Resources */,
+				06848F081773CC0300351FB9 /* SaveRoundProgressEvent.proto in Resources */,
+				06848F091773CC0300351FB9 /* SearchForUserEvent.proto in Resources */,
+				06848F0A1773CC0300351FB9 /* SpendRubiesEvent.proto in Resources */,
+				06848F0B1773CC0300351FB9 /* StartRoundEvent.proto in Resources */,
+				06848F0C1773CC0300351FB9 /* TriviaGameFormat.proto in Resources */,
+				06848F0D1773CC0300351FB9 /* TriviaQuestionFormat.proto in Resources */,
+				06848F0E1773CC0300351FB9 /* TriviaRoundFormat.proto in Resources */,
+				06848F0F1773CC0300351FB9 /* User.proto in Resources */,
+				06848F121773D13400351FB9 /* updating.png in Resources */,
+				06848F131773D13400351FB9 /* updating@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1782,23 +1799,24 @@
 				067301B6173D9805001C507A /* FillInTypeViewController.m in Sources */,
 				0680E4071758387700BCFCF7 /* TutorialMultipleChoiceViewController.m in Sources */,
 				0680E40B17583E1300BCFCF7 /* TutorialViewController.m in Sources */,
-				067448F7176FC41000622525 /* CommonEventProtocol.pb.m in Sources */,
-				067448F8176FC41000622525 /* CompletedRoundEvent.pb.m in Sources */,
-				067448F9176FC41000622525 /* CreateAccountEvent.pb.m in Sources */,
-				067448FA176FC41000622525 /* Example.pb.m in Sources */,
-				067448FB176FC41000622525 /* ForceLogout.pb.m in Sources */,
-				067448FC176FC41000622525 /* LoginEvent.pb.m in Sources */,
-				067448FD176FC41000622525 /* PicturesEventProtocol.pb.m in Sources */,
-				067448FE176FC41000622525 /* RefillTokensByWaitingEvent.pb.m in Sources */,
-				067448FF176FC41000622525 /* RetrieveNewQuestionsEvent.pb.m in Sources */,
-				06744900176FC41000622525 /* SaveRoundProgressEvent.pb.m in Sources */,
-				06744901176FC41000622525 /* SearchForUserEvent.pb.m in Sources */,
-				06744902176FC41000622525 /* SpendRubiesEvent.pb.m in Sources */,
-				06744903176FC41000622525 /* StartRoundEvent.pb.m in Sources */,
-				06744904176FC41000622525 /* TriviaGameFormat.pb.m in Sources */,
-				06744905176FC41000622525 /* TriviaQuestionFormat.pb.m in Sources */,
-				06744906176FC41000622525 /* TriviaRoundFormat.pb.m in Sources */,
-				06744907176FC41000622525 /* User.pb.m in Sources */,
+				06848EDA1773CBF900351FB9 /* CommonEventProtocol.pb.m in Sources */,
+				06848EDB1773CBF900351FB9 /* CompletedRoundEvent.pb.m in Sources */,
+				06848EDC1773CBF900351FB9 /* CreateAccountEvent.pb.m in Sources */,
+				06848EDD1773CBF900351FB9 /* Example.pb.m in Sources */,
+				06848EDE1773CBF900351FB9 /* ForceLogout.pb.m in Sources */,
+				06848EDF1773CBF900351FB9 /* LoginEvent.pb.m in Sources */,
+				06848EE01773CBF900351FB9 /* Logout.pb.m in Sources */,
+				06848EE11773CBF900351FB9 /* PicturesEventProtocol.pb.m in Sources */,
+				06848EE21773CBF900351FB9 /* RefillTokensByWaitingEvent.pb.m in Sources */,
+				06848EE31773CBF900351FB9 /* RetrieveNewQuestionsEvent.pb.m in Sources */,
+				06848EE41773CBF900351FB9 /* SaveRoundProgressEvent.pb.m in Sources */,
+				06848EE51773CBF900351FB9 /* SearchForUserEvent.pb.m in Sources */,
+				06848EE61773CBF900351FB9 /* SpendRubiesEvent.pb.m in Sources */,
+				06848EE71773CBF900351FB9 /* StartRoundEvent.pb.m in Sources */,
+				06848EE81773CBF900351FB9 /* TriviaGameFormat.pb.m in Sources */,
+				06848EE91773CBF900351FB9 /* TriviaQuestionFormat.pb.m in Sources */,
+				06848EEA1773CBF900351FB9 /* TriviaRoundFormat.pb.m in Sources */,
+				06848EEB1773CBF900351FB9 /* User.pb.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1858,7 +1876,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "808C8DF2-F928-4A02-8910-CB1A365E973E";
 				SDKROOT = iphoneos;
@@ -1884,7 +1902,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "808C8DF2-F928-4A02-8910-CB1A365E973E";
 				SDKROOT = iphoneos;

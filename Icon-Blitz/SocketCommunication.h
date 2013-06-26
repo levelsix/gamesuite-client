@@ -35,9 +35,13 @@
 - (int)sendLoginRequestEventViaEmail:(BasicUserProto *)proto;
 - (int)sendLoginRequestEventViaNoCredentials:(BasicUserProto *)proto;
 - (int)sendRetrieveNewQuestions:(BasicUserProto *)sender numQuestionsWanted:(int32_t)numberWanted;
-- (int)sendCompleteRoundRequest:(BasicUserProto *)sender gameId:(NSString *)gameId results:(CompletedRoundResponseProto *)results;
+- (int)sendCompleteRoundRequest:(BasicUserProto *)sender opponent:(BasicUserProto *)opponent gameId:(NSString *)gameId results:(CompleteRoundResultsProto  *)results;
 - (int)sendStartRoundRequest:(BasicUserProto *)sender isRandomPlayer:(BOOL)isRandomPlayer opponent:(NSString *)opponent gameId:(NSString *)gameId roundNumber:(int32_t)roundNumber isPlayerOne:(BOOL)isPlayerOne startTime:(int64_t)startTime questions:(NSArray *)questions;
 - (int)sendRefillTokenByWaiting:(BasicUserProto *)sender currentTime:(int64_t)curTime;
 - (int)sendSearchForUser:(BasicUserProto *)sender nameOfPerson:(NSString *)nameOfPerson;
 - (int)sendSpendRubies:(BasicUserProto *)sender amountSpent:(int32_t)amountSpent;
+- (int)sendLogoutRequest;
+
+- (BasicUserProto *)buildSender;
+
 @end

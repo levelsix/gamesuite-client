@@ -39,10 +39,9 @@
 @property (nonatomic, strong) OngoingGameProto *gameStats;
 @property (nonatomic, strong) GameResultsProto *completedGameStats;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil gameResultProto:(GameResultsProto *)proto basicUserProto:(BasicUserProto *)userProto completed:(BOOL)completed currentRound:(int)round;
-
 - (id)initWithOngoingGameProto:(OngoingGameProto *)gameStats userInfo:(UserInfo *)userInfo myTurn:(BOOL)isMyTurn;
 - (id)initWithGameResultsProto:(GameResultsProto *)completedGames userInfo:(UserInfo *)userInfo;
+- (id)initWithRoundOneUserInfo:(UserInfo *)userInfo completedRoundResponse:(CompletedRoundResponseProto *)proto;
 
 - (void)receievedRetrieveScoreResponse:(Class)proto;
 - (IBAction)done:(id)sender;

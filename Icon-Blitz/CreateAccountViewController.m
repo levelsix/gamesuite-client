@@ -108,6 +108,9 @@ typedef enum {
 }
 
 - (void)goToHomeView:(LoginResponseProto *)proto {
+  [[NSUserDefaults standardUserDefaults] setBool:YES forKey:IS_LOGGED_IN];
+  [[NSUserDefaults standardUserDefaults] synchronize];
+  
   HomeViewController *vc = [[HomeViewController alloc] initWithLoginResponse:proto];
   [self.view addSubview:vc.view];
   vc.view.frame = CGRectMake(0, -vc.view.frame.size.height, vc.view.frame.size.width, vc.view.frame.size.height);

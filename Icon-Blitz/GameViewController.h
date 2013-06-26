@@ -35,6 +35,18 @@ typedef enum {
   kRubyType
 }NumberType;
 
+typedef enum {
+  kSpendRubyProto = 50,
+  kCompleteRoundProto,
+  kProtoTypeNone
+}ProtoType;
+
+typedef enum {
+  kRemoveCheat = 60,
+  kFreezeCheat,
+  kCheatNone
+}UsedCheatType;
+
 @class HomeViewController;
 @class UserInfo;
 
@@ -44,13 +56,17 @@ typedef enum {
 @property (nonatomic, assign) int timeLeft;
 @property (nonatomic, assign) int points;
 @property (nonatomic, assign) BOOL isTutorial;
+@property (nonatomic, assign) long long startTime;
+@property (nonatomic, assign) int roundNumber;
 @property (nonatomic, assign) QuestionType currentType;
 @property (nonatomic, strong) UserInfo *userData;
+@property (nonatomic, strong) BasicUserProto *recipient;
+@property (nonatomic, strong) BasicUserProto *opponent;
 @property (nonatomic, strong) UnfinishedRoundProto *proto;
 @property (nonatomic, strong) UIViewController *currentController;
-@property (nonatomic, strong) NSArray *questions;
-@property (nonatomic, strong) NSMutableArray *questionsId;
+@property (nonatomic, strong) NSMutableArray *questionsAnswered;
 @property (nonatomic, strong) NSString *gameId;
+@property (nonatomic, strong) NSTimer *gameTimer;
 
 @property (nonatomic, strong) IBOutlet UILabel *triviaType;
 @property (nonatomic, strong) IBOutlet UIView *triviaContainer;
@@ -65,7 +81,9 @@ typedef enum {
 @property (nonatomic, strong) IBOutlet UIImageView *timerImage;
 @property (nonatomic, strong) IBOutlet UILabel *freezeCost;
 @property (nonatomic, strong) IBOutlet UILabel *optionCost;
-@property (nonatomic, strong) NSTimer *gameTimer;
+@property (nonatomic, strong) IBOutlet UIView *spinnerView;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *spinner;
+
 @property (nonatomic, strong) id<TutorialAnswerDelegate> delegate;
 
            
@@ -77,8 +95,7 @@ typedef enum {
 
 - (id)initWithTutorial;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userData:(UserInfo *)userData;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userData:(UserInfo *)userData gameId:(NSString *)gameId;
-
+- (id)initWithUserInfo:(UserInfo *)userInfo gameId:(NSString *)gameId recipient:(BasicUserProto *)recipent opponent:(BasicUserProto *)opponent startTime:(long long)startTime roundNumber:(int)roundNumber;
 - (void)transitionWithConclusion:(BOOL)conclusion skipping:(BOOL)didSkip andNextQuestionType:(QuestionType)type;
 
 //tutorial methods

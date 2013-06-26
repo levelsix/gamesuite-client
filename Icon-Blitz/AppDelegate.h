@@ -21,7 +21,7 @@ extern NSString *const FBSessionStateChangedNotification;
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
-@property (nonatomic, strong) IBOutlet UINavigationController *navController;
+@property (nonatomic, strong) UINavigationController *navController;
 @property (strong, nonatomic) UIViewController *viewController;
 @property (nonatomic, weak) id delegate;
 - (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI;

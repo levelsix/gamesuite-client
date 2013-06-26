@@ -16,20 +16,6 @@
 
 @implementation UserInfo
 
-- (id)initWithBasicUserInfo:(BasicUserProto *)proto {
-  if ((self = [super init])) {
-    self.userId = proto.userId;
-    self.username = proto.nameStrangersSee;
-    self.facebookName = proto.nameFriendsSee;
-    self.email = proto.email;
-    self.password = proto.password;
-    self.facebookId = proto.facebookId;
-    self.loginToken = proto.badp;
-    self.basicProto = proto;
-  }
-  return self;
-}
-
 - (id)initWithCompleteUserProto:(CompleteUserProto *)proto {
   if ((self = [super init])) {
     self.userId = proto.userId;
@@ -40,7 +26,11 @@
     self.loginToken = proto.badp;
     self.lastLogin = proto.lastLogin;
     self.signupDate = proto.signupDate;
-    self.goldCoins = 15;
+    self.goldCoins = proto.currency.numTokens;
+    self.rubies = proto.currency.numRubies;
+    self.lastTokenRefillTime = proto.currency.lastTokenRefillTime;
+    self.questions = [[NSArray alloc] init];
+    self.listOfFacebookFriends = [[NSArray alloc] init];
   }
   return self;
 }

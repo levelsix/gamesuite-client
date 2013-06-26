@@ -10,6 +10,10 @@ enum CommonEventProtocolRequest {
 	C_CREATE_ACCOUNT_VIA_EMAIL_EVENT = 2;
 	C_CREATE_ACCOUNT_VIA_NO_CREDENTIALS_EVENT = 3;
 	C_LOGIN_EVENT = 4;
+	
+	
+	//no corresponding response
+	C_LOGOUT_EVENT = 51;
 }
 
 enum CommonEventProtocolResponse {

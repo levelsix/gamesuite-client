@@ -8,12 +8,14 @@ option java_outer_classname = "CompletedRoundEventProto";
 
 message CompletedRoundRequestProto {
 	optional BasicUserProto sender = 1;
+	optional BasicUserProto opponent = 4;
 	optional string gameId = 2;
 	optional CompleteRoundResultsProto results = 3;
 }
 
 message CompletedRoundResponseProto {
-	optional BasicUserProto recipient = 1;
+	optional BasicUserProto sender = 1; //the one who finished the round
+	optional BasicUserProto opponent = 5; //the other guy
 	optional string gameId = 2;
 	optional BasicRoundResultsProto results = 3;
 	optional CompletedRoundStatus status = 4;

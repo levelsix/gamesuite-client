@@ -15,4 +15,5 @@
 @property (nonatomic, strong) IBOutlet UILabel *lastPlayedLabel;
 @property (nonatomic, strong) IBOutlet UILabel *inviteNowLabel;
 @property (nonatomic, strong) IBOutlet UIButton *challengeButton;
+@property (nonatomic, strong) IBOutlet UILabel *challengeLabel;
 @end

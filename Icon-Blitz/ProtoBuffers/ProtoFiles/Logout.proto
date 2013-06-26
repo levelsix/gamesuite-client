@@ -1,0 +1,10 @@
+import "User.proto";
+
+package proto;
+
+option java_package = "com.lvl6.pictures.eventprotos";
+option java_outer_classname = "LogoutEventProto";
+
+message LogoutRequestProto {
+	optional BasicUserProto sender = 1;
+}

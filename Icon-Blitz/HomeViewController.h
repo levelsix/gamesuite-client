@@ -11,6 +11,8 @@
 #import "Utilities.h"
 #import <iAd/iAd.h>
 #import "ServerCallbackDelegate.h"
+#import "AppDelegate.h"
+#import "ChallengeTypeViewController.h"
 
 typedef enum {
   kNewGame = 0,
@@ -24,9 +26,10 @@ typedef enum {
 @class TurnCells;
 @class LastCell;
 @class ShopMenu;
+@class NoGamesCell;
 @class UserInfo;
 
-@interface HomeViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, ADBannerViewDelegate, ServerCallbackDelegate>
+@interface HomeViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, ADBannerViewDelegate, ServerCallbackDelegate, FinishFacebookLogin,PopBackToRootViewDelegate>
 
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) IBOutlet StartGameCell *startCell;
@@ -35,6 +38,8 @@ typedef enum {
 @property (nonatomic, strong) IBOutlet ShopMenu *shopMenu;
 @property (nonatomic, strong) IBOutlet UILabel *coinTimeLabel;
 @property (nonatomic, strong) IBOutlet UILabel *rubyLabel;
+@property (nonatomic, strong) IBOutlet UIView *updatingView;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *updatingSpinner;
 @property (nonatomic, strong) NSArray *completedGames;
 @property (nonatomic, strong) NSArray *myTurns;
 @property (nonatomic, strong) NSArray *notMyTurns;

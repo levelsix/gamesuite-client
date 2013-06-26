@@ -177,6 +177,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{228, 24}, {72, 21}}</string>
 								<reference key="NSSuperview" ref="541358626"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -304,6 +305,14 @@
 					<int key="connectionID">39</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">challengeLabel</string>
+						<reference key="source" ref="848159425"/>
+						<reference key="destination" ref="62343122"/>
+					</object>
+					<int key="connectionID">40</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">challengeFriend:</string>
 						<reference key="source" ref="3726861"/>
@@ -406,7 +415,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">39</int>
+			<int key="maxID">40</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

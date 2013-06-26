@@ -25,6 +25,7 @@ BOOL CommonEventProtocolRequestIsValidValue(CommonEventProtocolRequest value) {
     case CommonEventProtocolRequestCCreateAccountViaEmailEvent:
     case CommonEventProtocolRequestCCreateAccountViaNoCredentialsEvent:
     case CommonEventProtocolRequestCLoginEvent:
+    case CommonEventProtocolRequestCLogoutEvent:
       return YES;
     default:
       return NO;

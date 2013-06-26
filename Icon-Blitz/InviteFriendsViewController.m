@@ -15,35 +15,34 @@
 #import "GameViewController.h"
 #import "UINavigationController+PushPopRotated.h"
 #import "UserInfo.h"
-#import "SocketCommunication.h" 
-#import "ProtoHeaders.h"
+#import "SocketCommunication.h"
+#import "ChallengeTypeViewController.h"
 
 #define MaxSections 2
 #define NumberOfRows 2
 
 @implementation InviteFriendsViewController
 
-- (id)initWithQuestions:(NSArray *)questions userInfo:(UserInfo *)userInfo andFriendArray:(NSArray *)friendArray {
+- (id)initWithUserInfo:(UserInfo *)userInfo andFriendArray:(NSArray *)friendArray inviteArray:(NSArray *)inviteArray {
   if ((self = [super init])) {
-    self.userInfo = userInfo;
     self.friendsData = friendArray;
-    self.questions = questions;
+    self.inviteArray = inviteArray;
+    self.userInfo = userInfo;
+    self.totalArray = [[NSMutableArray alloc] init];
+        
+    //add all the arrays together for better organizing;
+    for (int i = 0 ;i <friendArray.count;i++) {
+      NSDictionary<FBGraphUser> *friend = [friendArray objectAtIndex:i];
+      [self.totalArray addObject:friend];
+    }
+    for (int i = 0; i <inviteArray.count;i++) {
+      NSDictionary<FBGraphUser> *friend = [inviteArray objectAtIndex:i];
+      [self.totalArray addObject:friend];
+    }
     [SDWebImageManager.sharedManager.imageDownloader setValue:@"FriendsArray" forHTTPHeaderField:@"Friends"];
     SDWebImageManager.sharedManager.imageDownloader.queueMode = SDWebImageDownloaderLIFOQueueMode;
   }
   return self;
-}
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userInfo:(UserInfo *)userInfo andFriendArray:(NSArray *)friendArray
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-      self.friendsData = friendArray;
-      self.userInfo = userInfo;
-      [SDWebImageManager.sharedManager.imageDownloader setValue:@"FriendsArray" forHTTPHeaderField:@"Friends"];
-      SDWebImageManager.sharedManager.imageDownloader.queueMode = SDWebImageDownloaderLIFOQueueMode;
-    }
-    return self;
 }
 
 - (void)viewDidLoad
@@ -54,10 +53,30 @@
 
 - (IBAction)back:(id)sender {
   [self.navigationController popViewControllerRotated:YES];
+  if ([self.delegate respondsToSelector:@selector(passUserData:)]) {
+    [self.delegate passUserData:self.userInfo];
+  }
 }
 
 - (IBAction)challengeFriend:(UIButton *)sender {
-  [self pushViewController];
+  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+  sc.delegate = self;
+  
+  BasicUserProto *proto = [sc buildSender];
+  
+  NSTimeInterval time = [self getUsersTimeInSeconds];
+  self.startTime = (int64_t)time;
+  NSDictionary<FBGraphUser> *chosen = [self.totalArray objectAtIndex:sender.tag];
+  for (BasicUserProto *userInfo in self.userInfo.listOfFacebookFriends) {
+    if ([userInfo.facebookId isEqualToString:chosen.id]) {
+      self.spinnerView.hidden = NO;
+      [self.spinner startAnimating];
+      self.view.userInteractionEnabled = NO;
+      [sc sendStartRoundRequest:proto isRandomPlayer:NO opponent:userInfo.userId gameId:nil roundNumber:1 isPlayerOne:YES startTime:self.startTime*1000 questions:self.userInfo.questions];
+      break;
+      return;
+    }
+  }
 }
 
 - (NSTimeInterval)getUsersTimeInSeconds {
@@ -65,17 +84,51 @@
   NSInteger secondsOffset = [local secondsFromGMTForDate:[NSDate date]];
   NSDate *date = [[NSDate alloc] init];
   NSTimeInterval time = [date timeIntervalSince1970];
-  return time +secondsOffset;
+  return time + secondsOffset;
 }
 
 #pragma mark Protocol Buffer Methods
 
-- (void)startRoundWithTag:(int)tag {
-  BasicUserProto *friendProto = (BasicUserProto* )[self.friendsData objectAtIndex:tag];
-  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
-  NSTimeInterval time = [self getUsersTimeInSeconds];
-  int64_t startTime = (int64_t)time;
-  [sc sendStartRoundRequest:self.userInfo.basicProto isRandomPlayer:NO opponent:friendProto.userId gameId:nil roundNumber:1 isPlayerOne:YES startTime:startTime questions:self.questions];
+- (void)receivedProtoResponse:(PBGeneratedMessage *)message {
+  self.view.userInteractionEnabled = YES;
+  self.spinnerView.hidden = YES;
+  [self.spinner stopAnimating];
+  StartRoundResponseProto *proto = (StartRoundResponseProto *)message;
+  if (proto.status == StartRoundResponseProto_StartRoundStatusSuccess) {
+    GameViewController *vc = [[GameViewController alloc] initWithUserInfo:self.userInfo gameId:proto.gameId recipient:proto.recipient opponent:nil startTime:self.startTime roundNumber:1];
+    [self.navigationController pushViewController:vc rotated:YES];
+  }
+  else {
+    [self failedProtoResponse:proto];
+  }
+}
+
+- (void)failedProtoResponse:(StartRoundResponseProto *)proto {
+  switch ((int)proto.status) {
+    case StartRoundResponseProto_StartRoundStatusFailWrongRoundNumber:
+      break;
+      
+    case StartRoundResponseProto_StartRoundStatusFailWrongOpponents:
+      break;
+      
+    case StartRoundResponseProto_StartRoundStatusFailGameEnded:
+      break;
+      
+    case StartRoundResponseProto_StartRoundStatusFailNotEnoughTokens:
+      break;
+      
+    case StartRoundResponseProto_StartRoundStatusFailNotUserTurn:
+      break;
+      
+    case StartRoundResponseProto_StartRoundStatusFailOther:
+      break;
+      
+    case StartRoundResponseProto_StartRoundStatusFailClientTooApartFromServerTime:
+      break;
+      
+    default:
+      break;
+  }
 }
 
 #pragma mark TableView Delegates Methods
@@ -85,7 +138,19 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return self.friendsData.count/2;
+  switch (section) {
+    case 0:
+      return self.friendsData.count;
+      break;
+      
+      case 1:
+      return self.inviteArray.count;
+      break;
+      
+    default:
+      break;
+  }
+  return 0;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -134,7 +199,14 @@
   }
   
   UIImage *maskImage = [UIImage imageNamed:@"fbblackcircle.png"];
-  NSDictionary<FBGraphUser> *friend = [self.friendsData objectAtIndex:indexPath.row];
+  NSDictionary<FBGraphUser> *friend;
+  if (indexPath.section == 0) {
+    friend = [self.friendsData objectAtIndex:indexPath.row];
+  }
+  else {
+    friend = [self.inviteArray objectAtIndex:indexPath.row];
+    cell.challengeLabel.text = [NSString stringWithFormat:@"Invite Now"];
+  }
   cell.nameLabel.text = [NSString stringWithFormat:@"%@",friend.name];
   NSString *url = [NSString stringWithFormat:@"http://graph.facebook.com/%d/picture?type=normal",[friend.id intValue]];
   [cell.profilePic setImageWithURL:[NSURL URLWithString:url]
@@ -159,11 +231,6 @@
     cell.challengeButton.tag = row + indexPath.row;
   }
   return cell;
-}
-
-- (void)pushViewController {
-  GameViewController *vc = [[GameViewController alloc] initWithNibName:@"GameViewController" bundle:nil userData:self.userInfo];
-  [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end

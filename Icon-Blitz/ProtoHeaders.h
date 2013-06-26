@@ -26,5 +26,8 @@
 #import "RefillTokensByWaitingEvent.pb.h"
 #import "SearchForUserEvent.pb.h"
 #import "SpendRubiesEvent.pb.h"
+#import "ForceLogout.pb.h"
+#import "Logout.pb.h"
+#import "SaveRoundProgressEvent.pb.h"
 
 #endif
