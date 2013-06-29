@@ -467,63 +467,62 @@
 }
 
 
-//- (void)checkIfDragViewIsIntersectingMultipleRect {
-//  //loop through all of our view
-//  NSMutableArray *areas = [NSMutableArray array];
-//  NSMutableArray *intersectedTag = [NSMutableArray array];
-//  int tag = 0;
-//  UIView *firstLine = [self.view viewWithTag:kFirstLine];
-//  UIView *secondLine = [self.view viewWithTag:kSecondLine];
-//  if (numberOfLines == 2) {
-//    if (CGRectIntersectsRect(dragObject.frame, firstLine.frame) || CGRectIntersectsRect(dragObject.frame, secondLine.frame)) {
-//      for (UIView *view in answerViews) {
-//        CGRect firstRect = [firstLine convertRect:view.frame toView:self.view];
-//        if (CGRectIntersectsRect(dragObject.frame, firstRect)) {
-//          CGRect rect = CGRectIntersection(dragObject.frame, firstRect);
-//          float area = rect.size.width * rect.size.height;
-//          [areas addObject:[NSNumber numberWithFloat:area]];
-//          [intersectedTag addObject:[NSNumber numberWithInt:tag]];
-//          tag++;
-//        }
-//        CGRect secondRect = [secondLine convertRect:view.frame toView:self.view];
-//        if (CGRectIntersectsRect(dragObject.frame, secondRect)) {
-//          CGRect rect = CGRectIntersection(dragObject.frame, secondRect);
-//          float area = rect.size.width * rect.size.height;
-//          [areas addObject:[NSNumber numberWithFloat:area]];
-//          [intersectedTag addObject:[NSNumber numberWithInt:tag]];
-//          tag++;
-//        }
-//      }
-//    }
-//  }
-//  float previousArea = 0;
-//  int arrayCounter = 0;
-//  int actualTagInAnswerArray;
-//  for (int i = 0; i < tag; i+=2) {
-//    float area = [[areas objectAtIndex:i] floatValue];
-//    if (previousArea <= area) {
-//      previousArea = area;
-//      arrayCounter = i;
-//    }
-//  }
-//  NSLog(@"%f", previousArea);
-//  actualTagInAnswerArray = [[intersectedTag objectAtIndex:arrayCounter/2] integerValue];
-//  UIView *view = (UIView *)[answerViews objectAtIndex:actualTagInAnswerArray];
-//  CGRect newFrame;
-//  if (numberOfLines == 2) {
-//    if (actualTagInAnswerArray < firstLineCount) {
-//      newFrame = [firstLine convertRect:view.frame toView:self.view];
-//    }
-//    else {
-//      newFrame = [secondLine convertRect:view.frame fromView:self.view];
-//    }
-//  }
-//  else {
-//    newFrame = [firstLine convertRect:view.frame fromView:self.view];
-//  }
-//  dragObject.frame = newFrame;
-//  NSLog(@"%f",newFrame.size.width*newFrame.size.height);
-//}
+- (void)checkIfDragViewIsIntersectingMultipleRect {
+  //loop through all of our view
+  NSMutableArray *areas = [NSMutableArray array];
+  NSMutableArray *intersectedTag = [NSMutableArray array];
+  int tag = 0;
+  UIView *firstLine = [self.view viewWithTag:kFirstLine];
+  UIView *secondLine = [self.view viewWithTag:kSecondLine];
+  if (numberOfLines == 2) {
+    if (CGRectIntersectsRect(dragObject.frame, firstLine.frame) || CGRectIntersectsRect(dragObject.frame, secondLine.frame)) {
+      for (UIView *view in answerViews) {
+        CGRect firstRect = [firstLine convertRect:view.frame toView:self.view];
+        if (CGRectIntersectsRect(dragObject.frame, firstRect)) {
+          CGRect rect = CGRectIntersection(dragObject.frame, firstRect);
+          float area = rect.size.width * rect.size.height;
+          [areas addObject:[NSNumber numberWithFloat:area]];
+          [intersectedTag addObject:[NSNumber numberWithInt:tag]];
+          tag++;
+        }
+        CGRect secondRect = [secondLine convertRect:view.frame toView:self.view];
+        if (CGRectIntersectsRect(dragObject.frame, secondRect)) {
+          CGRect rect = CGRectIntersection(dragObject.frame, secondRect);
+          float area = rect.size.width * rect.size.height;
+          [areas addObject:[NSNumber numberWithFloat:area]];
+          [intersectedTag addObject:[NSNumber numberWithInt:tag]];
+          tag++;
+        }
+      }
+    }
+  }
+  float previousArea = 0;
+  int arrayCounter = 0;
+  int actualTagInAnswerArray;
+  for (int i = 0; i < tag; i+=2) {
+    float area = [[areas objectAtIndex:i] floatValue];
+    if (previousArea <= area) {
+      previousArea = area;
+      arrayCounter = i;
+    }
+  }
+  actualTagInAnswerArray = [[intersectedTag objectAtIndex:arrayCounter/2] integerValue];
+  UIView *view = (UIView *)[answerViews objectAtIndex:actualTagInAnswerArray];
+  CGRect newFrame;
+  if (numberOfLines == 2) {
+    if (actualTagInAnswerArray < firstLineCount) {
+      newFrame = [firstLine convertRect:view.frame toView:self.view];
+    }
+    else {
+      newFrame = [secondLine convertRect:view.frame fromView:self.view];
+    }
+  }
+  else {
+    newFrame = [firstLine convertRect:view.frame fromView:self.view];
+  }
+  dragObject.frame = newFrame;
+  NSLog(@"%f",newFrame.size.width*newFrame.size.height);
+}
 
 
 - (void)draggingSelectedAnswer {

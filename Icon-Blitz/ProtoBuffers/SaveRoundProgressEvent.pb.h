@@ -35,11 +35,11 @@
 @class UserCurrencyProto;
 @class UserCurrencyProto_Builder;
 typedef enum {
-  SaveRoundProgressResponseProto_SaveRoundStatusSuccess = 1,
-  SaveRoundProgressResponseProto_SaveRoundStatusFailOther = 2,
-} SaveRoundProgressResponseProto_SaveRoundStatus;
+  SaveRoundProgressResponseProto_SaveRoundProgressStatusSuccess = 1,
+  SaveRoundProgressResponseProto_SaveRoundProgressStatusFailOther = 2,
+} SaveRoundProgressResponseProto_SaveRoundProgressStatus;
 
-BOOL SaveRoundProgressResponseProto_SaveRoundStatusIsValidValue(SaveRoundProgressResponseProto_SaveRoundStatus value);
+BOOL SaveRoundProgressResponseProto_SaveRoundProgressStatusIsValidValue(SaveRoundProgressResponseProto_SaveRoundProgressStatus value);
 
 
 @interface SaveRoundProgressEventRoot : NSObject {
@@ -125,14 +125,14 @@ BOOL SaveRoundProgressResponseProto_SaveRoundStatusIsValidValue(SaveRoundProgres
   BOOL hasStatus_:1;
   NSString* gameId;
   BasicUserProto* recipient;
-  SaveRoundProgressResponseProto_SaveRoundStatus status;
+  SaveRoundProgressResponseProto_SaveRoundProgressStatus status;
 }
 - (BOOL) hasRecipient;
 - (BOOL) hasGameId;
 - (BOOL) hasStatus;
 @property (readonly, retain) BasicUserProto* recipient;
 @property (readonly, retain) NSString* gameId;
-@property (readonly) SaveRoundProgressResponseProto_SaveRoundStatus status;
+@property (readonly) SaveRoundProgressResponseProto_SaveRoundProgressStatus status;
 
 + (SaveRoundProgressResponseProto*) defaultInstance;
 - (SaveRoundProgressResponseProto*) defaultInstance;
@@ -181,8 +181,8 @@ BOOL SaveRoundProgressResponseProto_SaveRoundStatusIsValidValue(SaveRoundProgres
 - (SaveRoundProgressResponseProto_Builder*) clearGameId;
 
 - (BOOL) hasStatus;
-- (SaveRoundProgressResponseProto_SaveRoundStatus) status;
-- (SaveRoundProgressResponseProto_Builder*) setStatus:(SaveRoundProgressResponseProto_SaveRoundStatus) value;
+- (SaveRoundProgressResponseProto_SaveRoundProgressStatus) status;
+- (SaveRoundProgressResponseProto_Builder*) setStatus:(SaveRoundProgressResponseProto_SaveRoundProgressStatus) value;
 - (SaveRoundProgressResponseProto_Builder*) clearStatus;
 @end
 

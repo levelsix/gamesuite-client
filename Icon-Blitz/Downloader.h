@@ -14,6 +14,8 @@
   NSString *_cacheDir;
 }
 
+@property (nonatomic, assign) BOOL doneLoading;
+
 + (Downloader *)sharedDownloader;
 
 - (void) syncDownloadFile:(NSString *)fileName;

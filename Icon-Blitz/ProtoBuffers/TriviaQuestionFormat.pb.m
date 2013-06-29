@@ -327,20 +327,20 @@ BOOL QuestionAnsweredProto_AnswerTypeIsValidValue(QuestionAnsweredProto_AnswerTy
 @end
 
 @interface QuestionProto ()
-@property (retain) NSString* id;
+@property (retain) NSString* questionId;
 @property (retain) MultipleChoiceQuestionProto* multipleChoice;
 @property (retain) PictureQuestionProto* pictures;
 @end
 
 @implementation QuestionProto
 
-- (BOOL) hasId {
-  return !!hasId_;
+- (BOOL) hasQuestionId {
+  return !!hasQuestionId_;
 }
-- (void) setHasId:(BOOL) value {
-  hasId_ = !!value;
+- (void) setHasQuestionId:(BOOL) value {
+  hasQuestionId_ = !!value;
 }
-@synthesize id;
+@synthesize questionId;
 - (BOOL) hasMultipleChoice {
   return !!hasMultipleChoice_;
 }
@@ -356,14 +356,14 @@ BOOL QuestionAnsweredProto_AnswerTypeIsValidValue(QuestionAnsweredProto_AnswerTy
 }
 @synthesize pictures;
 - (void) dealloc {
-  self.id = nil;
+  self.questionId = nil;
   self.multipleChoice = nil;
   self.pictures = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
-    self.id = @"";
+    self.questionId = @"";
     self.multipleChoice = [MultipleChoiceQuestionProto defaultInstance];
     self.pictures = [PictureQuestionProto defaultInstance];
   }
@@ -385,8 +385,8 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
   return YES;
 }
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
-  if (self.hasId) {
-    [output writeString:1 value:self.id];
+  if (self.hasQuestionId) {
+    [output writeString:1 value:self.questionId];
   }
   if (self.hasMultipleChoice) {
     [output writeMessage:2 value:self.multipleChoice];
@@ -403,8 +403,8 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
   }
 
   size = 0;
-  if (self.hasId) {
-    size += computeStringSize(1, self.id);
+  if (self.hasQuestionId) {
+    size += computeStringSize(1, self.questionId);
   }
   if (self.hasMultipleChoice) {
     size += computeMessageSize(2, self.multipleChoice);
@@ -487,8 +487,8 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
   if (other == [QuestionProto defaultInstance]) {
     return self;
   }
-  if (other.hasId) {
-    [self setId:other.id];
+  if (other.hasQuestionId) {
+    [self setQuestionId:other.questionId];
   }
   if (other.hasMultipleChoice) {
     [self mergeMultipleChoice:other.multipleChoice];
@@ -518,7 +518,7 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
         break;
       }
       case 10: {
-        [self setId:[input readString]];
+        [self setQuestionId:[input readString]];
         break;
       }
       case 18: {
@@ -542,20 +542,20 @@ static QuestionProto* defaultQuestionProtoInstance = nil;
     }
   }
 }
-- (BOOL) hasId {
-  return result.hasId;
+- (BOOL) hasQuestionId {
+  return result.hasQuestionId;
 }
-- (NSString*) id {
-  return result.id;
+- (NSString*) questionId {
+  return result.questionId;
 }
-- (QuestionProto_Builder*) setId:(NSString*) value {
-  result.hasId = YES;
-  result.id = value;
+- (QuestionProto_Builder*) setQuestionId:(NSString*) value {
+  result.hasQuestionId = YES;
+  result.questionId = value;
   return self;
 }
-- (QuestionProto_Builder*) clearId {
-  result.hasId = NO;
-  result.id = @"";
+- (QuestionProto_Builder*) clearQuestionId {
+  result.hasQuestionId = NO;
+  result.questionId = @"";
   return self;
 }
 - (BOOL) hasMultipleChoice {
@@ -895,20 +895,20 @@ static MultipleChoiceQuestionProto* defaultMultipleChoiceQuestionProtoInstance =
 @end
 
 @interface MultipleChoiceAnswerProto ()
-@property (retain) NSString* id;
+@property (retain) NSString* multipleChoiceAnswerId;
 @property (retain) NSString* answer;
 @property MultipleChoiceAnswerProto_AnswerType type;
 @end
 
 @implementation MultipleChoiceAnswerProto
 
-- (BOOL) hasId {
-  return !!hasId_;
+- (BOOL) hasMultipleChoiceAnswerId {
+  return !!hasMultipleChoiceAnswerId_;
 }
-- (void) setHasId:(BOOL) value {
-  hasId_ = !!value;
+- (void) setHasMultipleChoiceAnswerId:(BOOL) value {
+  hasMultipleChoiceAnswerId_ = !!value;
 }
-@synthesize id;
+@synthesize multipleChoiceAnswerId;
 - (BOOL) hasAnswer {
   return !!hasAnswer_;
 }
@@ -924,13 +924,13 @@ static MultipleChoiceQuestionProto* defaultMultipleChoiceQuestionProtoInstance =
 }
 @synthesize type;
 - (void) dealloc {
-  self.id = nil;
+  self.multipleChoiceAnswerId = nil;
   self.answer = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
-    self.id = @"";
+    self.multipleChoiceAnswerId = @"";
     self.answer = @"";
     self.type = MultipleChoiceAnswerProto_AnswerTypeText;
   }
@@ -952,8 +952,8 @@ static MultipleChoiceAnswerProto* defaultMultipleChoiceAnswerProtoInstance = nil
   return YES;
 }
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
-  if (self.hasId) {
-    [output writeString:1 value:self.id];
+  if (self.hasMultipleChoiceAnswerId) {
+    [output writeString:1 value:self.multipleChoiceAnswerId];
   }
   if (self.hasAnswer) {
     [output writeString:2 value:self.answer];
@@ -970,8 +970,8 @@ static MultipleChoiceAnswerProto* defaultMultipleChoiceAnswerProtoInstance = nil
   }
 
   size = 0;
-  if (self.hasId) {
-    size += computeStringSize(1, self.id);
+  if (self.hasMultipleChoiceAnswerId) {
+    size += computeStringSize(1, self.multipleChoiceAnswerId);
   }
   if (self.hasAnswer) {
     size += computeStringSize(2, self.answer);
@@ -1063,8 +1063,8 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
   if (other == [MultipleChoiceAnswerProto defaultInstance]) {
     return self;
   }
-  if (other.hasId) {
-    [self setId:other.id];
+  if (other.hasMultipleChoiceAnswerId) {
+    [self setMultipleChoiceAnswerId:other.multipleChoiceAnswerId];
   }
   if (other.hasAnswer) {
     [self setAnswer:other.answer];
@@ -1094,7 +1094,7 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
         break;
       }
       case 10: {
-        [self setId:[input readString]];
+        [self setMultipleChoiceAnswerId:[input readString]];
         break;
       }
       case 18: {
@@ -1113,20 +1113,20 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
     }
   }
 }
-- (BOOL) hasId {
-  return result.hasId;
+- (BOOL) hasMultipleChoiceAnswerId {
+  return result.hasMultipleChoiceAnswerId;
 }
-- (NSString*) id {
-  return result.id;
+- (NSString*) multipleChoiceAnswerId {
+  return result.multipleChoiceAnswerId;
 }
-- (MultipleChoiceAnswerProto_Builder*) setId:(NSString*) value {
-  result.hasId = YES;
-  result.id = value;
+- (MultipleChoiceAnswerProto_Builder*) setMultipleChoiceAnswerId:(NSString*) value {
+  result.hasMultipleChoiceAnswerId = YES;
+  result.multipleChoiceAnswerId = value;
   return self;
 }
-- (MultipleChoiceAnswerProto_Builder*) clearId {
-  result.hasId = NO;
-  result.id = @"";
+- (MultipleChoiceAnswerProto_Builder*) clearMultipleChoiceAnswerId {
+  result.hasMultipleChoiceAnswerId = NO;
+  result.multipleChoiceAnswerId = @"";
   return self;
 }
 - (BOOL) hasAnswer {

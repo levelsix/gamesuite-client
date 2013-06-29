@@ -16,10 +16,6 @@ message LoginRequestProto {
 	
 	optional LoginType loginType = 3;
 	
-	//this tells the server if this user's account needs to be initialized
-	//should be set to true only after user has just completed the tutorial
-	optional bool initializeAccount = 4;
-	
 	enum LoginType {
 		LOGIN_TOKEN = 1;
 		FACEBOOK = 2;
@@ -52,11 +48,20 @@ message LoginResponseProto {
 	optional LoginConstants loginConstants = 9;
 	
 	message LoginConstants {
-		optional int32 defaultInitialTokens = 1;
-		optional int32 defaultInitialRubies = 2;
-		optional int32 defaultRoundsPerGame = 3;
-		optional int32 defaultMinutesPerRound = 4;
-		optional QuestionTypeScoringConstants scoreTypes = 5;
+		optional CurrencyConstants currencyConstants = 1;
+		optional RoundConstants roundConstants = 2;
+		optional QuestionTypeScoringConstants scoreTypes = 3;
+		
+		message CurrencyConstants {
+			optional int32 defaultInitialRubies = 1;
+			optional int32 defaultInitialTokens = 2;
+			optional int32 numSecondsUntilRefill = 3;
+		}
+		
+		message RoundConstants {
+			optional int32 defaultRoundsPerGame = 1;
+			optional int32 defaultMinutesPerRound = 2;
+		}
 		
 		message QuestionTypeScoringConstants {
 			//for multiple choice questions

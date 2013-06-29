@@ -111,17 +111,17 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
 
 @interface QuestionProto : PBGeneratedMessage {
 @private
-  BOOL hasId_:1;
+  BOOL hasQuestionId_:1;
   BOOL hasMultipleChoice_:1;
   BOOL hasPictures_:1;
-  NSString* id;
+  NSString* questionId;
   MultipleChoiceQuestionProto* multipleChoice;
   PictureQuestionProto* pictures;
 }
-- (BOOL) hasId;
+- (BOOL) hasQuestionId;
 - (BOOL) hasMultipleChoice;
 - (BOOL) hasPictures;
-@property (readonly, retain) NSString* id;
+@property (readonly, retain) NSString* questionId;
 @property (readonly, retain) MultipleChoiceQuestionProto* multipleChoice;
 @property (readonly, retain) PictureQuestionProto* pictures;
 
@@ -159,10 +159,10 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
 - (QuestionProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
 - (QuestionProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 
-- (BOOL) hasId;
-- (NSString*) id;
-- (QuestionProto_Builder*) setId:(NSString*) value;
-- (QuestionProto_Builder*) clearId;
+- (BOOL) hasQuestionId;
+- (NSString*) questionId;
+- (QuestionProto_Builder*) setQuestionId:(NSString*) value;
+- (QuestionProto_Builder*) clearQuestionId;
 
 - (BOOL) hasMultipleChoice;
 - (MultipleChoiceQuestionProto*) multipleChoice;
@@ -248,17 +248,17 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
 
 @interface MultipleChoiceAnswerProto : PBGeneratedMessage {
 @private
-  BOOL hasId_:1;
+  BOOL hasMultipleChoiceAnswerId_:1;
   BOOL hasAnswer_:1;
   BOOL hasType_:1;
-  NSString* id;
+  NSString* multipleChoiceAnswerId;
   NSString* answer;
   MultipleChoiceAnswerProto_AnswerType type;
 }
-- (BOOL) hasId;
+- (BOOL) hasMultipleChoiceAnswerId;
 - (BOOL) hasAnswer;
 - (BOOL) hasType;
-@property (readonly, retain) NSString* id;
+@property (readonly, retain) NSString* multipleChoiceAnswerId;
 @property (readonly, retain) NSString* answer;
 @property (readonly) MultipleChoiceAnswerProto_AnswerType type;
 
@@ -296,10 +296,10 @@ BOOL MultipleChoiceAnswerProto_AnswerTypeIsValidValue(MultipleChoiceAnswerProto_
 - (MultipleChoiceAnswerProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
 - (MultipleChoiceAnswerProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 
-- (BOOL) hasId;
-- (NSString*) id;
-- (MultipleChoiceAnswerProto_Builder*) setId:(NSString*) value;
-- (MultipleChoiceAnswerProto_Builder*) clearId;
+- (BOOL) hasMultipleChoiceAnswerId;
+- (NSString*) multipleChoiceAnswerId;
+- (MultipleChoiceAnswerProto_Builder*) setMultipleChoiceAnswerId:(NSString*) value;
+- (MultipleChoiceAnswerProto_Builder*) clearMultipleChoiceAnswerId;
 
 - (BOOL) hasAnswer;
 - (NSString*) answer;

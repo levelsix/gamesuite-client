@@ -9,8 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
 #import "InviteFriendsViewController.h"
+#import "ServerCallbackDelegate.h"
 
 @class UserInfo;
+
+typedef enum {
+  kStartRoundNone = 10,
+  kStartRoundRandom,
+  kStartRoundSearch
+}StartRoundType;
 
 @protocol PopBackToRootViewDelegate <NSObject>
 
@@ -18,15 +25,14 @@
 
 @end
 
-@interface ChallengeTypeViewController : UIViewController <FinishFacebookLogin, PopViewControllerDelegate,ServerCallbackDelegate ,UIAlertViewDelegate> {
-
-}
+@interface ChallengeTypeViewController : UIViewController <FinishFacebookLogin, PopViewControllerDelegate,ServerCallbackDelegate ,UIAlertViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *facebookData;
 @property (nonatomic, strong) UserInfo *userInfo;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *spinner;
 @property (nonatomic, strong) IBOutlet UILabel *loadingLabel;
 @property (nonatomic, strong) IBOutlet UILabel *facebookFriendsLabel;
+@property (nonatomic, strong) IBOutlet UIButton *backButton;
 @property (nonatomic, strong) id<PopBackToRootViewDelegate> delegate;
 
 - (id)initWithUserInfo:(UserInfo *)userInfo;

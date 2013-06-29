@@ -259,7 +259,7 @@
 					<object class="IBUILabel" id="23240221">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{115, 208}, {91, 27}}</string>
+						<string key="NSFrame">{{102, 206}, {116, 31}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSNextKeyView" ref="179374271"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -268,18 +268,18 @@
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<string key="IBUIText">Login</string>
+						<string key="IBUIText">Sign up</string>
 						<reference key="IBUITextColor" ref="1031575143"/>
 						<nil key="IBUIHighlightedColor"/>
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUITextAlignment">1</int>
 						<object class="IBUIFontDescription" key="IBUIFontDescription">
 							<int key="type">1</int>
-							<double key="pointSize">21</double>
+							<double key="pointSize">23</double>
 						</object>
 						<object class="NSFont" key="IBUIFont">
 							<string key="NSName">Helvetica</string>
-							<double key="NSSize">21</double>
+							<double key="NSSize">23</double>
 							<int key="NSfFlags">16</int>
 						</object>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
@@ -359,6 +359,7 @@
 						<int key="NSvFlags">-2147483356</int>
 						<string key="NSFrame">{{46, 343}, {229, 36}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -506,7 +507,6 @@
 							<reference ref="1050173441"/>
 							<reference ref="121782598"/>
 							<reference ref="664507994"/>
-							<reference ref="23240221"/>
 							<reference ref="91575581"/>
 							<reference ref="864024978"/>
 							<reference ref="207302820"/>
@@ -515,6 +515,7 @@
 							<reference ref="179374271"/>
 							<reference ref="1059177602"/>
 							<reference ref="540894483"/>
+							<reference ref="23240221"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>

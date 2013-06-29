@@ -319,7 +319,7 @@ static SaveRoundProgressRequestProto* defaultSaveRoundProgressRequestProtoInstan
 @interface SaveRoundProgressResponseProto ()
 @property (retain) BasicUserProto* recipient;
 @property (retain) NSString* gameId;
-@property SaveRoundProgressResponseProto_SaveRoundStatus status;
+@property SaveRoundProgressResponseProto_SaveRoundProgressStatus status;
 @end
 
 @implementation SaveRoundProgressResponseProto
@@ -354,7 +354,7 @@ static SaveRoundProgressRequestProto* defaultSaveRoundProgressRequestProtoInstan
   if ((self = [super init])) {
     self.recipient = [BasicUserProto defaultInstance];
     self.gameId = @"";
-    self.status = SaveRoundProgressResponseProto_SaveRoundStatusSuccess;
+    self.status = SaveRoundProgressResponseProto_SaveRoundProgressStatusSuccess;
   }
   return self;
 }
@@ -434,10 +434,10 @@ static SaveRoundProgressResponseProto* defaultSaveRoundProgressResponseProtoInst
 }
 @end
 
-BOOL SaveRoundProgressResponseProto_SaveRoundStatusIsValidValue(SaveRoundProgressResponseProto_SaveRoundStatus value) {
+BOOL SaveRoundProgressResponseProto_SaveRoundProgressStatusIsValidValue(SaveRoundProgressResponseProto_SaveRoundProgressStatus value) {
   switch (value) {
-    case SaveRoundProgressResponseProto_SaveRoundStatusSuccess:
-    case SaveRoundProgressResponseProto_SaveRoundStatusFailOther:
+    case SaveRoundProgressResponseProto_SaveRoundProgressStatusSuccess:
+    case SaveRoundProgressResponseProto_SaveRoundProgressStatusFailOther:
       return YES;
     default:
       return NO;
@@ -530,7 +530,7 @@ BOOL SaveRoundProgressResponseProto_SaveRoundStatusIsValidValue(SaveRoundProgres
       }
       case 24: {
         int32_t value = [input readEnum];
-        if (SaveRoundProgressResponseProto_SaveRoundStatusIsValidValue(value)) {
+        if (SaveRoundProgressResponseProto_SaveRoundProgressStatusIsValidValue(value)) {
           [self setStatus:value];
         } else {
           [unknownFields mergeVarintField:3 value:value];
@@ -589,17 +589,17 @@ BOOL SaveRoundProgressResponseProto_SaveRoundStatusIsValidValue(SaveRoundProgres
 - (BOOL) hasStatus {
   return result.hasStatus;
 }
-- (SaveRoundProgressResponseProto_SaveRoundStatus) status {
+- (SaveRoundProgressResponseProto_SaveRoundProgressStatus) status {
   return result.status;
 }
-- (SaveRoundProgressResponseProto_Builder*) setStatus:(SaveRoundProgressResponseProto_SaveRoundStatus) value {
+- (SaveRoundProgressResponseProto_Builder*) setStatus:(SaveRoundProgressResponseProto_SaveRoundProgressStatus) value {
   result.hasStatus = YES;
   result.status = value;
   return self;
 }
 - (SaveRoundProgressResponseProto_Builder*) clearStatus {
   result.hasStatus = NO;
-  result.status = SaveRoundProgressResponseProto_SaveRoundStatusSuccess;
+  result.status = SaveRoundProgressResponseProto_SaveRoundProgressStatusSuccess;
   return self;
 }
 @end

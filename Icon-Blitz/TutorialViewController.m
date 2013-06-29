@@ -30,7 +30,6 @@
   BOOL requiredDialogue;
   BOOL keepTryingFillInAnswer;  
   CGPoint originalChatViewCenter;
-  
 }
 
 @end
@@ -392,7 +391,7 @@
 
 //fillIn
 - (void)pointToRightLetter:(CGPoint)point {
-  CGPoint newPoint = CGPointMake(point.x - 18.5, point.y);
+  CGPoint newPoint = CGPointMake(point.x - 13.5, point.y);
   [self animateArrowAtPoint:newPoint];
   self.overlayView.userInteractionEnabled = NO;
 }

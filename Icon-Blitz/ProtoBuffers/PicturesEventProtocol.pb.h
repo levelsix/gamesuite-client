@@ -9,6 +9,7 @@ typedef enum {
   PicturesEventProtocolRequestCStartRoundEvent = 1003,
   PicturesEventProtocolRequestCSpendRubiesEvent = 1004,
   PicturesEventProtocolRequestCSearchForUserEvent = 1005,
+  PicturesEventProtocolRequestCSaveRoundProgressEvent = 1006,
 } PicturesEventProtocolRequest;
 
 BOOL PicturesEventProtocolRequestIsValidValue(PicturesEventProtocolRequest value);
@@ -20,6 +21,7 @@ typedef enum {
   PicturesEventProtocolResponseSStartRoundEvent = 1003,
   PicturesEventProtocolResponseSSpendRubiesEvent = 1004,
   PicturesEventProtocolResponseSSearchForUserEvent = 1005,
+  PicturesEventProtocolResponseSSaveRoundProgressEvent = 1006,
 } PicturesEventProtocolResponse;
 
 BOOL PicturesEventProtocolResponseIsValidValue(PicturesEventProtocolResponse value);

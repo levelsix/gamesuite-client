@@ -26,7 +26,6 @@ static PBExtensionRegistry* extensionRegistry = nil;
 @property (retain) BasicUserProto* sender;
 @property (retain) NSMutableArray* mutableFacebookFriendIdsList;
 @property LoginRequestProto_LoginType loginType;
-@property BOOL initializeAccount;
 @end
 
 @implementation LoginRequestProto
@@ -46,18 +45,6 @@ static PBExtensionRegistry* extensionRegistry = nil;
   hasLoginType_ = !!value;
 }
 @synthesize loginType;
-- (BOOL) hasInitializeAccount {
-  return !!hasInitializeAccount_;
-}
-- (void) setHasInitializeAccount:(BOOL) value {
-  hasInitializeAccount_ = !!value;
-}
-- (BOOL) initializeAccount {
-  return !!initializeAccount_;
-}
-- (void) setInitializeAccount:(BOOL) value {
-  initializeAccount_ = !!value;
-}
 - (void) dealloc {
   self.sender = nil;
   self.mutableFacebookFriendIdsList = nil;
@@ -67,7 +54,6 @@ static PBExtensionRegistry* extensionRegistry = nil;
   if ((self = [super init])) {
     self.sender = [BasicUserProto defaultInstance];
     self.loginType = LoginRequestProto_LoginTypeLoginToken;
-    self.initializeAccount = NO;
   }
   return self;
 }
@@ -103,9 +89,6 @@ static LoginRequestProto* defaultLoginRequestProtoInstance = nil;
   if (self.hasLoginType) {
     [output writeEnum:3 value:self.loginType];
   }
-  if (self.hasInitializeAccount) {
-    [output writeBool:4 value:self.initializeAccount];
-  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -128,9 +111,6 @@ static LoginRequestProto* defaultLoginRequestProtoInstance = nil;
   }
   if (self.hasLoginType) {
     size += computeEnumSize(3, self.loginType);
-  }
-  if (self.hasInitializeAccount) {
-    size += computeBoolSize(4, self.initializeAccount);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -230,9 +210,6 @@ BOOL LoginRequestProto_LoginTypeIsValidValue(LoginRequestProto_LoginType value) 
   if (other.hasLoginType) {
     [self setLoginType:other.loginType];
   }
-  if (other.hasInitializeAccount) {
-    [self setInitializeAccount:other.initializeAccount];
-  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -274,10 +251,6 @@ BOOL LoginRequestProto_LoginTypeIsValidValue(LoginRequestProto_LoginType value) 
         } else {
           [unknownFields mergeVarintField:3 value:value];
         }
-        break;
-      }
-      case 32: {
-        [self setInitializeAccount:[input readBool]];
         break;
       }
     }
@@ -360,22 +333,6 @@ BOOL LoginRequestProto_LoginTypeIsValidValue(LoginRequestProto_LoginType value) 
   result.loginType = LoginRequestProto_LoginTypeLoginToken;
   return self;
 }
-- (BOOL) hasInitializeAccount {
-  return result.hasInitializeAccount;
-}
-- (BOOL) initializeAccount {
-  return result.initializeAccount;
-}
-- (LoginRequestProto_Builder*) setInitializeAccount:(BOOL) value {
-  result.hasInitializeAccount = YES;
-  result.initializeAccount = value;
-  return self;
-}
-- (LoginRequestProto_Builder*) clearInitializeAccount {
-  result.hasInitializeAccount = NO;
-  result.initializeAccount = NO;
-  return self;
-}
 @end
 
 @interface LoginResponseProto ()
@@ -424,7 +381,7 @@ BOOL LoginRequestProto_LoginTypeIsValidValue(LoginRequestProto_LoginType value) 
   self.mutableCompletedGamesList = nil;
   self.mutableMyTurnList = nil;
   self.mutableNotMyTurnList = nil;
-  //self.mutableNewQuestionsList = nil;
+  self.mutableNewQuestionsList = nil;
   self.mutableFacebookFriendsWithAccountsList = nil;
   self.mutablePictureNamesList = nil;
   self.loginConstants = nil;
@@ -614,43 +571,27 @@ BOOL LoginResponseProto_LoginResponseStatusIsValidValue(LoginResponseProto_Login
   }
 }
 @interface LoginResponseProto_LoginConstants ()
-@property int32_t defaultInitialTokens;
-@property int32_t defaultInitialRubies;
-@property int32_t defaultRoundsPerGame;
-@property int32_t defaultMinutesPerRound;
+@property (retain) LoginResponseProto_LoginConstants_CurrencyConstants* currencyConstants;
+@property (retain) LoginResponseProto_LoginConstants_RoundConstants* roundConstants;
 @property (retain) LoginResponseProto_LoginConstants_QuestionTypeScoringConstants* scoreTypes;
 @end
 
 @implementation LoginResponseProto_LoginConstants
 
-- (BOOL) hasDefaultInitialTokens {
-  return !!hasDefaultInitialTokens_;
+- (BOOL) hasCurrencyConstants {
+  return !!hasCurrencyConstants_;
 }
-- (void) setHasDefaultInitialTokens:(BOOL) value {
-  hasDefaultInitialTokens_ = !!value;
+- (void) setHasCurrencyConstants:(BOOL) value {
+  hasCurrencyConstants_ = !!value;
 }
-@synthesize defaultInitialTokens;
-- (BOOL) hasDefaultInitialRubies {
-  return !!hasDefaultInitialRubies_;
+@synthesize currencyConstants;
+- (BOOL) hasRoundConstants {
+  return !!hasRoundConstants_;
 }
-- (void) setHasDefaultInitialRubies:(BOOL) value {
-  hasDefaultInitialRubies_ = !!value;
+- (void) setHasRoundConstants:(BOOL) value {
+  hasRoundConstants_ = !!value;
 }
-@synthesize defaultInitialRubies;
-- (BOOL) hasDefaultRoundsPerGame {
-  return !!hasDefaultRoundsPerGame_;
-}
-- (void) setHasDefaultRoundsPerGame:(BOOL) value {
-  hasDefaultRoundsPerGame_ = !!value;
-}
-@synthesize defaultRoundsPerGame;
-- (BOOL) hasDefaultMinutesPerRound {
-  return !!hasDefaultMinutesPerRound_;
-}
-- (void) setHasDefaultMinutesPerRound:(BOOL) value {
-  hasDefaultMinutesPerRound_ = !!value;
-}
-@synthesize defaultMinutesPerRound;
+@synthesize roundConstants;
 - (BOOL) hasScoreTypes {
   return !!hasScoreTypes_;
 }
@@ -659,15 +600,15 @@ BOOL LoginResponseProto_LoginResponseStatusIsValidValue(LoginResponseProto_Login
 }
 @synthesize scoreTypes;
 - (void) dealloc {
+  self.currencyConstants = nil;
+  self.roundConstants = nil;
   self.scoreTypes = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
-    self.defaultInitialTokens = 0;
-    self.defaultInitialRubies = 0;
-    self.defaultRoundsPerGame = 0;
-    self.defaultMinutesPerRound = 0;
+    self.currencyConstants = [LoginResponseProto_LoginConstants_CurrencyConstants defaultInstance];
+    self.roundConstants = [LoginResponseProto_LoginConstants_RoundConstants defaultInstance];
     self.scoreTypes = [LoginResponseProto_LoginConstants_QuestionTypeScoringConstants defaultInstance];
   }
   return self;
@@ -688,20 +629,14 @@ static LoginResponseProto_LoginConstants* defaultLoginResponseProto_LoginConstan
   return YES;
 }
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
-  if (self.hasDefaultInitialTokens) {
-    [output writeInt32:1 value:self.defaultInitialTokens];
+  if (self.hasCurrencyConstants) {
+    [output writeMessage:1 value:self.currencyConstants];
   }
-  if (self.hasDefaultInitialRubies) {
-    [output writeInt32:2 value:self.defaultInitialRubies];
-  }
-  if (self.hasDefaultRoundsPerGame) {
-    [output writeInt32:3 value:self.defaultRoundsPerGame];
-  }
-  if (self.hasDefaultMinutesPerRound) {
-    [output writeInt32:4 value:self.defaultMinutesPerRound];
+  if (self.hasRoundConstants) {
+    [output writeMessage:2 value:self.roundConstants];
   }
   if (self.hasScoreTypes) {
-    [output writeMessage:5 value:self.scoreTypes];
+    [output writeMessage:3 value:self.scoreTypes];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -712,20 +647,14 @@ static LoginResponseProto_LoginConstants* defaultLoginResponseProto_LoginConstan
   }
 
   size = 0;
-  if (self.hasDefaultInitialTokens) {
-    size += computeInt32Size(1, self.defaultInitialTokens);
+  if (self.hasCurrencyConstants) {
+    size += computeMessageSize(1, self.currencyConstants);
   }
-  if (self.hasDefaultInitialRubies) {
-    size += computeInt32Size(2, self.defaultInitialRubies);
-  }
-  if (self.hasDefaultRoundsPerGame) {
-    size += computeInt32Size(3, self.defaultRoundsPerGame);
-  }
-  if (self.hasDefaultMinutesPerRound) {
-    size += computeInt32Size(4, self.defaultMinutesPerRound);
+  if (self.hasRoundConstants) {
+    size += computeMessageSize(2, self.roundConstants);
   }
   if (self.hasScoreTypes) {
-    size += computeMessageSize(5, self.scoreTypes);
+    size += computeMessageSize(3, self.scoreTypes);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -757,6 +686,474 @@ static LoginResponseProto_LoginConstants* defaultLoginResponseProto_LoginConstan
 }
 - (LoginResponseProto_LoginConstants_Builder*) builder {
   return [LoginResponseProto_LoginConstants builder];
+}
+@end
+
+@interface LoginResponseProto_LoginConstants_CurrencyConstants ()
+@property int32_t defaultInitialRubies;
+@property int32_t defaultInitialTokens;
+@property int32_t numSecondsUntilRefill;
+@end
+
+@implementation LoginResponseProto_LoginConstants_CurrencyConstants
+
+- (BOOL) hasDefaultInitialRubies {
+  return !!hasDefaultInitialRubies_;
+}
+- (void) setHasDefaultInitialRubies:(BOOL) value {
+  hasDefaultInitialRubies_ = !!value;
+}
+@synthesize defaultInitialRubies;
+- (BOOL) hasDefaultInitialTokens {
+  return !!hasDefaultInitialTokens_;
+}
+- (void) setHasDefaultInitialTokens:(BOOL) value {
+  hasDefaultInitialTokens_ = !!value;
+}
+@synthesize defaultInitialTokens;
+- (BOOL) hasNumSecondsUntilRefill {
+  return !!hasNumSecondsUntilRefill_;
+}
+- (void) setHasNumSecondsUntilRefill:(BOOL) value {
+  hasNumSecondsUntilRefill_ = !!value;
+}
+@synthesize numSecondsUntilRefill;
+- (void) dealloc {
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.defaultInitialRubies = 0;
+    self.defaultInitialTokens = 0;
+    self.numSecondsUntilRefill = 0;
+  }
+  return self;
+}
+static LoginResponseProto_LoginConstants_CurrencyConstants* defaultLoginResponseProto_LoginConstants_CurrencyConstantsInstance = nil;
++ (void) initialize {
+  if (self == [LoginResponseProto_LoginConstants_CurrencyConstants class]) {
+    defaultLoginResponseProto_LoginConstants_CurrencyConstantsInstance = [[LoginResponseProto_LoginConstants_CurrencyConstants alloc] init];
+  }
+}
++ (LoginResponseProto_LoginConstants_CurrencyConstants*) defaultInstance {
+  return defaultLoginResponseProto_LoginConstants_CurrencyConstantsInstance;
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants*) defaultInstance {
+  return defaultLoginResponseProto_LoginConstants_CurrencyConstantsInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasDefaultInitialRubies) {
+    [output writeInt32:1 value:self.defaultInitialRubies];
+  }
+  if (self.hasDefaultInitialTokens) {
+    [output writeInt32:2 value:self.defaultInitialTokens];
+  }
+  if (self.hasNumSecondsUntilRefill) {
+    [output writeInt32:3 value:self.numSecondsUntilRefill];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasDefaultInitialRubies) {
+    size += computeInt32Size(1, self.defaultInitialRubies);
+  }
+  if (self.hasDefaultInitialTokens) {
+    size += computeInt32Size(2, self.defaultInitialTokens);
+  }
+  if (self.hasNumSecondsUntilRefill) {
+    size += computeInt32Size(3, self.numSecondsUntilRefill);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (LoginResponseProto_LoginConstants_CurrencyConstants*) parseFromData:(NSData*) data {
+  return (LoginResponseProto_LoginConstants_CurrencyConstants*)[[[LoginResponseProto_LoginConstants_CurrencyConstants builder] mergeFromData:data] build];
+}
++ (LoginResponseProto_LoginConstants_CurrencyConstants*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (LoginResponseProto_LoginConstants_CurrencyConstants*)[[[LoginResponseProto_LoginConstants_CurrencyConstants builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (LoginResponseProto_LoginConstants_CurrencyConstants*) parseFromInputStream:(NSInputStream*) input {
+  return (LoginResponseProto_LoginConstants_CurrencyConstants*)[[[LoginResponseProto_LoginConstants_CurrencyConstants builder] mergeFromInputStream:input] build];
+}
++ (LoginResponseProto_LoginConstants_CurrencyConstants*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (LoginResponseProto_LoginConstants_CurrencyConstants*)[[[LoginResponseProto_LoginConstants_CurrencyConstants builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (LoginResponseProto_LoginConstants_CurrencyConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (LoginResponseProto_LoginConstants_CurrencyConstants*)[[[LoginResponseProto_LoginConstants_CurrencyConstants builder] mergeFromCodedInputStream:input] build];
+}
++ (LoginResponseProto_LoginConstants_CurrencyConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (LoginResponseProto_LoginConstants_CurrencyConstants*)[[[LoginResponseProto_LoginConstants_CurrencyConstants builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) builder {
+  return [[[LoginResponseProto_LoginConstants_CurrencyConstants_Builder alloc] init] autorelease];
+}
++ (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) builderWithPrototype:(LoginResponseProto_LoginConstants_CurrencyConstants*) prototype {
+  return [[LoginResponseProto_LoginConstants_CurrencyConstants builder] mergeFrom:prototype];
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) builder {
+  return [LoginResponseProto_LoginConstants_CurrencyConstants builder];
+}
+@end
+
+@interface LoginResponseProto_LoginConstants_CurrencyConstants_Builder()
+@property (retain) LoginResponseProto_LoginConstants_CurrencyConstants* result;
+@end
+
+@implementation LoginResponseProto_LoginConstants_CurrencyConstants_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[LoginResponseProto_LoginConstants_CurrencyConstants alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) clear {
+  self.result = [[[LoginResponseProto_LoginConstants_CurrencyConstants alloc] init] autorelease];
+  return self;
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) clone {
+  return [LoginResponseProto_LoginConstants_CurrencyConstants builderWithPrototype:result];
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants*) defaultInstance {
+  return [LoginResponseProto_LoginConstants_CurrencyConstants defaultInstance];
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants*) buildPartial {
+  LoginResponseProto_LoginConstants_CurrencyConstants* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) mergeFrom:(LoginResponseProto_LoginConstants_CurrencyConstants*) other {
+  if (other == [LoginResponseProto_LoginConstants_CurrencyConstants defaultInstance]) {
+    return self;
+  }
+  if (other.hasDefaultInitialRubies) {
+    [self setDefaultInitialRubies:other.defaultInitialRubies];
+  }
+  if (other.hasDefaultInitialTokens) {
+    [self setDefaultInitialTokens:other.defaultInitialTokens];
+  }
+  if (other.hasNumSecondsUntilRefill) {
+    [self setNumSecondsUntilRefill:other.numSecondsUntilRefill];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 8: {
+        [self setDefaultInitialRubies:[input readInt32]];
+        break;
+      }
+      case 16: {
+        [self setDefaultInitialTokens:[input readInt32]];
+        break;
+      }
+      case 24: {
+        [self setNumSecondsUntilRefill:[input readInt32]];
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasDefaultInitialRubies {
+  return result.hasDefaultInitialRubies;
+}
+- (int32_t) defaultInitialRubies {
+  return result.defaultInitialRubies;
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) setDefaultInitialRubies:(int32_t) value {
+  result.hasDefaultInitialRubies = YES;
+  result.defaultInitialRubies = value;
+  return self;
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) clearDefaultInitialRubies {
+  result.hasDefaultInitialRubies = NO;
+  result.defaultInitialRubies = 0;
+  return self;
+}
+- (BOOL) hasDefaultInitialTokens {
+  return result.hasDefaultInitialTokens;
+}
+- (int32_t) defaultInitialTokens {
+  return result.defaultInitialTokens;
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) setDefaultInitialTokens:(int32_t) value {
+  result.hasDefaultInitialTokens = YES;
+  result.defaultInitialTokens = value;
+  return self;
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) clearDefaultInitialTokens {
+  result.hasDefaultInitialTokens = NO;
+  result.defaultInitialTokens = 0;
+  return self;
+}
+- (BOOL) hasNumSecondsUntilRefill {
+  return result.hasNumSecondsUntilRefill;
+}
+- (int32_t) numSecondsUntilRefill {
+  return result.numSecondsUntilRefill;
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) setNumSecondsUntilRefill:(int32_t) value {
+  result.hasNumSecondsUntilRefill = YES;
+  result.numSecondsUntilRefill = value;
+  return self;
+}
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) clearNumSecondsUntilRefill {
+  result.hasNumSecondsUntilRefill = NO;
+  result.numSecondsUntilRefill = 0;
+  return self;
+}
+@end
+
+@interface LoginResponseProto_LoginConstants_RoundConstants ()
+@property int32_t defaultRoundsPerGame;
+@property int32_t defaultMinutesPerRound;
+@end
+
+@implementation LoginResponseProto_LoginConstants_RoundConstants
+
+- (BOOL) hasDefaultRoundsPerGame {
+  return !!hasDefaultRoundsPerGame_;
+}
+- (void) setHasDefaultRoundsPerGame:(BOOL) value {
+  hasDefaultRoundsPerGame_ = !!value;
+}
+@synthesize defaultRoundsPerGame;
+- (BOOL) hasDefaultMinutesPerRound {
+  return !!hasDefaultMinutesPerRound_;
+}
+- (void) setHasDefaultMinutesPerRound:(BOOL) value {
+  hasDefaultMinutesPerRound_ = !!value;
+}
+@synthesize defaultMinutesPerRound;
+- (void) dealloc {
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.defaultRoundsPerGame = 0;
+    self.defaultMinutesPerRound = 0;
+  }
+  return self;
+}
+static LoginResponseProto_LoginConstants_RoundConstants* defaultLoginResponseProto_LoginConstants_RoundConstantsInstance = nil;
++ (void) initialize {
+  if (self == [LoginResponseProto_LoginConstants_RoundConstants class]) {
+    defaultLoginResponseProto_LoginConstants_RoundConstantsInstance = [[LoginResponseProto_LoginConstants_RoundConstants alloc] init];
+  }
+}
++ (LoginResponseProto_LoginConstants_RoundConstants*) defaultInstance {
+  return defaultLoginResponseProto_LoginConstants_RoundConstantsInstance;
+}
+- (LoginResponseProto_LoginConstants_RoundConstants*) defaultInstance {
+  return defaultLoginResponseProto_LoginConstants_RoundConstantsInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasDefaultRoundsPerGame) {
+    [output writeInt32:1 value:self.defaultRoundsPerGame];
+  }
+  if (self.hasDefaultMinutesPerRound) {
+    [output writeInt32:2 value:self.defaultMinutesPerRound];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasDefaultRoundsPerGame) {
+    size += computeInt32Size(1, self.defaultRoundsPerGame);
+  }
+  if (self.hasDefaultMinutesPerRound) {
+    size += computeInt32Size(2, self.defaultMinutesPerRound);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (LoginResponseProto_LoginConstants_RoundConstants*) parseFromData:(NSData*) data {
+  return (LoginResponseProto_LoginConstants_RoundConstants*)[[[LoginResponseProto_LoginConstants_RoundConstants builder] mergeFromData:data] build];
+}
++ (LoginResponseProto_LoginConstants_RoundConstants*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (LoginResponseProto_LoginConstants_RoundConstants*)[[[LoginResponseProto_LoginConstants_RoundConstants builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (LoginResponseProto_LoginConstants_RoundConstants*) parseFromInputStream:(NSInputStream*) input {
+  return (LoginResponseProto_LoginConstants_RoundConstants*)[[[LoginResponseProto_LoginConstants_RoundConstants builder] mergeFromInputStream:input] build];
+}
++ (LoginResponseProto_LoginConstants_RoundConstants*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (LoginResponseProto_LoginConstants_RoundConstants*)[[[LoginResponseProto_LoginConstants_RoundConstants builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (LoginResponseProto_LoginConstants_RoundConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (LoginResponseProto_LoginConstants_RoundConstants*)[[[LoginResponseProto_LoginConstants_RoundConstants builder] mergeFromCodedInputStream:input] build];
+}
++ (LoginResponseProto_LoginConstants_RoundConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (LoginResponseProto_LoginConstants_RoundConstants*)[[[LoginResponseProto_LoginConstants_RoundConstants builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (LoginResponseProto_LoginConstants_RoundConstants_Builder*) builder {
+  return [[[LoginResponseProto_LoginConstants_RoundConstants_Builder alloc] init] autorelease];
+}
++ (LoginResponseProto_LoginConstants_RoundConstants_Builder*) builderWithPrototype:(LoginResponseProto_LoginConstants_RoundConstants*) prototype {
+  return [[LoginResponseProto_LoginConstants_RoundConstants builder] mergeFrom:prototype];
+}
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) builder {
+  return [LoginResponseProto_LoginConstants_RoundConstants builder];
+}
+@end
+
+@interface LoginResponseProto_LoginConstants_RoundConstants_Builder()
+@property (retain) LoginResponseProto_LoginConstants_RoundConstants* result;
+@end
+
+@implementation LoginResponseProto_LoginConstants_RoundConstants_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[LoginResponseProto_LoginConstants_RoundConstants alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) clear {
+  self.result = [[[LoginResponseProto_LoginConstants_RoundConstants alloc] init] autorelease];
+  return self;
+}
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) clone {
+  return [LoginResponseProto_LoginConstants_RoundConstants builderWithPrototype:result];
+}
+- (LoginResponseProto_LoginConstants_RoundConstants*) defaultInstance {
+  return [LoginResponseProto_LoginConstants_RoundConstants defaultInstance];
+}
+- (LoginResponseProto_LoginConstants_RoundConstants*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (LoginResponseProto_LoginConstants_RoundConstants*) buildPartial {
+  LoginResponseProto_LoginConstants_RoundConstants* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) mergeFrom:(LoginResponseProto_LoginConstants_RoundConstants*) other {
+  if (other == [LoginResponseProto_LoginConstants_RoundConstants defaultInstance]) {
+    return self;
+  }
+  if (other.hasDefaultRoundsPerGame) {
+    [self setDefaultRoundsPerGame:other.defaultRoundsPerGame];
+  }
+  if (other.hasDefaultMinutesPerRound) {
+    [self setDefaultMinutesPerRound:other.defaultMinutesPerRound];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 8: {
+        [self setDefaultRoundsPerGame:[input readInt32]];
+        break;
+      }
+      case 16: {
+        [self setDefaultMinutesPerRound:[input readInt32]];
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasDefaultRoundsPerGame {
+  return result.hasDefaultRoundsPerGame;
+}
+- (int32_t) defaultRoundsPerGame {
+  return result.defaultRoundsPerGame;
+}
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) setDefaultRoundsPerGame:(int32_t) value {
+  result.hasDefaultRoundsPerGame = YES;
+  result.defaultRoundsPerGame = value;
+  return self;
+}
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) clearDefaultRoundsPerGame {
+  result.hasDefaultRoundsPerGame = NO;
+  result.defaultRoundsPerGame = 0;
+  return self;
+}
+- (BOOL) hasDefaultMinutesPerRound {
+  return result.hasDefaultMinutesPerRound;
+}
+- (int32_t) defaultMinutesPerRound {
+  return result.defaultMinutesPerRound;
+}
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) setDefaultMinutesPerRound:(int32_t) value {
+  result.hasDefaultMinutesPerRound = YES;
+  result.defaultMinutesPerRound = value;
+  return self;
+}
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) clearDefaultMinutesPerRound {
+  result.hasDefaultMinutesPerRound = NO;
+  result.defaultMinutesPerRound = 0;
+  return self;
 }
 @end
 
@@ -1093,17 +1490,11 @@ static LoginResponseProto_LoginConstants_QuestionTypeScoringConstants* defaultLo
   if (other == [LoginResponseProto_LoginConstants defaultInstance]) {
     return self;
   }
-  if (other.hasDefaultInitialTokens) {
-    [self setDefaultInitialTokens:other.defaultInitialTokens];
+  if (other.hasCurrencyConstants) {
+    [self mergeCurrencyConstants:other.currencyConstants];
   }
-  if (other.hasDefaultInitialRubies) {
-    [self setDefaultInitialRubies:other.defaultInitialRubies];
-  }
-  if (other.hasDefaultRoundsPerGame) {
-    [self setDefaultRoundsPerGame:other.defaultRoundsPerGame];
-  }
-  if (other.hasDefaultMinutesPerRound) {
-    [self setDefaultMinutesPerRound:other.defaultMinutesPerRound];
+  if (other.hasRoundConstants) {
+    [self mergeRoundConstants:other.roundConstants];
   }
   if (other.hasScoreTypes) {
     [self mergeScoreTypes:other.scoreTypes];
@@ -1129,23 +1520,25 @@ static LoginResponseProto_LoginConstants_QuestionTypeScoringConstants* defaultLo
         }
         break;
       }
-      case 8: {
-        [self setDefaultInitialTokens:[input readInt32]];
+      case 10: {
+        LoginResponseProto_LoginConstants_CurrencyConstants_Builder* subBuilder = [LoginResponseProto_LoginConstants_CurrencyConstants builder];
+        if (self.hasCurrencyConstants) {
+          [subBuilder mergeFrom:self.currencyConstants];
+        }
+        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
+        [self setCurrencyConstants:[subBuilder buildPartial]];
         break;
       }
-      case 16: {
-        [self setDefaultInitialRubies:[input readInt32]];
+      case 18: {
+        LoginResponseProto_LoginConstants_RoundConstants_Builder* subBuilder = [LoginResponseProto_LoginConstants_RoundConstants builder];
+        if (self.hasRoundConstants) {
+          [subBuilder mergeFrom:self.roundConstants];
+        }
+        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
+        [self setRoundConstants:[subBuilder buildPartial]];
         break;
       }
-      case 24: {
-        [self setDefaultRoundsPerGame:[input readInt32]];
-        break;
-      }
-      case 32: {
-        [self setDefaultMinutesPerRound:[input readInt32]];
-        break;
-      }
-      case 42: {
+      case 26: {
         LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder* subBuilder = [LoginResponseProto_LoginConstants_QuestionTypeScoringConstants builder];
         if (self.hasScoreTypes) {
           [subBuilder mergeFrom:self.scoreTypes];
@@ -1157,68 +1550,64 @@ static LoginResponseProto_LoginConstants_QuestionTypeScoringConstants* defaultLo
     }
   }
 }
-- (BOOL) hasDefaultInitialTokens {
-  return result.hasDefaultInitialTokens;
+- (BOOL) hasCurrencyConstants {
+  return result.hasCurrencyConstants;
 }
-- (int32_t) defaultInitialTokens {
-  return result.defaultInitialTokens;
+- (LoginResponseProto_LoginConstants_CurrencyConstants*) currencyConstants {
+  return result.currencyConstants;
 }
-- (LoginResponseProto_LoginConstants_Builder*) setDefaultInitialTokens:(int32_t) value {
-  result.hasDefaultInitialTokens = YES;
-  result.defaultInitialTokens = value;
+- (LoginResponseProto_LoginConstants_Builder*) setCurrencyConstants:(LoginResponseProto_LoginConstants_CurrencyConstants*) value {
+  result.hasCurrencyConstants = YES;
+  result.currencyConstants = value;
   return self;
 }
-- (LoginResponseProto_LoginConstants_Builder*) clearDefaultInitialTokens {
-  result.hasDefaultInitialTokens = NO;
-  result.defaultInitialTokens = 0;
+- (LoginResponseProto_LoginConstants_Builder*) setCurrencyConstantsBuilder:(LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) builderForValue {
+  return [self setCurrencyConstants:[builderForValue build]];
+}
+- (LoginResponseProto_LoginConstants_Builder*) mergeCurrencyConstants:(LoginResponseProto_LoginConstants_CurrencyConstants*) value {
+  if (result.hasCurrencyConstants &&
+      result.currencyConstants != [LoginResponseProto_LoginConstants_CurrencyConstants defaultInstance]) {
+    result.currencyConstants =
+      [[[LoginResponseProto_LoginConstants_CurrencyConstants builderWithPrototype:result.currencyConstants] mergeFrom:value] buildPartial];
+  } else {
+    result.currencyConstants = value;
+  }
+  result.hasCurrencyConstants = YES;
   return self;
 }
-- (BOOL) hasDefaultInitialRubies {
-  return result.hasDefaultInitialRubies;
-}
-- (int32_t) defaultInitialRubies {
-  return result.defaultInitialRubies;
-}
-- (LoginResponseProto_LoginConstants_Builder*) setDefaultInitialRubies:(int32_t) value {
-  result.hasDefaultInitialRubies = YES;
-  result.defaultInitialRubies = value;
+- (LoginResponseProto_LoginConstants_Builder*) clearCurrencyConstants {
+  result.hasCurrencyConstants = NO;
+  result.currencyConstants = [LoginResponseProto_LoginConstants_CurrencyConstants defaultInstance];
   return self;
 }
-- (LoginResponseProto_LoginConstants_Builder*) clearDefaultInitialRubies {
-  result.hasDefaultInitialRubies = NO;
-  result.defaultInitialRubies = 0;
+- (BOOL) hasRoundConstants {
+  return result.hasRoundConstants;
+}
+- (LoginResponseProto_LoginConstants_RoundConstants*) roundConstants {
+  return result.roundConstants;
+}
+- (LoginResponseProto_LoginConstants_Builder*) setRoundConstants:(LoginResponseProto_LoginConstants_RoundConstants*) value {
+  result.hasRoundConstants = YES;
+  result.roundConstants = value;
   return self;
 }
-- (BOOL) hasDefaultRoundsPerGame {
-  return result.hasDefaultRoundsPerGame;
+- (LoginResponseProto_LoginConstants_Builder*) setRoundConstantsBuilder:(LoginResponseProto_LoginConstants_RoundConstants_Builder*) builderForValue {
+  return [self setRoundConstants:[builderForValue build]];
 }
-- (int32_t) defaultRoundsPerGame {
-  return result.defaultRoundsPerGame;
-}
-- (LoginResponseProto_LoginConstants_Builder*) setDefaultRoundsPerGame:(int32_t) value {
-  result.hasDefaultRoundsPerGame = YES;
-  result.defaultRoundsPerGame = value;
+- (LoginResponseProto_LoginConstants_Builder*) mergeRoundConstants:(LoginResponseProto_LoginConstants_RoundConstants*) value {
+  if (result.hasRoundConstants &&
+      result.roundConstants != [LoginResponseProto_LoginConstants_RoundConstants defaultInstance]) {
+    result.roundConstants =
+      [[[LoginResponseProto_LoginConstants_RoundConstants builderWithPrototype:result.roundConstants] mergeFrom:value] buildPartial];
+  } else {
+    result.roundConstants = value;
+  }
+  result.hasRoundConstants = YES;
   return self;
 }
-- (LoginResponseProto_LoginConstants_Builder*) clearDefaultRoundsPerGame {
-  result.hasDefaultRoundsPerGame = NO;
-  result.defaultRoundsPerGame = 0;
-  return self;
-}
-- (BOOL) hasDefaultMinutesPerRound {
-  return result.hasDefaultMinutesPerRound;
-}
-- (int32_t) defaultMinutesPerRound {
-  return result.defaultMinutesPerRound;
-}
-- (LoginResponseProto_LoginConstants_Builder*) setDefaultMinutesPerRound:(int32_t) value {
-  result.hasDefaultMinutesPerRound = YES;
-  result.defaultMinutesPerRound = value;
-  return self;
-}
-- (LoginResponseProto_LoginConstants_Builder*) clearDefaultMinutesPerRound {
-  result.hasDefaultMinutesPerRound = NO;
-  result.defaultMinutesPerRound = 0;
+- (LoginResponseProto_LoginConstants_Builder*) clearRoundConstants {
+  result.hasRoundConstants = NO;
+  result.roundConstants = [LoginResponseProto_LoginConstants_RoundConstants defaultInstance];
   return self;
 }
 - (BOOL) hasScoreTypes {

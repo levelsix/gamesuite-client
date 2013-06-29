@@ -33,9 +33,9 @@
 			<integer>15</integer>
 		</array>
 		<array>
-			<string>Opps, thats not correct, you have now finished all the questions, we will now take you to the score screen</string>
-			<integer>11</integer>
-			<string>Congratulation, you have finished all the questions, you will now be taken to the score screen</string>
+			<string>Opps, thats not correct, you have now finished all the tutorial questions</string>
+			<integer>13</integer>
+			<string>Congratulation, you have finished all the tutorial questions</string>
 			<integer>13</integer>
 		</array>
 		<array>

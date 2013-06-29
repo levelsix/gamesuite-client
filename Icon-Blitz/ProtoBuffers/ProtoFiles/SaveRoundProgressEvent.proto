@@ -16,9 +16,9 @@ message SaveRoundProgressRequestProto {
 message SaveRoundProgressResponseProto {
 	optional BasicUserProto recipient = 1;
 	optional string gameId = 2;
-	optional SaveRoundStatus status = 3;
+	optional SaveRoundProgressStatus status = 3;
 	
-	enum SaveRoundStatus {
+	enum SaveRoundProgressStatus {
 		SUCCESS = 1;
 		FAIL_OTHER = 2;
 	}

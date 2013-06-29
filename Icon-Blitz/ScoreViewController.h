@@ -9,6 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "ProtoHeaders.h"
 
+typedef enum {
+  kNewGameState = 100,
+  kOnGoingGameState,
+  kCompletedGameState,
+  kStateNone
+}ScoreStates;
+
 @class UserInfo;
 
 @interface ScoreViewController : UIViewController

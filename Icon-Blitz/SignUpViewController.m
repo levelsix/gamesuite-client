@@ -121,7 +121,6 @@
   if (protoType == kSignUp) {
     CreateAccountResponseProto *proto = (CreateAccountResponseProto *)message;
     if (proto.status == CreateAccountResponseProto_CreateAccountStatusSuccessAccountCreated) {
-      NSLog(@"signed up success");
       [self.spinner startAnimating];
       self.loadingLabel.hidden = NO;
       self.loadingLabel.text = [NSString stringWithFormat:@"Logging in..."];
@@ -133,7 +132,6 @@
       }
       else {
         //login with no credential
-        NSLog(@"signed up failed");
         [self loginWithToken:proto];
       }
     }

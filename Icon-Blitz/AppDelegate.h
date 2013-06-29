@@ -26,5 +26,6 @@ extern NSString *const FBSessionStateChangedNotification;
 @property (nonatomic, weak) id delegate;
 - (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI;
 - (void) closeSession;
+- (void)forceLogout;
 
 @end

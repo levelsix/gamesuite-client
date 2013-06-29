@@ -12,6 +12,7 @@ enum PicturesEventProtocolRequest {
 	C_START_ROUND_EVENT = 1003;
 	C_SPEND_RUBIES_EVENT = 1004;
 	C_SEARCH_FOR_USER_EVENT = 1005;
+	C_SAVE_ROUND_PROGRESS_EVENT = 1006;
 }
 
 enum PicturesEventProtocolResponse {
@@ -23,4 +24,5 @@ enum PicturesEventProtocolResponse {
 	S_START_ROUND_EVENT = 1003;
 	S_SPEND_RUBIES_EVENT = 1004;
 	S_SEARCH_FOR_USER_EVENT = 1005;
+	S_SAVE_ROUND_PROGRESS_EVENT = 1006;
 }

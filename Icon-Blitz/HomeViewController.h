@@ -47,6 +47,7 @@ typedef enum {
 @property (nonatomic, strong) NSMutableArray *wholeArray;
 @property (nonatomic, strong) LoginResponseProto *loginProto;
 @property (nonatomic, strong) UserInfo *userInfo;
+@property (nonatomic, strong) NSArray *imagesToDownload;
 
 @property (nonatomic) BOOL inAppPurchasedLoaded;
 

@@ -11,7 +11,7 @@ message QuestionAnsweredProto {
 	//used to determine the order the user saw the questions
 	optional int32 questionNumber = 3;
 	
-	//the time the user saw the question
+	//the time the user saw the question, (2013/06/24) not really used
 	optional int64 timeAnswered = 4;
 	
 	enum AnswerType {
@@ -23,7 +23,7 @@ message QuestionAnsweredProto {
 
 message QuestionProto {
 	//uniquely identifies this question (id string used in the db)
-	optional string id = 1;
+	optional string questionId = 1;
 
 	//mutually exclusive, if one is set the other is not set
 	optional MultipleChoiceQuestionProto multipleChoice = 2;
@@ -47,7 +47,7 @@ message MultipleChoiceQuestionProto {
 
 message MultipleChoiceAnswerProto {
 	//uniquely identifies this MultipleChoiceAnswerProto
-	optional string id = 1; 
+	optional string multipleChoiceAnswerId = 1; 
 	
 	//a phrase/sentence or a picture
 	optional string answer = 2;

@@ -96,30 +96,30 @@
   MultipleChoiceAnswerProto *answer = [question.answersList objectAtIndex:0];
   self.answerALabel.text = answer.answer;
   
-  if ([answer.id isEqualToString:question.answerId]) {
-    self.correctChoice = kChoiceA;
-  }
-  
-  answer = [question.answersList objectAtIndex:1];
-  self.answerBLabel.text = answer.answer;
-  
-  if ([answer.id isEqualToString:question.answerId]) {
-    self.correctChoice = kChoiceB;
-  }
-
-  answer = [question.answersList objectAtIndex:2];
-  self.answerCLabel.text = answer.answer;
-  
-  if ([answer.id isEqualToString:question.answerId]) {
-    self.correctChoice = kChoiceC;
-  }
-  
-  answer = [question.answersList objectAtIndex:3];
-  self.answerDLabel.text = answer.answer;
-  
-  if ([answer.id isEqualToString:question.answerId]) {
-    self.correctChoice = kChoiceD;
-  }
+//  if ([answer.id isEqualToString:question.answerId]) {
+//    self.correctChoice = kChoiceA;
+//  }
+//  
+//  answer = [question.answersList objectAtIndex:1];
+//  self.answerBLabel.text = answer.answer;
+//  
+//  if ([answer.id isEqualToString:question.answerId]) {
+//    self.correctChoice = kChoiceB;
+//  }
+//
+//  answer = [question.answersList objectAtIndex:2];
+//  self.answerCLabel.text = answer.answer;
+//  
+//  if ([answer.id isEqualToString:question.answerId]) {
+//    self.correctChoice = kChoiceC;
+//  }
+//  
+//  answer = [question.answersList objectAtIndex:3];
+//  self.answerDLabel.text = answer.answer;
+//  
+//  if ([answer.id isEqualToString:question.answerId]) {
+//    self.correctChoice = kChoiceD;
+//  }
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

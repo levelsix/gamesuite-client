@@ -21,20 +21,20 @@ static PBExtensionRegistry* extensionRegistry = nil;
 @end
 
 @interface BasicRoundResultsProto ()
-@property (retain) NSString* id;
+@property (retain) NSString* roundId;
 @property int32_t score;
 @property int32_t roundNumber;
 @end
 
 @implementation BasicRoundResultsProto
 
-- (BOOL) hasId {
-  return !!hasId_;
+- (BOOL) hasRoundId {
+  return !!hasRoundId_;
 }
-- (void) setHasId:(BOOL) value {
-  hasId_ = !!value;
+- (void) setHasRoundId:(BOOL) value {
+  hasRoundId_ = !!value;
 }
-@synthesize id;
+@synthesize roundId;
 - (BOOL) hasScore {
   return !!hasScore_;
 }
@@ -50,12 +50,12 @@ static PBExtensionRegistry* extensionRegistry = nil;
 }
 @synthesize roundNumber;
 - (void) dealloc {
-  self.id = nil;
+  self.roundId = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
-    self.id = @"";
+    self.roundId = @"";
     self.score = 0;
     self.roundNumber = 0;
   }
@@ -77,8 +77,8 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
   return YES;
 }
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
-  if (self.hasId) {
-    [output writeString:1 value:self.id];
+  if (self.hasRoundId) {
+    [output writeString:1 value:self.roundId];
   }
   if (self.hasScore) {
     [output writeSInt32:2 value:self.score];
@@ -95,8 +95,8 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
   }
 
   size = 0;
-  if (self.hasId) {
-    size += computeStringSize(1, self.id);
+  if (self.hasRoundId) {
+    size += computeStringSize(1, self.roundId);
   }
   if (self.hasScore) {
     size += computeSInt32Size(2, self.score);
@@ -179,8 +179,8 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
   if (other == [BasicRoundResultsProto defaultInstance]) {
     return self;
   }
-  if (other.hasId) {
-    [self setId:other.id];
+  if (other.hasRoundId) {
+    [self setRoundId:other.roundId];
   }
   if (other.hasScore) {
     [self setScore:other.score];
@@ -210,7 +210,7 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
         break;
       }
       case 10: {
-        [self setId:[input readString]];
+        [self setRoundId:[input readString]];
         break;
       }
       case 16: {
@@ -224,20 +224,20 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
     }
   }
 }
-- (BOOL) hasId {
-  return result.hasId;
+- (BOOL) hasRoundId {
+  return result.hasRoundId;
 }
-- (NSString*) id {
-  return result.id;
+- (NSString*) roundId {
+  return result.roundId;
 }
-- (BasicRoundResultsProto_Builder*) setId:(NSString*) value {
-  result.hasId = YES;
-  result.id = value;
+- (BasicRoundResultsProto_Builder*) setRoundId:(NSString*) value {
+  result.hasRoundId = YES;
+  result.roundId = value;
   return self;
 }
-- (BasicRoundResultsProto_Builder*) clearId {
-  result.hasId = NO;
-  result.id = @"";
+- (BasicRoundResultsProto_Builder*) clearRoundId {
+  result.hasRoundId = NO;
+  result.roundId = @"";
   return self;
 }
 - (BOOL) hasScore {
@@ -275,7 +275,7 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
 @end
 
 @interface CompleteRoundResultsProto ()
-@property (retain) NSString* id;
+@property (retain) NSString* roundId;
 @property int32_t score;
 @property int32_t roundNumber;
 @property (retain) NSMutableArray* mutableAnswersList;
@@ -285,13 +285,13 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
 
 @implementation CompleteRoundResultsProto
 
-- (BOOL) hasId {
-  return !!hasId_;
+- (BOOL) hasRoundId {
+  return !!hasRoundId_;
 }
-- (void) setHasId:(BOOL) value {
-  hasId_ = !!value;
+- (void) setHasRoundId:(BOOL) value {
+  hasRoundId_ = !!value;
 }
-@synthesize id;
+@synthesize roundId;
 - (BOOL) hasScore {
   return !!hasScore_;
 }
@@ -322,13 +322,13 @@ static BasicRoundResultsProto* defaultBasicRoundResultsProtoInstance = nil;
 }
 @synthesize endTime;
 - (void) dealloc {
-  self.id = nil;
+  self.roundId = nil;
   self.mutableAnswersList = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
-    self.id = @"";
+    self.roundId = @"";
     self.score = 0;
     self.roundNumber = 0;
     self.startTime = 0L;
@@ -359,8 +359,8 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
   return YES;
 }
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
-  if (self.hasId) {
-    [output writeString:1 value:self.id];
+  if (self.hasRoundId) {
+    [output writeString:1 value:self.roundId];
   }
   if (self.hasScore) {
     [output writeSInt32:2 value:self.score];
@@ -386,8 +386,8 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
   }
 
   size = 0;
-  if (self.hasId) {
-    size += computeStringSize(1, self.id);
+  if (self.hasRoundId) {
+    size += computeStringSize(1, self.roundId);
   }
   if (self.hasScore) {
     size += computeSInt32Size(2, self.score);
@@ -479,8 +479,8 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
   if (other == [CompleteRoundResultsProto defaultInstance]) {
     return self;
   }
-  if (other.hasId) {
-    [self setId:other.id];
+  if (other.hasRoundId) {
+    [self setRoundId:other.roundId];
   }
   if (other.hasScore) {
     [self setScore:other.score];
@@ -522,7 +522,7 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
         break;
       }
       case 10: {
-        [self setId:[input readString]];
+        [self setRoundId:[input readString]];
         break;
       }
       case 16: {
@@ -550,20 +550,20 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
     }
   }
 }
-- (BOOL) hasId {
-  return result.hasId;
+- (BOOL) hasRoundId {
+  return result.hasRoundId;
 }
-- (NSString*) id {
-  return result.id;
+- (NSString*) roundId {
+  return result.roundId;
 }
-- (CompleteRoundResultsProto_Builder*) setId:(NSString*) value {
-  result.hasId = YES;
-  result.id = value;
+- (CompleteRoundResultsProto_Builder*) setRoundId:(NSString*) value {
+  result.hasRoundId = YES;
+  result.roundId = value;
   return self;
 }
-- (CompleteRoundResultsProto_Builder*) clearId {
-  result.hasId = NO;
-  result.id = @"";
+- (CompleteRoundResultsProto_Builder*) clearRoundId {
+  result.hasRoundId = NO;
+  result.roundId = @"";
   return self;
 }
 - (BOOL) hasScore {
@@ -662,7 +662,7 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
 @end
 
 @interface UnfinishedRoundProto ()
-@property (retain) NSString* id;
+@property (retain) NSString* roundId;
 @property (retain) NSMutableArray* mutableQuestionsList;
 @property int32_t roundNumber;
 @property int32_t secondsRemaning;
@@ -672,13 +672,13 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
 
 @implementation UnfinishedRoundProto
 
-- (BOOL) hasId {
-  return !!hasId_;
+- (BOOL) hasRoundId {
+  return !!hasRoundId_;
 }
-- (void) setHasId:(BOOL) value {
-  hasId_ = !!value;
+- (void) setHasRoundId:(BOOL) value {
+  hasRoundId_ = !!value;
 }
-@synthesize id;
+@synthesize roundId;
 @synthesize mutableQuestionsList;
 - (BOOL) hasRoundNumber {
   return !!hasRoundNumber_;
@@ -709,13 +709,13 @@ static CompleteRoundResultsProto* defaultCompleteRoundResultsProtoInstance = nil
 }
 @synthesize currentScore;
 - (void) dealloc {
-  self.id = nil;
+  self.roundId = nil;
   self.mutableQuestionsList = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
-    self.id = @"";
+    self.roundId = @"";
     self.roundNumber = 0;
     self.secondsRemaning = 0;
     self.currentQuestionNumber = 0;
@@ -746,8 +746,8 @@ static UnfinishedRoundProto* defaultUnfinishedRoundProtoInstance = nil;
   return YES;
 }
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
-  if (self.hasId) {
-    [output writeString:1 value:self.id];
+  if (self.hasRoundId) {
+    [output writeString:1 value:self.roundId];
   }
   for (QuestionProto* element in self.questionsList) {
     [output writeMessage:2 value:element];
@@ -773,8 +773,8 @@ static UnfinishedRoundProto* defaultUnfinishedRoundProtoInstance = nil;
   }
 
   size = 0;
-  if (self.hasId) {
-    size += computeStringSize(1, self.id);
+  if (self.hasRoundId) {
+    size += computeStringSize(1, self.roundId);
   }
   for (QuestionProto* element in self.questionsList) {
     size += computeMessageSize(2, element);
@@ -866,8 +866,8 @@ static UnfinishedRoundProto* defaultUnfinishedRoundProtoInstance = nil;
   if (other == [UnfinishedRoundProto defaultInstance]) {
     return self;
   }
-  if (other.hasId) {
-    [self setId:other.id];
+  if (other.hasRoundId) {
+    [self setRoundId:other.roundId];
   }
   if (other.mutableQuestionsList.count > 0) {
     if (result.mutableQuestionsList == nil) {
@@ -909,7 +909,7 @@ static UnfinishedRoundProto* defaultUnfinishedRoundProtoInstance = nil;
         break;
       }
       case 10: {
-        [self setId:[input readString]];
+        [self setRoundId:[input readString]];
         break;
       }
       case 18: {
@@ -937,20 +937,20 @@ static UnfinishedRoundProto* defaultUnfinishedRoundProtoInstance = nil;
     }
   }
 }
-- (BOOL) hasId {
-  return result.hasId;
+- (BOOL) hasRoundId {
+  return result.hasRoundId;
 }
-- (NSString*) id {
-  return result.id;
+- (NSString*) roundId {
+  return result.roundId;
 }
-- (UnfinishedRoundProto_Builder*) setId:(NSString*) value {
-  result.hasId = YES;
-  result.id = value;
+- (UnfinishedRoundProto_Builder*) setRoundId:(NSString*) value {
+  result.hasRoundId = YES;
+  result.roundId = value;
   return self;
 }
-- (UnfinishedRoundProto_Builder*) clearId {
-  result.hasId = NO;
-  result.id = @"";
+- (UnfinishedRoundProto_Builder*) clearRoundId {
+  result.hasRoundId = NO;
+  result.roundId = @"";
   return self;
 }
 - (NSArray*) questionsList {

@@ -24,9 +24,6 @@ typedef enum {
 #define Minimum_UserName_Count 4
 #define Maximum_UserName_Count 15
 
-#define TempEmail @"trivia@lvl6.com"
-#define TempPass @"level6"
-
 @implementation LoginViewController
 
 - (void)dealloc {
@@ -63,8 +60,10 @@ typedef enum {
 
 - (IBAction)login:(id)sender {
   if ([self checkIfEmailIsValid] && [self checkIfPasswordIsValid]) {
+    SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+    sc.delegate = self;
     BasicUserProto *proto = [[[[BasicUserProto builder] setEmail:self.email] setPassword:self.password] build];
-    [[SocketCommunication sharedSocketCommunication] sendLoginRequestEventViaEmail:proto];
+    [sc sendLoginRequestEventViaEmail:proto];
   }
 }
 
@@ -113,11 +112,26 @@ typedef enum {
   return valid;
 }
 
+#pragma mark - Protocol Methods
+
+- (void)goToHomeView:(LoginResponseProto *)proto {
+  [[NSUserDefaults standardUserDefaults] setBool:YES forKey:IS_LOGGED_IN];
+  [[NSUserDefaults standardUserDefaults] synchronize];
+  
+  HomeViewController *vc = [[HomeViewController alloc] initWithLoginResponse:proto];
+  [self.view addSubview:vc.view];
+  vc.view.frame = CGRectMake(0, -vc.view.frame.size.height, vc.view.frame.size.width, vc.view.frame.size.height);
+  [UIView animateWithDuration:0.3f delay:0.f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    vc.view.frame = CGRectMake(0, 0, vc.view.frame.size.width, vc.view.frame.size.height);
+  } completion:^(BOOL finished) {
+    [self.navigationController pushViewController:vc animated:NO];
+  }];
+}
+
 - (void)receivedProtoResponse:(PBGeneratedMessage *)message {
   LoginResponseProto *proto = (LoginResponseProto *)message;
   if (proto.status == LoginResponseProto_LoginResponseStatusSuccessFacebookId || proto.status == LoginResponseProto_LoginResponseStatusSuccessEmailPassword || proto.status == LoginResponseProto_LoginResponseStatusSuccessNoCredentials || proto.status == LoginResponseProto_LoginResponseStatusSuccessLoginToken) {
-    HomeViewController *vc = [[HomeViewController alloc] initWithLoginResponse:proto];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self goToHomeView:proto];
   }
   else {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid email or password" message:@"Please check if your email or password is correct" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];

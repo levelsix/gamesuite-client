@@ -399,7 +399,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{226, 442}, {68, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSNextKeyView" ref="877317104"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="163158525"/>
 						<bool key="IBUIOpaque">NO</bool>
@@ -421,7 +421,7 @@
 						<int key="NSvFlags">256</int>
 						<string key="NSFrame">{{260, 422}, {19, 20}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSNextKeyView"/>
+						<reference key="NSNextKeyView" ref="247743850"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">1</int>
@@ -477,7 +477,7 @@
 						<int key="NSvFlags">-2147483356</int>
 						<string key="NSFrame">{{215, 420}, {91, 46}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSNextKeyView" ref="247743850"/>
+						<reference key="NSNextKeyView" ref="877317104"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="163158525"/>
 						<bool key="IBUIOpaque">NO</bool>
@@ -564,7 +564,7 @@
 						<int key="NSvFlags">256</int>
 						<string key="NSFrame">{{121, 82}, {78, 11}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSNextKeyView" ref="905636253"/>
+						<reference key="NSNextKeyView" ref="1034572300"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">4</int>
@@ -611,6 +611,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{10, 70}, {105, 35}}</string>
 								<reference key="NSSuperview" ref="1034572300"/>
+								<reference key="NSNextKeyView" ref="905636253"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>

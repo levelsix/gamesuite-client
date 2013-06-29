@@ -45,6 +45,7 @@
   BOOL opponentScoreLoaded;
   BOOL spinning;
   BOOL myTurn;
+  ScoreStates currentState;;
 }
 
 @end

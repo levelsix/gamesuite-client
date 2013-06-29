@@ -58,14 +58,13 @@
       responseClass = [RefillTokensByWaitingResponseProto class];
       break;
       
-    case PicturesEventProtocolResponseSSearchForUserEvent:
+    case PicturesEventProtocolRequestCSearchForUserEvent:
       responseClass = [SearchForUserResponseProto class];
       break;
       
     case PicturesEventProtocolResponseSRetrieveNewQuestionsEvent:
       responseClass = [RetrieveNewQuestionsResponseProto class];
       break;
-      
       
     default:
       responseClass = nil;
@@ -116,28 +115,24 @@ static NSString *udid = nil;
 }
 
 - (int)sendLoginRequestEventViaToken:(BasicUserProto *)proto facebookFriends:(NSArray *)facebookFriendId {
-  BOOL isLoggedin = [[NSUserDefaults standardUserDefaults] boolForKey:IS_LOGGED_IN];
-  BOOL initialize;
-  if (isLoggedin) initialize = NO;
-  else initialize = YES;
   if (facebookFriendId) {
-    LoginRequestProto *req = [[[[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeLoginToken] setInitializeAccount:initialize] addAllFacebookFriendIds:facebookFriendId]build];
+    LoginRequestProto *req = [[[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeLoginToken] addAllFacebookFriendIds:facebookFriendId]build];
     return [self sendData:req withMessageType:CommonEventProtocolRequestCLoginEvent];
   }
   else {
-    LoginRequestProto *req = [[[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeLoginToken] setInitializeAccount:initialize] build];
+    LoginRequestProto *req = [[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeLoginToken] build];
     return [self sendData:req withMessageType:CommonEventProtocolRequestCLoginEvent];
   }
   return 0;
 }
 
 - (int)sendLoginRequestEventViaFacebook:(BasicUserProto *)proto facebookFriends:(NSArray *)facebookFriendId {
-  LoginRequestProto *req = [[[[[[LoginRequestProto builder] setSender:proto] addAllFacebookFriendIds:facebookFriendId] setLoginType:LoginRequestProto_LoginTypeFacebook] setInitializeAccount:YES] build];
+  LoginRequestProto *req = [[[[[LoginRequestProto builder] setSender:proto] addAllFacebookFriendIds:facebookFriendId] setLoginType:LoginRequestProto_LoginTypeFacebook]build];
   return [self sendData:req withMessageType:CommonEventProtocolRequestCLoginEvent];
 }
 
 - (int)sendLoginRequestEventViaEmail:(BasicUserProto *)proto {
-  LoginRequestProto *req = [[[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeEmailPassword]setInitializeAccount:YES] build];
+  LoginRequestProto *req = [[[[LoginRequestProto builder] setSender:proto] setLoginType:LoginRequestProto_LoginTypeEmailPassword] build];
   return [self sendData:req withMessageType:CommonEventProtocolRequestCLoginEvent];
 }
 
@@ -196,6 +191,14 @@ static NSString *udid = nil;
 
 -(void) messageReceived:(NSData *)data withEvent:(int)eventType tag:(int)tag {
   Class typeClass = [self getClassForType:eventType];
+  NSString *classInString = NSStringFromClass([typeClass class]);
+  
+  if ([classInString isEqualToString:@"ForceLogoutResponseProto"]) {
+    [self sendLogoutRequest];
+    AppDelegate *ad = [[UIApplication sharedApplication] delegate];
+    [ad forceLogout];
+  }
+  
   if ([self.delegate respondsToSelector:@selector(receivedProtoResponse:)]) {
     FullEvent *fe = [FullEvent createWithEvent:(PBGeneratedMessage *)[typeClass parseFromData:data] tag:tag];
     [self.delegate receivedProtoResponse:fe.event];

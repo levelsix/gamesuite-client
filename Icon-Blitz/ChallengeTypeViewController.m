@@ -17,6 +17,9 @@
 
 @interface ChallengeTypeViewController () {
   BOOL fromHomeView;
+  StartRoundType startRoundType;
+  BOOL startedRequest;
+  BOOL searchFunctionClicked;
 }
 
 @end
@@ -44,9 +47,14 @@
 {
   [super viewDidLoad];
   self.facebookData = [NSMutableArray array];
+  startRoundType = kStartRoundNone;
 }
 
 - (IBAction)back:(UIButton *)sender {
+  if (startedRequest) {
+    SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+    sc.delegate = nil;
+  }
   [self.navigationController popViewControllerRotated:YES];
   if ([self.delegate respondsToSelector:@selector(passDataBackToRootView:)]) {
     [self.delegate passDataBackToRootView:self.userInfo];
@@ -75,7 +83,7 @@
 - (void)requestForFriend {
   __block NSMutableArray *friendIds = [[NSMutableArray alloc] init];
   __block NSMutableArray *haveGameIdObject = [[NSMutableArray alloc] init];
-  
+  __block NSArray *sortedArray;
   NSMutableArray *haveGameIds = [NSMutableArray array];
   for (BasicUserProto *proto in self.userInfo.listOfFacebookFriends) {
     [haveGameIds addObject:proto.facebookId];
@@ -94,8 +102,8 @@
           [friendIds addObject:friend];
         }
       }
-      
-      [self showFriends:haveGameIdObject andInviteArray:friendIds];
+      sortedArray = [friendIds sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+      [self showFriends:haveGameIdObject andInviteArray:sortedArray];
       [self.spinner stopAnimating];
     }
     else {
@@ -132,34 +140,88 @@
   UIAlertView *alert = [[ UIAlertView alloc] initWithTitle:@"Enter username" message:nil delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:@"cancel", nil];
   alert.alertViewStyle = UIAlertViewStylePlainTextInput;
   [alert show];
+  searchFunctionClicked = YES;
 }
 
 - (IBAction)randomClicked:(UIButton *)sender {
-  
+  startedRequest = YES;
+  startRoundType = kStartRoundRandom;
+  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+  sc.delegate = self;
+  [self.spinner startAnimating];
+  self.loadingLabel.hidden = NO;
+  [self disableButtons];
+
+  BasicUserProto *user = [sc buildSender];
+  self.loadingLabel.text = [NSString stringWithFormat:@"Searching for random opponent"];
+  self.loadingLabel.numberOfLines = 0;
+  int64_t startTime = (int64_t)[self getUsersTimeInSeconds];
+  [sc sendStartRoundRequest:user isRandomPlayer:YES opponent:NULL gameId:NULL roundNumber:1 isPlayerOne:YES startTime:startTime*1000 questions:self.userInfo.questions];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
   switch (buttonIndex) {
     case 0:
-      [self searchForUser:[alertView textFieldAtIndex:0].text];
+      if (searchFunctionClicked) {
+        [self searchForUser:[alertView textFieldAtIndex:0].text];
+        searchFunctionClicked = NO;
+      }
       break;
+      
+    case 1:
+      searchFunctionClicked = NO;
+      break;
+      
   }
 }
 
 - (void)searchForUser:(NSString *)name {
+  startRoundType = kStartRoundSearch;
   [self.spinner startAnimating];
   self.loadingLabel.hidden = NO;
-  self.loadingLabel.text = [NSString stringWithFormat:@"Search for '%@'",name];
+  [self disableButtons];
+  self.loadingLabel.text = [NSString stringWithFormat:@"Searching for '%@'",name];
   SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
   sc.delegate = self;
   BasicUserProto *user = [sc buildSender];
   [sc sendSearchForUser:user nameOfPerson:name];
 }
 
+- (NSTimeInterval)getUsersTimeInSeconds {
+  NSTimeZone* local = [NSTimeZone localTimeZone];
+  NSInteger secondsOffset = [local secondsFromGMTForDate:[NSDate date]];
+  NSDate *date = [[NSDate alloc] init];
+  NSTimeInterval time = [date timeIntervalSince1970];
+  return time + secondsOffset;
+}
+
+- (void)disableButtons {
+  for (UIButton *buttons in self.view.subviews) {
+    buttons.userInteractionEnabled = NO;
+  }
+  self.backButton.userInteractionEnabled = YES;
+}
+
+- (void)enableButtons {
+  for (UIButton *buttons in self.view.subviews) {
+    buttons.userInteractionEnabled = YES;
+  }
+}
+
 #pragma mark - Protocol Buffer Methods
 
 - (void)receivedProtoResponse:(PBGeneratedMessage *)message {
-  NSLog(@"received event");
+  [self enableButtons];
+  startedRequest = NO;
+  StartRoundResponseProto *proto = (StartRoundResponseProto *)message;
+  if (startRoundType == kStartRoundRandom) {
+    if (proto.status == StartRoundResponseProto_StartRoundStatusSuccess) {
+      
+    }
+  }
+  else if (startRoundType == kStartRoundSearch) {
+    
+  }
 }
 
 @end

@@ -24,8 +24,12 @@
 @class LoginResponseProto_Builder;
 @class LoginResponseProto_LoginConstants;
 @class LoginResponseProto_LoginConstants_Builder;
+@class LoginResponseProto_LoginConstants_CurrencyConstants;
+@class LoginResponseProto_LoginConstants_CurrencyConstants_Builder;
 @class LoginResponseProto_LoginConstants_QuestionTypeScoringConstants;
 @class LoginResponseProto_LoginConstants_QuestionTypeScoringConstants_Builder;
+@class LoginResponseProto_LoginConstants_RoundConstants;
+@class LoginResponseProto_LoginConstants_RoundConstants_Builder;
 @class MultipleChoiceAnswerProto;
 @class MultipleChoiceAnswerProto_Builder;
 @class MultipleChoiceQuestionProto;
@@ -76,20 +80,16 @@ BOOL LoginResponseProto_LoginResponseStatusIsValidValue(LoginResponseProto_Login
 
 @interface LoginRequestProto : PBGeneratedMessage {
 @private
-  BOOL hasInitializeAccount_:1;
   BOOL hasSender_:1;
   BOOL hasLoginType_:1;
-  BOOL initializeAccount_:1;
   BasicUserProto* sender;
   LoginRequestProto_LoginType loginType;
   NSMutableArray* mutableFacebookFriendIdsList;
 }
 - (BOOL) hasSender;
 - (BOOL) hasLoginType;
-- (BOOL) hasInitializeAccount;
 @property (readonly, retain) BasicUserProto* sender;
 @property (readonly) LoginRequestProto_LoginType loginType;
-- (BOOL) initializeAccount;
 - (NSArray*) facebookFriendIdsList;
 - (NSString*) facebookFriendIdsAtIndex:(int32_t) index;
 
@@ -145,11 +145,6 @@ BOOL LoginResponseProto_LoginResponseStatusIsValidValue(LoginResponseProto_Login
 - (LoginRequestProto_LoginType) loginType;
 - (LoginRequestProto_Builder*) setLoginType:(LoginRequestProto_LoginType) value;
 - (LoginRequestProto_Builder*) clearLoginType;
-
-- (BOOL) hasInitializeAccount;
-- (BOOL) initializeAccount;
-- (LoginRequestProto_Builder*) setInitializeAccount:(BOOL) value;
-- (LoginRequestProto_Builder*) clearInitializeAccount;
 @end
 
 @interface LoginResponseProto : PBGeneratedMessage {
@@ -205,26 +200,18 @@ BOOL LoginResponseProto_LoginResponseStatusIsValidValue(LoginResponseProto_Login
 
 @interface LoginResponseProto_LoginConstants : PBGeneratedMessage {
 @private
-  BOOL hasDefaultInitialTokens_:1;
-  BOOL hasDefaultInitialRubies_:1;
-  BOOL hasDefaultRoundsPerGame_:1;
-  BOOL hasDefaultMinutesPerRound_:1;
+  BOOL hasCurrencyConstants_:1;
+  BOOL hasRoundConstants_:1;
   BOOL hasScoreTypes_:1;
-  int32_t defaultInitialTokens;
-  int32_t defaultInitialRubies;
-  int32_t defaultRoundsPerGame;
-  int32_t defaultMinutesPerRound;
+  LoginResponseProto_LoginConstants_CurrencyConstants* currencyConstants;
+  LoginResponseProto_LoginConstants_RoundConstants* roundConstants;
   LoginResponseProto_LoginConstants_QuestionTypeScoringConstants* scoreTypes;
 }
-- (BOOL) hasDefaultInitialTokens;
-- (BOOL) hasDefaultInitialRubies;
-- (BOOL) hasDefaultRoundsPerGame;
-- (BOOL) hasDefaultMinutesPerRound;
+- (BOOL) hasCurrencyConstants;
+- (BOOL) hasRoundConstants;
 - (BOOL) hasScoreTypes;
-@property (readonly) int32_t defaultInitialTokens;
-@property (readonly) int32_t defaultInitialRubies;
-@property (readonly) int32_t defaultRoundsPerGame;
-@property (readonly) int32_t defaultMinutesPerRound;
+@property (readonly, retain) LoginResponseProto_LoginConstants_CurrencyConstants* currencyConstants;
+@property (readonly, retain) LoginResponseProto_LoginConstants_RoundConstants* roundConstants;
 @property (readonly, retain) LoginResponseProto_LoginConstants_QuestionTypeScoringConstants* scoreTypes;
 
 + (LoginResponseProto_LoginConstants*) defaultInstance;
@@ -242,6 +229,129 @@ BOOL LoginResponseProto_LoginResponseStatusIsValidValue(LoginResponseProto_Login
 + (LoginResponseProto_LoginConstants*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 + (LoginResponseProto_LoginConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input;
 + (LoginResponseProto_LoginConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface LoginResponseProto_LoginConstants_CurrencyConstants : PBGeneratedMessage {
+@private
+  BOOL hasDefaultInitialRubies_:1;
+  BOOL hasDefaultInitialTokens_:1;
+  BOOL hasNumSecondsUntilRefill_:1;
+  int32_t defaultInitialRubies;
+  int32_t defaultInitialTokens;
+  int32_t numSecondsUntilRefill;
+}
+- (BOOL) hasDefaultInitialRubies;
+- (BOOL) hasDefaultInitialTokens;
+- (BOOL) hasNumSecondsUntilRefill;
+@property (readonly) int32_t defaultInitialRubies;
+@property (readonly) int32_t defaultInitialTokens;
+@property (readonly) int32_t numSecondsUntilRefill;
+
++ (LoginResponseProto_LoginConstants_CurrencyConstants*) defaultInstance;
+- (LoginResponseProto_LoginConstants_CurrencyConstants*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) builder;
++ (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) builder;
++ (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) builderWithPrototype:(LoginResponseProto_LoginConstants_CurrencyConstants*) prototype;
+
++ (LoginResponseProto_LoginConstants_CurrencyConstants*) parseFromData:(NSData*) data;
++ (LoginResponseProto_LoginConstants_CurrencyConstants*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (LoginResponseProto_LoginConstants_CurrencyConstants*) parseFromInputStream:(NSInputStream*) input;
++ (LoginResponseProto_LoginConstants_CurrencyConstants*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (LoginResponseProto_LoginConstants_CurrencyConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (LoginResponseProto_LoginConstants_CurrencyConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface LoginResponseProto_LoginConstants_CurrencyConstants_Builder : PBGeneratedMessage_Builder {
+@private
+  LoginResponseProto_LoginConstants_CurrencyConstants* result;
+}
+
+- (LoginResponseProto_LoginConstants_CurrencyConstants*) defaultInstance;
+
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) clear;
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) clone;
+
+- (LoginResponseProto_LoginConstants_CurrencyConstants*) build;
+- (LoginResponseProto_LoginConstants_CurrencyConstants*) buildPartial;
+
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) mergeFrom:(LoginResponseProto_LoginConstants_CurrencyConstants*) other;
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasDefaultInitialRubies;
+- (int32_t) defaultInitialRubies;
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) setDefaultInitialRubies:(int32_t) value;
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) clearDefaultInitialRubies;
+
+- (BOOL) hasDefaultInitialTokens;
+- (int32_t) defaultInitialTokens;
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) setDefaultInitialTokens:(int32_t) value;
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) clearDefaultInitialTokens;
+
+- (BOOL) hasNumSecondsUntilRefill;
+- (int32_t) numSecondsUntilRefill;
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) setNumSecondsUntilRefill:(int32_t) value;
+- (LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) clearNumSecondsUntilRefill;
+@end
+
+@interface LoginResponseProto_LoginConstants_RoundConstants : PBGeneratedMessage {
+@private
+  BOOL hasDefaultRoundsPerGame_:1;
+  BOOL hasDefaultMinutesPerRound_:1;
+  int32_t defaultRoundsPerGame;
+  int32_t defaultMinutesPerRound;
+}
+- (BOOL) hasDefaultRoundsPerGame;
+- (BOOL) hasDefaultMinutesPerRound;
+@property (readonly) int32_t defaultRoundsPerGame;
+@property (readonly) int32_t defaultMinutesPerRound;
+
++ (LoginResponseProto_LoginConstants_RoundConstants*) defaultInstance;
+- (LoginResponseProto_LoginConstants_RoundConstants*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) builder;
++ (LoginResponseProto_LoginConstants_RoundConstants_Builder*) builder;
++ (LoginResponseProto_LoginConstants_RoundConstants_Builder*) builderWithPrototype:(LoginResponseProto_LoginConstants_RoundConstants*) prototype;
+
++ (LoginResponseProto_LoginConstants_RoundConstants*) parseFromData:(NSData*) data;
++ (LoginResponseProto_LoginConstants_RoundConstants*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (LoginResponseProto_LoginConstants_RoundConstants*) parseFromInputStream:(NSInputStream*) input;
++ (LoginResponseProto_LoginConstants_RoundConstants*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (LoginResponseProto_LoginConstants_RoundConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (LoginResponseProto_LoginConstants_RoundConstants*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface LoginResponseProto_LoginConstants_RoundConstants_Builder : PBGeneratedMessage_Builder {
+@private
+  LoginResponseProto_LoginConstants_RoundConstants* result;
+}
+
+- (LoginResponseProto_LoginConstants_RoundConstants*) defaultInstance;
+
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) clear;
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) clone;
+
+- (LoginResponseProto_LoginConstants_RoundConstants*) build;
+- (LoginResponseProto_LoginConstants_RoundConstants*) buildPartial;
+
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) mergeFrom:(LoginResponseProto_LoginConstants_RoundConstants*) other;
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasDefaultRoundsPerGame;
+- (int32_t) defaultRoundsPerGame;
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) setDefaultRoundsPerGame:(int32_t) value;
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) clearDefaultRoundsPerGame;
+
+- (BOOL) hasDefaultMinutesPerRound;
+- (int32_t) defaultMinutesPerRound;
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) setDefaultMinutesPerRound:(int32_t) value;
+- (LoginResponseProto_LoginConstants_RoundConstants_Builder*) clearDefaultMinutesPerRound;
 @end
 
 @interface LoginResponseProto_LoginConstants_QuestionTypeScoringConstants : PBGeneratedMessage {
@@ -336,25 +446,19 @@ BOOL LoginResponseProto_LoginResponseStatusIsValidValue(LoginResponseProto_Login
 - (LoginResponseProto_LoginConstants_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
 - (LoginResponseProto_LoginConstants_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 
-- (BOOL) hasDefaultInitialTokens;
-- (int32_t) defaultInitialTokens;
-- (LoginResponseProto_LoginConstants_Builder*) setDefaultInitialTokens:(int32_t) value;
-- (LoginResponseProto_LoginConstants_Builder*) clearDefaultInitialTokens;
+- (BOOL) hasCurrencyConstants;
+- (LoginResponseProto_LoginConstants_CurrencyConstants*) currencyConstants;
+- (LoginResponseProto_LoginConstants_Builder*) setCurrencyConstants:(LoginResponseProto_LoginConstants_CurrencyConstants*) value;
+- (LoginResponseProto_LoginConstants_Builder*) setCurrencyConstantsBuilder:(LoginResponseProto_LoginConstants_CurrencyConstants_Builder*) builderForValue;
+- (LoginResponseProto_LoginConstants_Builder*) mergeCurrencyConstants:(LoginResponseProto_LoginConstants_CurrencyConstants*) value;
+- (LoginResponseProto_LoginConstants_Builder*) clearCurrencyConstants;
 
-- (BOOL) hasDefaultInitialRubies;
-- (int32_t) defaultInitialRubies;
-- (LoginResponseProto_LoginConstants_Builder*) setDefaultInitialRubies:(int32_t) value;
-- (LoginResponseProto_LoginConstants_Builder*) clearDefaultInitialRubies;
-
-- (BOOL) hasDefaultRoundsPerGame;
-- (int32_t) defaultRoundsPerGame;
-- (LoginResponseProto_LoginConstants_Builder*) setDefaultRoundsPerGame:(int32_t) value;
-- (LoginResponseProto_LoginConstants_Builder*) clearDefaultRoundsPerGame;
-
-- (BOOL) hasDefaultMinutesPerRound;
-- (int32_t) defaultMinutesPerRound;
-- (LoginResponseProto_LoginConstants_Builder*) setDefaultMinutesPerRound:(int32_t) value;
-- (LoginResponseProto_LoginConstants_Builder*) clearDefaultMinutesPerRound;
+- (BOOL) hasRoundConstants;
+- (LoginResponseProto_LoginConstants_RoundConstants*) roundConstants;
+- (LoginResponseProto_LoginConstants_Builder*) setRoundConstants:(LoginResponseProto_LoginConstants_RoundConstants*) value;
+- (LoginResponseProto_LoginConstants_Builder*) setRoundConstantsBuilder:(LoginResponseProto_LoginConstants_RoundConstants_Builder*) builderForValue;
+- (LoginResponseProto_LoginConstants_Builder*) mergeRoundConstants:(LoginResponseProto_LoginConstants_RoundConstants*) value;
+- (LoginResponseProto_LoginConstants_Builder*) clearRoundConstants;
 
 - (BOOL) hasScoreTypes;
 - (LoginResponseProto_LoginConstants_QuestionTypeScoringConstants*) scoreTypes;

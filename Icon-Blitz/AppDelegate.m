@@ -16,6 +16,7 @@
 #import "TriviaBlitzIAPHelper.h"
 #import "SocketCommunication.h" 
 #import "StaticProperties.h"
+#import "TutorialViewController.h"
 
 NSString *const FBSessionStateChangedNotification =
 @"com.bestfunfreegames.Icon-Blitz:FBSessionStateChangedNotification";
@@ -94,6 +95,7 @@ NSString *const FBSessionStateChangedNotification =
   BOOL isLoggedin = [[NSUserDefaults standardUserDefaults] boolForKey:IS_LOGGED_IN];
   if (isLoggedin) {
     self.viewController = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
+    //self.viewController  = [[TutorialViewController alloc] initWithNibName:@"TutorialViewController" bundle:nil];
   }
   else {
     self.viewController = [[SignUpViewController alloc] initWithNibName:@"SignUpViewController" bundle:nil];
@@ -106,31 +108,49 @@ NSString *const FBSessionStateChangedNotification =
   SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
   [sc initNetworkCommunication];
   
+  [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+   (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+  
   [self.window makeKeyAndVisible];
   return YES;
 }
 
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
+{
+	NSLog(@"My token is: %@", deviceToken);
+}
+
+- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
+{
+	NSLog(@"Failed to get token, error: %@", error);
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-  // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-  // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+  
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-  
-  BOOL isLoggedin = [[NSUserDefaults standardUserDefaults] boolForKey:IS_LOGGED_IN];
-  
   SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
   [sc sendLogoutRequest];
   
-  NSString *currentView = NSStringFromClass([self.navController.visibleViewController class]);
-  if (![currentView isEqualToString:@"HomeViewController"]) {
-    if (isLoggedin) {
+  BOOL isLoggedin = [[NSUserDefaults standardUserDefaults] boolForKey:IS_LOGGED_IN];
+  BOOL changedRootViewOnce = [[NSUserDefaults standardUserDefaults] boolForKey:CHANGED_ROOT_ONCE];
+  if (isLoggedin && !changedRootViewOnce) {
+    UIViewController *rootViewController = self.navController.viewControllers[0];
+    NSString *classString =  NSStringFromClass([rootViewController class]);
+    if (![classString isEqualToString:@"HomeViewController"]) {
       self.viewController = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
+      self.navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
       self.window.rootViewController = self.navController;
       self.navController.navigationBar.hidden = YES;
+      [[NSUserDefaults standardUserDefaults] setBool:YES forKey:CHANGED_ROOT_ONCE];
     }
+  }
+
+  NSString *currentView = NSStringFromClass([self.navController.visibleViewController class]);
+  if (![currentView isEqualToString:@"HomeViewController"]) {
     [self.navController popToRootViewControllerAnimated:NO];
   }
 }
@@ -146,7 +166,6 @@ NSString *const FBSessionStateChangedNotification =
   
   NSString *currentView = NSStringFromClass([self.navController.visibleViewController class]);
   if ([currentView isEqualToString:@"HomeViewController"]){
-    NSLog(@"refreshing data");
     HomeViewController *vc = (HomeViewController *)self.navController.visibleViewController;
     [vc loginWithToken];
   }
@@ -164,7 +183,11 @@ NSString *const FBSessionStateChangedNotification =
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-  // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+  [sc sendLogoutRequest];}
+
+- (void)forceLogout {
+  [self.navController popToRootViewControllerAnimated:NO];
 }
 
 @end

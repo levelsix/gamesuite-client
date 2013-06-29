@@ -39,8 +39,6 @@
       NSDictionary<FBGraphUser> *friend = [inviteArray objectAtIndex:i];
       [self.totalArray addObject:friend];
     }
-    [SDWebImageManager.sharedManager.imageDownloader setValue:@"FriendsArray" forHTTPHeaderField:@"Friends"];
-    SDWebImageManager.sharedManager.imageDownloader.queueMode = SDWebImageDownloaderLIFOQueueMode;
   }
   return self;
 }
@@ -49,6 +47,8 @@
 {
   [super viewDidLoad];
   self.inviteTableView.tableFooterView = [[UIView alloc] init];
+  [SDWebImageManager.sharedManager.imageDownloader setValue:@"FriendsArray" forHTTPHeaderField:@"Friends"];
+  SDWebImageManager.sharedManager.imageDownloader.queueMode = SDWebImageDownloaderLIFOQueueMode;
 }
 
 - (IBAction)back:(id)sender {
@@ -63,7 +63,7 @@
   sc.delegate = self;
   
   BasicUserProto *proto = [sc buildSender];
-  
+
   NSTimeInterval time = [self getUsersTimeInSeconds];
   self.startTime = (int64_t)time;
   NSDictionary<FBGraphUser> *chosen = [self.totalArray objectAtIndex:sender.tag];

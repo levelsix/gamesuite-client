@@ -30,16 +30,16 @@
 @interface BasicRoundResultsProto : PBGeneratedMessage {
 @private
   BOOL hasRoundNumber_:1;
-  BOOL hasId_:1;
+  BOOL hasRoundId_:1;
   BOOL hasScore_:1;
   int32_t roundNumber;
-  NSString* id;
+  NSString* roundId;
   int32_t score;
 }
-- (BOOL) hasId;
+- (BOOL) hasRoundId;
 - (BOOL) hasScore;
 - (BOOL) hasRoundNumber;
-@property (readonly, retain) NSString* id;
+@property (readonly, retain) NSString* roundId;
 @property (readonly) int32_t score;
 @property (readonly) int32_t roundNumber;
 
@@ -77,10 +77,10 @@
 - (BasicRoundResultsProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
 - (BasicRoundResultsProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 
-- (BOOL) hasId;
-- (NSString*) id;
-- (BasicRoundResultsProto_Builder*) setId:(NSString*) value;
-- (BasicRoundResultsProto_Builder*) clearId;
+- (BOOL) hasRoundId;
+- (NSString*) roundId;
+- (BasicRoundResultsProto_Builder*) setRoundId:(NSString*) value;
+- (BasicRoundResultsProto_Builder*) clearRoundId;
 
 - (BOOL) hasScore;
 - (int32_t) score;
@@ -98,21 +98,21 @@
   BOOL hasStartTime_:1;
   BOOL hasEndTime_:1;
   BOOL hasRoundNumber_:1;
-  BOOL hasId_:1;
+  BOOL hasRoundId_:1;
   BOOL hasScore_:1;
   int64_t startTime;
   int64_t endTime;
   int32_t roundNumber;
-  NSString* id;
+  NSString* roundId;
   int32_t score;
   NSMutableArray* mutableAnswersList;
 }
-- (BOOL) hasId;
+- (BOOL) hasRoundId;
 - (BOOL) hasScore;
 - (BOOL) hasRoundNumber;
 - (BOOL) hasStartTime;
 - (BOOL) hasEndTime;
-@property (readonly, retain) NSString* id;
+@property (readonly, retain) NSString* roundId;
 @property (readonly) int32_t score;
 @property (readonly) int32_t roundNumber;
 @property (readonly) int64_t startTime;
@@ -154,10 +154,10 @@
 - (CompleteRoundResultsProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
 - (CompleteRoundResultsProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 
-- (BOOL) hasId;
-- (NSString*) id;
-- (CompleteRoundResultsProto_Builder*) setId:(NSString*) value;
-- (CompleteRoundResultsProto_Builder*) clearId;
+- (BOOL) hasRoundId;
+- (NSString*) roundId;
+- (CompleteRoundResultsProto_Builder*) setRoundId:(NSString*) value;
+- (CompleteRoundResultsProto_Builder*) clearRoundId;
 
 - (BOOL) hasScore;
 - (int32_t) score;
@@ -193,20 +193,20 @@
   BOOL hasSecondsRemaning_:1;
   BOOL hasCurrentQuestionNumber_:1;
   BOOL hasCurrentScore_:1;
-  BOOL hasId_:1;
+  BOOL hasRoundId_:1;
   int32_t roundNumber;
   int32_t secondsRemaning;
   int32_t currentQuestionNumber;
   int32_t currentScore;
-  NSString* id;
+  NSString* roundId;
   NSMutableArray* mutableQuestionsList;
 }
-- (BOOL) hasId;
+- (BOOL) hasRoundId;
 - (BOOL) hasRoundNumber;
 - (BOOL) hasSecondsRemaning;
 - (BOOL) hasCurrentQuestionNumber;
 - (BOOL) hasCurrentScore;
-@property (readonly, retain) NSString* id;
+@property (readonly, retain) NSString* roundId;
 @property (readonly) int32_t roundNumber;
 @property (readonly) int32_t secondsRemaning;
 @property (readonly) int32_t currentQuestionNumber;
@@ -248,10 +248,10 @@
 - (UnfinishedRoundProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
 - (UnfinishedRoundProto_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 
-- (BOOL) hasId;
-- (NSString*) id;
-- (UnfinishedRoundProto_Builder*) setId:(NSString*) value;
-- (UnfinishedRoundProto_Builder*) clearId;
+- (BOOL) hasRoundId;
+- (NSString*) roundId;
+- (UnfinishedRoundProto_Builder*) setRoundId:(NSString*) value;
+- (UnfinishedRoundProto_Builder*) clearRoundId;
 
 - (NSArray*) questionsList;
 - (QuestionProto*) questionsAtIndex:(int32_t) index;

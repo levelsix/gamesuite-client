@@ -27,6 +27,9 @@
 		0628CCA916F2783100AE97A0 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0628CCA816F2783100AE97A0 /* ImageIO.framework */; };
 		0628CCB716F284BA00AE97A0 /* FriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0628CCB516F284BA00AE97A0 /* FriendsViewController.m */; };
 		0628CCB816F284BA00AE97A0 /* FriendsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0628CCB616F284BA00AE97A0 /* FriendsViewController.xib */; };
+		062E39AD177BAC1900108B42 /* FillInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 062E39AB177BAC1800108B42 /* FillInViewController.m */; };
+		062E39AE177BAC1900108B42 /* FillInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 062E39AC177BAC1800108B42 /* FillInViewController.xib */; };
+		062E39B1177BB94200108B42 /* AnswerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 062E39B0177BB94200108B42 /* AnswerView.m */; };
 		0638341917586CF100A0E417 /* circleglow.png in Resources */ = {isa = PBXBuildFile; fileRef = 0638341717586CF100A0E417 /* circleglow.png */; };
 		0638341A17586CF100A0E417 /* circleglow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0638341817586CF100A0E417 /* circleglow@2x.png */; };
 		063DEA4B1718B77B00D8ADE2 /* FullEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 063DEA4A1718B77B00D8ADE2 /* FullEvent.m */; };
@@ -344,6 +347,11 @@
 		0628CCB516F284BA00AE97A0 /* FriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendsViewController.m; sourceTree = "<group>"; };
 		0628CCB616F284BA00AE97A0 /* FriendsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendsViewController.xib; sourceTree = "<group>"; };
 		0628CFC416F2B7B000AE97A0 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		062E39AA177BAC1800108B42 /* FillInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FillInViewController.h; sourceTree = "<group>"; };
+		062E39AB177BAC1800108B42 /* FillInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FillInViewController.m; sourceTree = "<group>"; };
+		062E39AC177BAC1800108B42 /* FillInViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FillInViewController.xib; sourceTree = "<group>"; };
+		062E39AF177BB94100108B42 /* AnswerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnswerView.h; sourceTree = "<group>"; };
+		062E39B0177BB94200108B42 /* AnswerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnswerView.m; sourceTree = "<group>"; };
 		0638341717586CF100A0E417 /* circleglow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circleglow.png; sourceTree = "<group>"; };
 		0638341817586CF100A0E417 /* circleglow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "circleglow@2x.png"; sourceTree = "<group>"; };
 		063DEA491718B77B00D8ADE2 /* FullEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FullEvent.h; sourceTree = "<group>"; };
@@ -1017,6 +1025,11 @@
 		0682262A16F7D4C600F92076 /* Type of level */ = {
 			isa = PBXGroup;
 			children = (
+				062E39AF177BB94100108B42 /* AnswerView.h */,
+				062E39B0177BB94200108B42 /* AnswerView.m */,
+				062E39AA177BAC1800108B42 /* FillInViewController.h */,
+				062E39AB177BAC1800108B42 /* FillInViewController.m */,
+				062E39AC177BAC1800108B42 /* FillInViewController.xib */,
 				067301B3173D9805001C507A /* FillInTypeViewController.h */,
 				067301B4173D9805001C507A /* FillInTypeViewController.m */,
 				067301B5173D9805001C507A /* FillInTypeViewController.xib */,
@@ -1738,6 +1751,7 @@
 				06848F0F1773CC0300351FB9 /* User.proto in Resources */,
 				06848F121773D13400351FB9 /* updating.png in Resources */,
 				06848F131773D13400351FB9 /* updating@2x.png in Resources */,
+				062E39AE177BAC1900108B42 /* FillInViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1817,6 +1831,8 @@
 				06848EE91773CBF900351FB9 /* TriviaQuestionFormat.pb.m in Sources */,
 				06848EEA1773CBF900351FB9 /* TriviaRoundFormat.pb.m in Sources */,
 				06848EEB1773CBF900351FB9 /* User.pb.m in Sources */,
+				062E39AD177BAC1900108B42 /* FillInViewController.m in Sources */,
+				062E39B1177BB94200108B42 /* AnswerView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

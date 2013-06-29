@@ -15,6 +15,7 @@
 #import "FillInTypeViewController.h"
 #import "SocketCommunication.h" 
 #import "TutorialMultipleChoiceViewController.h"
+#import "FillInViewController.h"
 
 #define Tutorial_Timer 60
 #define Regular_Game_Timer 120
@@ -260,6 +261,15 @@
 
 #pragma mark Non-Tutorial Stuff
 
+- (id)initWithFillInTest {
+  if ((self = [super init])) {
+    self.currentController = [[FillInViewController alloc] initWithGame:self];
+    self.currentController.view.center = CGPointMake(self.currentController.view.center.x, self.currentController.view.center.y+56);
+    [self.view addSubview:self.currentController.view];
+    gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);  }
+  return self;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userData:(UserInfo *)userData {
   if ((self = [super init])) {
     self.userData = userData;
@@ -456,8 +466,24 @@
   [self transitionWithConclusion:NO skipping:NO andNextQuestionType:kFillIn];
 }
 
-- (IBAction)cheatOneClicked:(id)sender {  
-  if (self.userData.rubies < CheatCost) {
+- (IBAction)cheatOneClicked:(id)sender {
+  
+  if (self.isTutorial) {
+    self.currentType = kFillIn;
+    if (self.currentType = kFillIn) {
+      FillInTypeViewController *vc = (FillInTypeViewController *)self.currentController;
+      [vc removeOptions];
+    }
+    else {
+      MultipleChoiceViewController *vc = (MultipleChoiceViewController *)self.currentController;
+      [vc removeOptions];
+    }
+    if (self.isTutorial) {
+      [self tutorialCheatUsed];
+    }
+    return;
+  }
+  else if (self.userData.rubies < CheatCost) {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not enough rubies" message:@"You don't have enough rubies, you can buy them after this game!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
     [alert show];
     return;
@@ -522,7 +548,7 @@
 - (void)pushNewViewControllersWithType:(QuestionType)type {
   UIViewController *newController;
   if (type == kFillIn)  {
-    newController = [[FillInTypeViewController alloc] initWithGame:self];
+    newController = [[FillInViewController alloc] initWithGame:self];
   }
   else if (type == kMultipleChoice) {
     newController = [[MultipleChoiceViewController alloc] initWithGame:self];
@@ -567,7 +593,7 @@
   else if (conclusion) answerType = QuestionAnsweredProto_AnswerTypeCorrect;
   else answerType = QuestionAnsweredProto_AnswerTypeIncorrect;
   
-  QuestionAnsweredProto *proto = [[[[[QuestionAnsweredProto builder] setQuestionId:qProto.id] setAnswerType:answerType] setQuestionNumber:self.currentQuestion] build];
+  QuestionAnsweredProto *proto = [[[[[QuestionAnsweredProto builder] setQuestionId:qProto.questionId] setAnswerType:answerType] setQuestionNumber:self.currentQuestion] build];
   
   [self.questionsAnswered addObject:proto];
   
@@ -585,7 +611,7 @@
         [self updatePointsLabel];
         [self fadeInLabelWithAmount:10 add:YES andNumberType:kPointType];
       }completion:^(BOOL finished) {
-        [self pushNewViewControllersWithType:kMultipleChoice];
+        [self pushNewViewControllersWithType:kFillIn];
         [imageView removeFromSuperview];
       }];
     }
@@ -702,7 +728,8 @@
   self.spinnerView.hidden = NO;
   [self.spinner startAnimating];
   
-  CompleteRoundResultsProto *proto = [[[[[[[CompleteRoundResultsProto builder] setId:NULL] setRoundNumber:self.roundNumber] setStartTime:self.startTime] setEndTime:endTime] addAllAnswers:self.questionsAnswered] build];
+  CompleteRoundResultsProto *proto = [[[[[[[CompleteRoundResultsProto builder] setRoundId:NULL] setRoundNumber:self.roundNumber] setStartTime:self.startTime] setEndTime:endTime] addAllAnswers:self.questionsAnswered] build];
+
   [sc sendCompleteRoundRequest:user opponent:self.opponent gameId:self.gameId results:proto];
 }
 

@@ -17,8 +17,8 @@
 #import "ScoreViewController.h"
 #import "UserInfo.h"
 #import "SocketCommunication.h"
+#import "Downloader.h"
 
-#define MAX_GOLD_COINS 15
 #define ADD_NEW_COIN_TIME 1200
 
 @interface HomeViewController () {
@@ -31,13 +31,24 @@
   int theirTurnAmt;
   int completedAmt;
   int rubyBefore;
-    
+  
+  //first time they finished sign up set these 2
+  int initialRubies;
+  int initialTokens;
+  
+  int defaultMinsPerRound;
+  int multipleChoicePointAmount;
+  int fillInPointAmount;
+  
+  int secondsTillRefill;
+  
+  NSMutableDictionary *roundConstants;
+  
   BOOL myTurnHasNoGames;
   BOOL theirTurnHasNoGames;
   BOOL completedHasNoGames;
   
   BasicUserProto *basicProto;
-
 }
 
 @end
@@ -59,6 +70,7 @@
     self.userInfo.questions = proto.newQuestionsList;
     [self saveTokenWithProto:proto.recipient];
     [self addArraysTogether];
+    [self updateUserCurrencyWithLoginResponse:proto];
     fromSignUp = YES;
   }
   return self;
@@ -88,6 +100,7 @@
   [[NSUserDefaults standardUserDefaults] setObject:[completeUserDict copy] forKey:COMPLETE_USER_INFO];
   [[NSUserDefaults standardUserDefaults] setObject:[tokenDict copy] forKey:LOGIN_TOKEN];
   [[NSUserDefaults standardUserDefaults] synchronize];
+  
 }
 
 - (void)loginWithToken {
@@ -162,21 +175,42 @@
   }];
 }
 
+- (void)updateUserCurrencyWithLoginResponse:(LoginResponseProto *)proto {
+  initialRubies = proto.loginConstants.currencyConstants.defaultInitialRubies;
+  initialTokens = proto.loginConstants.currencyConstants.defaultInitialTokens;
+  secondsTillRefill = proto.loginConstants.currencyConstants.numSecondsUntilRefill;
+  defaultMinsPerRound = proto.loginConstants.roundConstants.defaultMinutesPerRound;
+  multipleChoicePointAmount = proto.loginConstants.scoreTypes.mcqCorrect;
+  fillInPointAmount = proto.loginConstants.scoreTypes.acqCorrect;
+  
+  amountOfRubies = self.userInfo.rubies;
+  amountOfGoldCoins = self.userInfo.goldCoins;
+  
+  self.rubyLabel.text = [NSString stringWithFormat:@"%d",amountOfRubies];
+  
+  if ([newCoinTimer isValid]) {
+    [newCoinTimer invalidate];
+  }
+  
+  if (amountOfGoldCoins != initialTokens) {
+    newCoinTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(coinCountDown) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:newCoinTimer forMode:NSRunLoopCommonModes];
+  }
+  [self coinManagement:YES];
+  
+}
+
 - (void)viewDidLoad
 {
   [super viewDidLoad];
   [self loadGoldCoins];
+  roundConstants = [[NSMutableDictionary alloc] init];
+  self.imagesToDownload = [[NSArray alloc] init];
   addNewCoinTime = ADD_NEW_COIN_TIME;
   NSInteger minute = addNewCoinTime/60;
   NSInteger leftOver = addNewCoinTime % 60;
   NSString *timeFormat = [NSString stringWithFormat:@"%0.2d:%0.2d",minute, leftOver];
   self.coinTimeLabel.text = timeFormat;
-  amountOfGoldCoins = MAX_GOLD_COINS;
-  amountOfRubies = 15;
-  if (amountOfGoldCoins != MAX_GOLD_COINS) {
-    newCoinTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(coinCountDown) userInfo:nil repeats:YES];  
-  }
-  [self coinManagement:YES];
   
   if ([ADBannerView instancesRespondToSelector:@selector(initWithAdType:)]) {
     _bannerView = [[ADBannerView alloc] initWithAdType:ADAdTypeBanner];
@@ -240,10 +274,6 @@
   [self.tableView reloadData];
 }
 
-- (void)updateUI {
-  self.rubyLabel.text = [NSString stringWithFormat:@"%d",self.userInfo.rubies];
-}
-
 - (void)updateRuby:(int)value  {
   rubyBefore = amountOfRubies;
   amountOfRubies += value;
@@ -260,7 +290,7 @@
 }
 
 - (void)updateGoldCoin:(int)value {
-  amountOfGoldCoins = 15;
+  amountOfGoldCoins = initialTokens;
   [self coinManagement:YES];
   [self invalidateTimer];
   addNewCoinTime = ADD_NEW_COIN_TIME;
@@ -280,8 +310,8 @@
   if (addNewCoinTime <= 0) {
     amountOfGoldCoins++;
     [self coinManagement:YES];
-    if (amountOfGoldCoins >= MAX_GOLD_COINS) {
-      amountOfGoldCoins = MAX_GOLD_COINS;
+    if (amountOfGoldCoins >= initialTokens) {
+      amountOfGoldCoins = initialTokens;
       addNewCoinTime = ADD_NEW_COIN_TIME;
       NSInteger minute = addNewCoinTime/60;
       NSInteger leftOver = addNewCoinTime % 60;
@@ -349,7 +379,7 @@
 
   if (b.tag > theirTurnAmt && b.tag <= completedAmt) {
     //view completed games
-
+    
 
   }
   else if (b.tag <= yourTurnAmt) {
@@ -431,13 +461,32 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 
 #pragma mark Protocol Buffers methods
 
+- (void)downloadImage {
+  for (int i = 0 ; i <self.imagesToDownload.count; i++) {
+    NSString *pictureName = [self.imagesToDownload objectAtIndex:i];
+    NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *file = [documentsPath stringByAppendingPathComponent:pictureName];
+    BOOL imageExists = [[NSFileManager defaultManager] fileExistsAtPath:file];
+    
+    if (!imageExists) {
+      [[Downloader sharedDownloader] asyncDownloadFile:pictureName completion:^{
+        NSLog(@"done downloading %@",pictureName);
+      }];
+    }
+  }
+}
+
 - (void)refreshDataWithProto:(LoginResponseProto *)proto {
+  
   self.userInfo = [[UserInfo alloc] initWithCompleteUserProto:proto.recipient];
   self.userInfo.listOfFacebookFriends = proto.facebookFriendsWithAccountsList;
   self.userInfo.questions = proto.newQuestionsList;
   self.myTurns = proto.myTurnList;
   self.notMyTurns = proto.notMyTurnList;
   self.completedGames = proto.completedGamesList;
+  self.imagesToDownload = proto.pictureNamesList;
+  [self downloadImage];
+  [self updateUserCurrencyWithLoginResponse:proto];
   [self addArraysTogether];
 }
 

@@ -93,6 +93,7 @@ typedef enum {
 - (QuestionType)getQuestiontype;
 - (void)animateTriviaTypeLabel;
 
+- (id)initWithFillInTest;
 - (id)initWithTutorial;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userData:(UserInfo *)userData;
 - (id)initWithUserInfo:(UserInfo *)userInfo gameId:(NSString *)gameId recipient:(BasicUserProto *)recipent opponent:(BasicUserProto *)opponent startTime:(long long)startTime roundNumber:(int)roundNumber;
