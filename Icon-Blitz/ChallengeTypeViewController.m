@@ -83,7 +83,6 @@
 - (void)requestForFriend {
   __block NSMutableArray *friendIds = [[NSMutableArray alloc] init];
   __block NSMutableArray *haveGameIdObject = [[NSMutableArray alloc] init];
-  __block NSArray *sortedArray;
   NSMutableArray *haveGameIds = [NSMutableArray array];
   for (BasicUserProto *proto in self.userInfo.listOfFacebookFriends) {
     [haveGameIds addObject:proto.facebookId];
@@ -102,8 +101,7 @@
           [friendIds addObject:friend];
         }
       }
-      sortedArray = [friendIds sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-      [self showFriends:haveGameIdObject andInviteArray:sortedArray];
+      [self showFriends:haveGameIdObject andInviteArray:friendIds];
       [self.spinner stopAnimating];
     }
     else {
