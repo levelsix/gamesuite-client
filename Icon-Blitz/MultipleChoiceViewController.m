@@ -20,6 +20,7 @@
   NSMutableArray *usedCheatArray;
   BOOL selecteNewAnswer;
   BOOL isTutorialView;
+  NSString *answerId;
 }
 
 @end
@@ -38,9 +39,9 @@
 - (id)initWithGame:(GameViewController *)game {
   if (self == [super init]) {
     self.game = game;
-    self.correctChoice = kChoiceA;
-    [self setUpCheatArray];
-    question = (MultipleChoiceQuestionProto *)[self.game.userData.questions objectAtIndex:self.game.currentQuestion];
+    QuestionProto *qProto = (QuestionProto *)[self.game.userData.questions objectAtIndex:self.game.currentQuestion];
+    question = qProto.multipleChoice;
+    [self implementInfo];
   }
   return self;
 }
@@ -58,6 +59,10 @@
 - (void)viewDidLoad {
   if (isTutorialView) {
     [self setUpTutorialQuestion];
+  }
+  else {
+    [self implementInfo];
+    
   }
 }
 
@@ -91,35 +96,37 @@
 
 - (void)implementInfo {
   self.questionLabel.text = question.question;
+  answerId = question.answerId;
   //[self.game.questionsId addObject:question.id];
       
   MultipleChoiceAnswerProto *answer = [question.answersList objectAtIndex:0];
   self.answerALabel.text = answer.answer;
   
-//  if ([answer.id isEqualToString:question.answerId]) {
-//    self.correctChoice = kChoiceA;
-//  }
-//  
-//  answer = [question.answersList objectAtIndex:1];
-//  self.answerBLabel.text = answer.answer;
-//  
-//  if ([answer.id isEqualToString:question.answerId]) {
-//    self.correctChoice = kChoiceB;
-//  }
-//
-//  answer = [question.answersList objectAtIndex:2];
-//  self.answerCLabel.text = answer.answer;
-//  
-//  if ([answer.id isEqualToString:question.answerId]) {
-//    self.correctChoice = kChoiceC;
-//  }
-//  
-//  answer = [question.answersList objectAtIndex:3];
-//  self.answerDLabel.text = answer.answer;
-//  
-//  if ([answer.id isEqualToString:question.answerId]) {
-//    self.correctChoice = kChoiceD;
-//  }
+  if ([answer.multipleChoiceAnswerId isEqualToString:question.answerId]) {
+    self.correctChoice = kChoiceA;
+  }
+  
+  answer = [question.answersList objectAtIndex:1];
+  self.answerBLabel.text = answer.answer;
+  
+  if ([answer.multipleChoiceAnswerId isEqualToString:question.answerId]) {
+    self.correctChoice = kChoiceB;
+  }
+
+  answer = [question.answersList objectAtIndex:2];
+  self.answerCLabel.text = answer.answer;
+  
+  if ([answer.multipleChoiceAnswerId isEqualToString:question.answerId]) {
+    self.correctChoice = kChoiceC;
+  }
+  
+  answer = [question.answersList objectAtIndex:3];
+  self.answerDLabel.text = answer.answer;
+  
+  if ([answer.multipleChoiceAnswerId isEqualToString:question.answerId]) {
+    self.correctChoice = kChoiceD;
+  }
+  [self setUpCheatArray];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -196,14 +203,17 @@
 }
 
 - (void)checkCorrectAnswer {
-  //QuestionType type = [self.game getQuestiontype];
+  QuestionType type;
+  QuestionProto *nextQuestion = (QuestionProto *)[self.game.userData.questions objectAtIndex:self.game.currentQuestion+1];
+  if (nextQuestion.multipleChoice) type = kMultipleChoice;
+  else type = kFillIn;
   if (selectedAnswer == self.correctChoice) {
     if (self.game.isTutorial) {
       [self.game tutorialCorrectionAnimationWithCorrect:YES fromQuestionType:kMultipleChoice];
       [self performSelector:@selector(resetAnswer) withObject:nil afterDelay:0.5f];
     }
     else {
-      [self.game transitionWithConclusion:YES skipping:NO andNextQuestionType:kFillIn];    
+      [self.game transitionWithConclusion:YES skipping:NO andNextQuestionType:type];    
     }
   }
   else {
@@ -212,7 +222,7 @@
       [self performSelector:@selector(resetAnswer) withObject:nil afterDelay:0.5f];
     }
     else {
-      [self.game transitionWithConclusion:NO skipping:NO andNextQuestionType:kMultipleChoice];
+      [self.game transitionWithConclusion:NO skipping:NO andNextQuestionType:type];
     }
   }
 }

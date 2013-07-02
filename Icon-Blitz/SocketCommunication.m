@@ -188,7 +188,6 @@ static NSString *udid = nil;
   [self messageReceived:payload withEvent:nextMsgType tag:tag];
 }
 
-
 -(void) messageReceived:(NSData *)data withEvent:(int)eventType tag:(int)tag {
   Class typeClass = [self getClassForType:eventType];
   NSString *classInString = NSStringFromClass([typeClass class]);
@@ -213,6 +212,12 @@ static NSString *udid = nil;
   _currentTagNum = 1;
   _shouldReconnect = YES;
   _numDisconnects = 0;  
+}
+
+- (void) initUserIdMessageQueue {
+  [_connectionThread startUserIdQueue];
+  
+  NSLog(@"Created user id queue");
 }
 
 - (void)connectedToHost {

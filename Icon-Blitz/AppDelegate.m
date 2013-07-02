@@ -137,7 +137,7 @@ NSString *const FBSessionStateChangedNotification =
 {
   SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
   [sc sendLogoutRequest];
-  
+
   BOOL isLoggedin = [[NSUserDefaults standardUserDefaults] boolForKey:IS_LOGGED_IN];
   BOOL changedRootViewOnce = [[NSUserDefaults standardUserDefaults] boolForKey:CHANGED_ROOT_ONCE];
   if (isLoggedin && !changedRootViewOnce) {

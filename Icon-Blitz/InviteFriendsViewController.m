@@ -61,7 +61,7 @@
 - (IBAction)challengeFriend:(UIButton *)sender {
   SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
   sc.delegate = self;
-  
+    
   BasicUserProto *proto = [sc buildSender];
   
   NSTimeInterval time = [self getUsersTimeInSeconds];
@@ -102,6 +102,7 @@
 }
 
 - (void)failedProtoResponse:(StartRoundResponseProto *)proto {
+  UIAlertView *alert;
   switch ((int)proto.status) {
     case StartRoundResponseProto_StartRoundStatusFailWrongRoundNumber:
       break;
@@ -113,6 +114,7 @@
       break;
       
     case StartRoundResponseProto_StartRoundStatusFailNotEnoughTokens:
+      alert = [[UIAlertView alloc] initWithTitle:@"Not enough tokens" message:@"You don't have enough tokens, you can buy some at the home screen" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
       break;
       
     case StartRoundResponseProto_StartRoundStatusFailNotUserTurn:
@@ -127,6 +129,7 @@
     default:
       break;
   }
+  [alert show];
 }
 
 #pragma mark TableView Delegates Methods

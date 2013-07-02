@@ -27,6 +27,7 @@
 
 + (SocketCommunication *)sharedSocketCommunication;
 - (void)initNetworkCommunication;
+- (void) initUserIdMessageQueue;
 - (int)sendCreateAccountViaFacebookMessage:(NSDictionary *)facebookInfo;
 - (int)sendCreateAccountViaEmailMessage:(NSDictionary *)userInfo;
 - (int)sendCreateAccountViaNoCredentialsRequestProto: (NSDictionary *)deviceInfo;
@@ -41,7 +42,7 @@
 - (int)sendSearchForUser:(BasicUserProto *)sender nameOfPerson:(NSString *)nameOfPerson;
 - (int)sendSpendRubies:(BasicUserProto *)sender amountSpent:(int32_t)amountSpent;
 - (int)sendLogoutRequest;
-
+- (void)closeDownConnection;
 - (BasicUserProto *)buildSender;
 
 @end

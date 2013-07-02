@@ -266,7 +266,8 @@
     self.currentController = [[FillInViewController alloc] initWithGame:self];
     self.currentController.view.center = CGPointMake(self.currentController.view.center.x, self.currentController.view.center.y+56);
     [self.view addSubview:self.currentController.view];
-    gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);  }
+    gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
+  }
   return self;
 }
 
@@ -292,6 +293,17 @@
     self.startTime = startTime;
     self.roundNumber = roundNumber;
     self.questionsAnswered = [[NSMutableArray alloc] init];
+    [self startTimer];
+    
+    QuestionProto *firstQuestion = (QuestionProto *)[self.userData.questions objectAtIndex:self.currentQuestion];
+    if (firstQuestion.multipleChoice)
+      self.currentController = [[MultipleChoiceViewController alloc] initWithGame:self];
+    else
+      self.currentController = [[FillInViewController alloc] initWithGame:self];
+    
+    self.currentController.view.center = CGPointMake(self.currentController.view.center.x, self.currentController.view.center.y+56);
+    [self.view addSubview:self.currentController.view];
+    gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
   }
   return self;
 }
@@ -337,12 +349,11 @@
 
 - (QuestionType)getQuestiontype {
   QuestionType type;
-  if ([[self.userData.questions objectAtIndex:self.currentQuestion] isKindOfClass:[MultipleChoiceAnswerProto class]]) {
-    type = kMultipleChoice;
-  }
-  else {
-    type = kFillIn;
-  }
+  QuestionProto *question = (QuestionProto *)[self.userData.questions objectAtIndex:self.currentQuestion];
+  
+  if (question.multipleChoice) type = kMultipleChoice;
+  else type = kFillIn;
+
   self.currentType = type;
   return type;
 }
@@ -360,7 +371,7 @@
     self.timeLeftLabel.text = [NSString stringWithFormat:@"%d",self.timeLeft];
     self.view.userInteractionEnabled = NO;
     [self.gameTimer invalidate];
-    [self completRound];
+    [self completeRound];
   }
 }
 
@@ -611,7 +622,7 @@
         [self updatePointsLabel];
         [self fadeInLabelWithAmount:10 add:YES andNumberType:kPointType];
       }completion:^(BOOL finished) {
-        [self pushNewViewControllersWithType:kFillIn];
+        [self pushNewViewControllersWithType:type];
         [imageView removeFromSuperview];
       }];
     }
@@ -626,13 +637,13 @@
         imageView.transform = CGAffineTransformMakeScale(2, 2);
         imageView.transform = CGAffineTransformMakeRotation(-5.85);
       }completion:^(BOOL finished) {
-        [self pushNewViewControllersWithType:kFillIn];
+        [self pushNewViewControllersWithType:type];
         [imageView removeFromSuperview];
       }];
     }
   }
   else {
-    [self pushNewViewControllersWithType:kFillIn];
+    [self pushNewViewControllersWithType:type];
   }
 }
 
@@ -690,6 +701,7 @@
 }
 
 - (void)receivedProtoResponse:(PBGeneratedMessage *)message {
+  NSLog(@"received gameview response");
   if (protoType == kSpendRubyProto) {
     SpendRubiesResponseProto *proto = (SpendRubiesResponseProto *)message;
     if (proto.status == SpendRubiesResponseProto_SpendRubiesStatusSuccess) {
@@ -716,7 +728,7 @@
   }
 }
 
-- (void)completRound {
+- (void)completeRound {
   self.view.userInteractionEnabled = NO;
   protoType = kCompleteRoundProto;
   SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];

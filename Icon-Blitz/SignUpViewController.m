@@ -106,6 +106,7 @@
 
 - (void)goToHomeViewWithAnimationWithLoginResponse:(LoginResponseProto *)proto {
   [[NSUserDefaults standardUserDefaults] setBool:YES forKey:IS_LOGGED_IN];
+  [[NSUserDefaults standardUserDefaults] setObject:proto.recipient.userId forKey:USER_ID];
   [[NSUserDefaults standardUserDefaults] synchronize];
   
   HomeViewController *vc = [[HomeViewController alloc] initWithLoginResponse:proto];

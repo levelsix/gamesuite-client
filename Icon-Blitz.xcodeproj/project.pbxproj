@@ -56,8 +56,6 @@
 		066B4245171CB23400B26CE4 /* correct@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 066B4241171CB23400B26CE4 /* correct@2x.png */; };
 		066B427F171CD65200B26CE4 /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 066B427D171CD65200B26CE4 /* SignUpViewController.m */; };
 		066B4280171CD65200B26CE4 /* SignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 066B427E171CD65200B26CE4 /* SignUpViewController.xib */; };
-		067301B6173D9805001C507A /* FillInTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 067301B4173D9805001C507A /* FillInTypeViewController.m */; };
-		067301B7173D9805001C507A /* FillInTypeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 067301B5173D9805001C507A /* FillInTypeViewController.xib */; };
 		0673C3E416F0379D00B5A586 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0673C3E316F0379D00B5A586 /* UIKit.framework */; };
 		0673C3E616F0379D00B5A586 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0673C3E516F0379D00B5A586 /* Foundation.framework */; };
 		0673C3E816F0379D00B5A586 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0673C3E716F0379D00B5A586 /* CoreGraphics.framework */; };
@@ -267,6 +265,8 @@
 		06A5476917138A810049C53A /* usernamestart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 06A5475B17138A810049C53A /* usernamestart@2x.png */; };
 		06A5477D1713A53B0049C53A /* HomeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A5477C1713A53B0049C53A /* HomeCell.m */; };
 		06A5477F1713A5750049C53A /* HomeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06A5477E1713A5750049C53A /* HomeCell.xib */; };
+		06A844DA17837EA7000B6AE1 /* FillInTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A844D717837EA7000B6AE1 /* FillInTypeViewController.m */; };
+		06A844DB17837EA7000B6AE1 /* FillInTypeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06A844D817837EA7000B6AE1 /* FillInTypeViewController.xib */; };
 		06A9E5731720D05700969076 /* AMQPConnectionThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A9E5721720D05700969076 /* AMQPConnectionThread.m */; };
 		06A9E57E1722039F00969076 /* OpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A9E57D1722039F00969076 /* OpenUDID.m */; };
 		06AE01381762A3C2009ACBBE /* icontest.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 06AE01371762A3C2009ACBBE /* icontest.jpg */; };
@@ -391,9 +391,6 @@
 		066B427C171CD65200B26CE4 /* SignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
 		066B427D171CD65200B26CE4 /* SignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
 		066B427E171CD65200B26CE4 /* SignUpViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignUpViewController.xib; sourceTree = "<group>"; };
-		067301B3173D9805001C507A /* FillInTypeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FillInTypeViewController.h; sourceTree = "<group>"; };
-		067301B4173D9805001C507A /* FillInTypeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FillInTypeViewController.m; sourceTree = "<group>"; };
-		067301B5173D9805001C507A /* FillInTypeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FillInTypeViewController.xib; sourceTree = "<group>"; };
 		0673C3DF16F0379D00B5A586 /* Icon-Blitz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Icon-Blitz.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0673C3E316F0379D00B5A586 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0673C3E516F0379D00B5A586 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -662,6 +659,9 @@
 		06A5477B1713A53B0049C53A /* HomeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeCell.h; sourceTree = "<group>"; };
 		06A5477C1713A53B0049C53A /* HomeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeCell.m; sourceTree = "<group>"; };
 		06A5477E1713A5750049C53A /* HomeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeCell.xib; sourceTree = "<group>"; };
+		06A844D717837EA7000B6AE1 /* FillInTypeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FillInTypeViewController.m; sourceTree = "<group>"; };
+		06A844D817837EA7000B6AE1 /* FillInTypeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FillInTypeViewController.xib; sourceTree = "<group>"; };
+		06A844D917837EA7000B6AE1 /* FillInTypeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FillInTypeViewController.h; sourceTree = "<group>"; };
 		06A9E5711720D05700969076 /* AMQPConnectionThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQPConnectionThread.h; sourceTree = "<group>"; };
 		06A9E5721720D05700969076 /* AMQPConnectionThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQPConnectionThread.m; sourceTree = "<group>"; };
 		06A9E5741720D0BA00969076 /* AMQPConnectionThreadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQPConnectionThreadDelegate.h; sourceTree = "<group>"; };
@@ -1045,14 +1045,14 @@
 		0682262A16F7D4C600F92076 /* Type of level */ = {
 			isa = PBXGroup;
 			children = (
+				06A844D817837EA7000B6AE1 /* FillInTypeViewController.xib */,
+				06A844D917837EA7000B6AE1 /* FillInTypeViewController.h */,
+				06A844D717837EA7000B6AE1 /* FillInTypeViewController.m */,
 				062E39AF177BB94100108B42 /* AnswerView.h */,
 				062E39B0177BB94200108B42 /* AnswerView.m */,
 				062E39AA177BAC1800108B42 /* FillInViewController.h */,
 				062E39AB177BAC1800108B42 /* FillInViewController.m */,
 				062E39AC177BAC1800108B42 /* FillInViewController.xib */,
-				067301B3173D9805001C507A /* FillInTypeViewController.h */,
-				067301B4173D9805001C507A /* FillInTypeViewController.m */,
-				067301B5173D9805001C507A /* FillInTypeViewController.xib */,
 				069DE72E170E199D009A5C46 /* MultipleChoiceViewController.h */,
 				069DE72F170E199D009A5C46 /* MultipleChoiceViewController.m */,
 				069DE730170E199D009A5C46 /* MultipleChoiceViewController.xib */,
@@ -1731,7 +1731,6 @@
 				0658A0251734C3C1003305CA /* nameinput@2x.png in Resources */,
 				0658A0261734C3C1003305CA /* signupaccountbg.png in Resources */,
 				0658A0271734C3C1003305CA /* signupaccountbg@2x.png in Resources */,
-				067301B7173D9805001C507A /* FillInTypeViewController.xib in Resources */,
 				06FF5C231743350E006D37C4 /* spinnerbg.png in Resources */,
 				06FF5C241743350E006D37C4 /* spinnerbg@2x.png in Resources */,
 				06E58AA217445D4D00262A44 /* testimage1.jpg in Resources */,
@@ -1800,6 +1799,7 @@
 				06A3519417823C7600EED3E3 /* Icon@2x.png in Resources */,
 				06A3519517823C7600EED3E3 /* iTunesArtwork.png in Resources */,
 				06A3519617823C7600EED3E3 /* iTunesArtwork@2x.png in Resources */,
+				06A844DB17837EA7000B6AE1 /* FillInTypeViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1858,7 +1858,6 @@
 				0612FB711730999E00DA0D5B /* JRSwizzle.m in Sources */,
 				0612FB74173099A800DA0D5B /* UINavigationController+PushPopRotated.m in Sources */,
 				06FF59AC17385EC0003741A6 /* TextFieldIndentation.m in Sources */,
-				067301B6173D9805001C507A /* FillInTypeViewController.m in Sources */,
 				0680E4071758387700BCFCF7 /* TutorialMultipleChoiceViewController.m in Sources */,
 				0680E40B17583E1300BCFCF7 /* TutorialViewController.m in Sources */,
 				06848EDA1773CBF900351FB9 /* CommonEventProtocol.pb.m in Sources */,
@@ -1881,6 +1880,7 @@
 				06848EEB1773CBF900351FB9 /* User.pb.m in Sources */,
 				062E39AD177BAC1900108B42 /* FillInViewController.m in Sources */,
 				062E39B1177BB94200108B42 /* AnswerView.m in Sources */,
+				06A844DA17837EA7000B6AE1 /* FillInTypeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -21,8 +21,4 @@
 
 - (id)initWithGame:(GameViewController *)game;
 - (void)removeOptions;
-- (void)resetTutorialLetters;
-- (id)initWithTutorial:(GameViewController *)game question:(NSDictionary *)question;
-- (id)initWithTutorialIconQuestion:(GameViewController *)game questionData:(NSDictionary *)question iconQuestion:(BOOL)isItIconQuestion;
-- (void)disableUserInteractionWithTag:(int)tag;
 @end

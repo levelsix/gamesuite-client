@@ -98,13 +98,18 @@
   [tokenDict setObject:proto.badp.udid forKey:@"udid"];
   [tokenDict setObject:proto.badp.deviceId forKey:@"deviceId"];
   
+  [[SocketCommunication sharedSocketCommunication] initUserIdMessageQueue];
   
   [[NSUserDefaults standardUserDefaults] setObject:[completeUserDict copy] forKey:COMPLETE_USER_INFO];
   [[NSUserDefaults standardUserDefaults] setObject:[tokenDict copy] forKey:LOGIN_TOKEN];
+  [[NSUserDefaults standardUserDefaults] setObject:proto.userId forKey:USER_ID];
   [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)loginWithToken {
+  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+  sc.delegate = self;
+  
   [self.view addSubview:self.updatingView];
   [self.updatingSpinner startAnimating];
   self.updatingView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
@@ -134,9 +139,7 @@
     BasicAuthorizedDeviceProto *deviceProto = [[[[[[[[BasicAuthorizedDeviceProto builder] setBasicAuthorizedDeviceId:basicAuthorizedDeviceId] setUserId:tokenUserId] setLoginToken:loginToken] setExpirationDate:expirationDate] setUdid:udid] setDeviceId:deviceId] build];
     
     basicProto = [[[[[[[[[BasicUserProto builder] setUserId:userId] setNameStrangersSee:nameStrangersSee] setNameFriendsSee:nameFriendsSee] setEmail:email] setPassword:password] setFacebookId:facebookId] setBadp:deviceProto] build];
-    
-    SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
-    sc.delegate = self;
+
     
     BOOL didFacebookLogin = [[NSUserDefaults standardUserDefaults] boolForKey:DID_FACEBOOK_SIGNUP];
     if (didFacebookLogin) {

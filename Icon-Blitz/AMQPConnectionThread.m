@@ -13,8 +13,6 @@
 #import "amqp_framing.h"
 #import "UserInfo.h"
 
-#define UDID_KEY [NSString stringWithFormat:@"client_udid_%@",_udid];
-#define USER_ID_KEY [NSString stringWithFormat:@"client_userid_%d",userId]
 #define ROUTING_KEY @"messagesFromPlayers"
 
 @implementation AMQPConnectionThread 
@@ -41,7 +39,11 @@ static int sessionId;
     
     _topicExchange = [[AMQPExchange alloc] initTopicExchangeWithName:@"chatmessages" onChannel:channel isPassive:NO isDurable:YES];
     
-    NSString *udidKey = UDID_KEY //udid
+    UserInfo *ui = [[UserInfo alloc] init];
+    NSString *udid = [ui getUDID];
+    
+    NSString *udidKey = [NSString stringWithFormat:@"client_udid_%@",udid];
+    NSLog(@"udidkey = %@",udidKey);
     _udidQueue = [[AMQPQueue alloc] initWithName:[udidKey stringByAppendingFormat:@"_%d_queue", sessionId] onChannel:channel isPassive:NO isExclusive:NO isDurable:YES getsAutoDeleted:YES];
     [_udidQueue bindToExchange:_directExchange withKey:udidKey];
     _udidConsumer  = [_udidQueue startConsumerWithAcknowledgements:NO isExclusive:NO receiveLocalMessages:YES];
@@ -62,10 +64,16 @@ static int sessionId;
 }
 
 - (void)initUserIdMessageQueue {
-  NSString *useridKey = nil;
+  NSString *userId = [[NSUserDefaults standardUserDefaults]objectForKey:USER_ID];
+  
+  NSString *useridKey = [NSString stringWithFormat:@"client_userid_%@",userId];
   _useridQueue = [[AMQPQueue alloc] initWithName:[useridKey stringByAppendingFormat:@"_%d_queue", sessionId]  onChannel:_udidConsumer.channel  isPassive:NO isExclusive:NO isDurable:YES getsAutoDeleted:YES];
   [_useridQueue bindToExchange:_directExchange withKey:useridKey];
   _useridConsumer = [_useridQueue startConsumerWithAcknowledgements:NO isExclusive:NO receiveLocalMessages:YES];
+
+  
+  NSLog(@"Created queues");
+
 }
 
 - (void)endConnection {

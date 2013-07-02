@@ -54,60 +54,6 @@
 
 @implementation FillInViewController
 
-#pragma - Tutorial Methods
-
-- (id)initWithTutorialIconQuestion:(GameViewController *)game questionData:(NSDictionary *)question iconQuestion:(BOOL)isItIconQuestion {
-  if ((self =[super init])) {
-    isIconQuestion = YES;
-    lastQuestion = [question objectForKey:@"question"];
-    correctAnswerLetterCount = [[question objectForKey:@"letterCount"] integerValue];
-    numberOfLines = [[question objectForKey:@"numberOfLines"] integerValue];
-    firstLineLetterCount= [[question objectForKey:@"firstLineCount"] integerValue];
-    secondLineLetterCount = [[question objectForKey:@"secondLineCount"] integerValue];
-    correctAnswer = [question objectForKey:@"correctAnswer"];
-    letterOptionsArray = [question objectForKey:@"selectionSlots"];
-  }
-  return self;
-}
-
-- (id)initWithTutorial:(GameViewController *)game question:(NSDictionary *)question {
-  if ((self = [super init])) {
-    self.game = game;
-    self.questionLabel.text = [question objectForKey:@"questions"];
-    correctAnswerLetterCount = [[question objectForKey:@"letterCount"] integerValue];
-    numberOfLines = [[question objectForKey:@"numberOfLines"] integerValue];
-    firstLineLetterCount = [[question objectForKey:@"firstLineCount"] integerValue];
-    secondLineLetterCount = [[question objectForKey:@"secondLineCount"] integerValue];
-    correctAnswer = [question objectForKey:@"correctAnswer"];
-    letterOptionsArray = [question objectForKey:@"selectionSlots"];
-  }
-  return self;
-}
-
-- (void)resetTutorialLetters {
-  for (int i = 0 ; i <submittedAnswersTag.count;i ++) {
-    int tag = [[submittedAnswersTag objectAtIndex:i] integerValue];
-    SelectionView *view = (SelectionView *)[self.view viewWithTag:tag];
-    [UIView animateWithDuration:0.3f animations:^{
-      view.frame = originalLetterViewLocations[view.tag-1];
-    }completion:^(BOOL finished) {
-      AnswerView *answerView = (AnswerView *)[answerSlotViews objectAtIndex:view.takenTag];
-      answerView.taken = NO;
-      view.bottomBar.hidden = NO;
-      view.used = NO;
-      [submittedAnswers replaceObjectAtIndex:view.takenTag withObject:@"A"];
-      [submittedAnswersTag replaceObjectAtIndex:view.takenTag withObject:[NSNumber numberWithInt:-1]];
-      view.takenTag = -1;
-    }];
-  }
-}
-
-- (void)disableUserInteractionWithTag:(int)tag {
- 
-}
-
-#pragma - Non-Tutorial Methods
-
 - (id)initWithGame:(GameViewController *)game {
   if ((self = [super init]) ) {
     self.game = game;
@@ -260,7 +206,6 @@
   animationCounter++;
   if (animationCounter > 14) {
     self.view.userInteractionEnabled = YES;
-    if (!self.game.isTutorial) self.game.removeCheatButon.userInteractionEnabled = YES;
     [timer invalidate];
   }
 }
