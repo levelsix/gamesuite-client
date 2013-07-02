@@ -22,6 +22,12 @@ typedef enum {
   kOtherStuff
 }SectionTypes;
 
+typedef enum {
+  kLoginProto = 20,
+  kRefillProto,
+  kProtoNone
+}CurrentProtoType;
+
 @class StartGameCell;
 @class TurnCells;
 @class LastCell;

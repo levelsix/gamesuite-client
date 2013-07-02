@@ -76,8 +76,10 @@
   }
 }
 
-- (void)finishedFBLogin {
-  [self requestForFriend];
+- (void)finishedFBLoginWithAllowAccess:(BOOL)allowAccess {
+  if (allowAccess) {
+    [self requestForFriend];
+  }
 }
 
 - (void)requestForFriend {

@@ -228,7 +228,14 @@ static NSString *udid = nil;
   NSString *facebookId = [completeUser objectForKey:@"facebookId"];
   NSString *password = [completeUser objectForKey:@"password"];
   
-  BasicUserProto *basicProto = [[[[[[[[BasicUserProto builder] setUserId:userId] setNameStrangersSee:nameStrangersSee] setNameFriendsSee:nameFriendsSee] setEmail:email] setPassword:password] setFacebookId:facebookId] build];
+  NSDictionary *token = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_TOKEN];
+  
+  NSString *udid = [token objectForKey:@"udid"];
+  NSString *deviceId = [token objectForKey:@"deviceId"];
+  
+  BasicAuthorizedDeviceProto *badp = [[[[BasicAuthorizedDeviceProto builder] setUdid:udid] setDeviceId:deviceId] build];
+  
+  BasicUserProto *basicProto = [[[[[[[[[BasicUserProto builder] setUserId:userId] setNameStrangersSee:nameStrangersSee] setNameFriendsSee:nameFriendsSee] setEmail:email] setPassword:password] setFacebookId:facebookId] setBadp:badp ]build];
   return basicProto;
 }
 

@@ -35,6 +35,7 @@
   //first time they finished sign up set these 2
   int initialRubies;
   int initialTokens;
+  int lastRefillTime;
   
   int defaultMinsPerRound;
   int multipleChoicePointAmount;
@@ -49,6 +50,7 @@
   BOOL completedHasNoGames;
   
   BasicUserProto *basicProto;
+  CurrentProtoType currentProtoType;
 }
 
 @end
@@ -100,7 +102,6 @@
   [[NSUserDefaults standardUserDefaults] setObject:[completeUserDict copy] forKey:COMPLETE_USER_INFO];
   [[NSUserDefaults standardUserDefaults] setObject:[tokenDict copy] forKey:LOGIN_TOKEN];
   [[NSUserDefaults standardUserDefaults] synchronize];
-  
 }
 
 - (void)loginWithToken {
@@ -112,7 +113,8 @@
   NSDictionary *completeUser = [[NSUserDefaults standardUserDefaults] objectForKey:COMPLETE_USER_INFO];
   NSDictionary *token = [[NSUserDefaults standardUserDefaults] objectForKey:LOGIN_TOKEN];
   
-  if (completeUser && token) {    
+  if (completeUser && token) {
+    currentProtoType = kLoginProto;
     NSString *userId = [completeUser objectForKey:@"userId"];
     NSString *nameStrangersSee = [completeUser objectForKey:@"nameStrangersSee"];
     NSString *nameFriendsSee = [completeUser objectForKey:@"nameFriendsSee"];
@@ -145,7 +147,7 @@
         [fb facebookLogin];
       }
       else {
-        [self finishedFBLogin];
+        [self finishedFBLoginWithAllowAccess:YES];
       }
     }
     else {
@@ -154,7 +156,7 @@
   }
 }
 
-- (void)finishedFBLogin {
+- (void)finishedFBLoginWithAllowAccess:(BOOL)allowAccess {
   NSMutableArray *friendIds = [NSMutableArray array];
   FBRequest *friendsRequest = [FBRequest requestForMyFriends];
   [friendsRequest startWithCompletionHandler: ^(FBRequestConnection *connection,
@@ -175,6 +177,12 @@
   }];
 }
 
+- (NSTimeInterval)getUsersTimeInSeconds {
+  NSDate *date = [[NSDate alloc] init];
+  NSTimeInterval time = [date timeIntervalSince1970];
+  return time;
+}
+
 - (void)updateUserCurrencyWithLoginResponse:(LoginResponseProto *)proto {
   initialRubies = proto.loginConstants.currencyConstants.defaultInitialRubies;
   initialTokens = proto.loginConstants.currencyConstants.defaultInitialTokens;
@@ -182,9 +190,34 @@
   defaultMinsPerRound = proto.loginConstants.roundConstants.defaultMinutesPerRound;
   multipleChoicePointAmount = proto.loginConstants.scoreTypes.mcqCorrect;
   fillInPointAmount = proto.loginConstants.scoreTypes.acqCorrect;
+  lastRefillTime = proto.recipient.currency.lastTokenRefillTime/1000;
+    
+  NSTimeInterval currentTime = [self getUsersTimeInSeconds];
+  int64_t serverTime = currentTime*1000;
+  
+  if (currentTime >= (lastRefillTime + secondsTillRefill)) {
+    NSLog(@"sending over refill time");
+    currentProtoType = kRefillProto;
+    SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+    BasicUserProto *sender = [sc buildSender];
+    sc.delegate = self;
+    [sc sendRefillTokenByWaiting:sender currentTime:serverTime];
+  }
+  else {
+    NSLog(@"dont need to refill yet");
+    double difference = currentTime - (lastRefillTime + secondsTillRefill);
+    addNewCoinTime = (int)difference;
+  }
   
   amountOfRubies = self.userInfo.rubies;
   amountOfGoldCoins = self.userInfo.goldCoins;
+  
+  NSInteger minute = addNewCoinTime/60;
+  NSInteger leftOver = addNewCoinTime % 60;
+  NSString *timeFormat = [NSString stringWithFormat:@"%0.2d:%0.2d",minute, leftOver];
+  self.coinTimeLabel.text = timeFormat;
+
+  [self loadGoldCoins];
   
   self.rubyLabel.text = [NSString stringWithFormat:@"%d",amountOfRubies];
   
@@ -203,15 +236,9 @@
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-  [self loadGoldCoins];
   roundConstants = [[NSMutableDictionary alloc] init];
   self.imagesToDownload = [[NSArray alloc] init];
-  addNewCoinTime = ADD_NEW_COIN_TIME;
-  NSInteger minute = addNewCoinTime/60;
-  NSInteger leftOver = addNewCoinTime % 60;
-  NSString *timeFormat = [NSString stringWithFormat:@"%0.2d:%0.2d",minute, leftOver];
-  self.coinTimeLabel.text = timeFormat;
-  
+  currentProtoType = kProtoTypeNone;
   if ([ADBannerView instancesRespondToSelector:@selector(initWithAdType:)]) {
     _bannerView = [[ADBannerView alloc] initWithAdType:ADAdTypeBanner];
   }
@@ -470,14 +497,13 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
     
     if (!imageExists) {
       [[Downloader sharedDownloader] asyncDownloadFile:pictureName completion:^{
-        NSLog(@"done downloading %@",pictureName);
+        //NSLog(@"done downloading %@",pictureName);
       }];
     }
   }
 }
 
 - (void)refreshDataWithProto:(LoginResponseProto *)proto {
-  
   self.userInfo = [[UserInfo alloc] initWithCompleteUserProto:proto.recipient];
   self.userInfo.listOfFacebookFriends = proto.facebookFriendsWithAccountsList;
   self.userInfo.questions = proto.newQuestionsList;
@@ -492,16 +518,21 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 
 - (void)receivedProtoResponse:(PBGeneratedMessage *)message {
   LoginResponseProto *proto = (LoginResponseProto *)message;
-  [self.updatingSpinner stopAnimating];
-  [self.updatingView removeFromSuperview];
-  self.view.userInteractionEnabled = YES;
-  if (proto.status == LoginResponseProto_LoginResponseStatusSuccessLoginToken || proto.status == LoginResponseProto_LoginResponseStatusSuccessFacebookId || proto.status == LoginResponseProto_LoginResponseStatusSuccessEmailPassword || proto.status == LoginResponseProto_LoginResponseStatusSuccessNoCredentials) {
-    [self saveTokenWithProto:proto.recipient];
-    [self refreshDataWithProto:proto];
+  if (currentProtoType == kLoginProto) {
+    [self.updatingSpinner stopAnimating];
+    [self.updatingView removeFromSuperview];
+    self.view.userInteractionEnabled = YES;
+    if (proto.status == LoginResponseProto_LoginResponseStatusSuccessLoginToken || proto.status == LoginResponseProto_LoginResponseStatusSuccessFacebookId || proto.status == LoginResponseProto_LoginResponseStatusSuccessEmailPassword || proto.status == LoginResponseProto_LoginResponseStatusSuccessNoCredentials) {
+      [self saveTokenWithProto:proto.recipient];
+      [self refreshDataWithProto:proto];
+    }
+    else {
+      //implemente fail sceneario
+      NSLog(@"log in failed");
+    }
   }
-  else {
-    //implemente fail sceneario
-    NSLog(@"log in failed");
+  else if (currentProtoType == kRefillProto) {
+    NSLog(@"received refill message");
   }
 }
 

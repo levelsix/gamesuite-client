@@ -11,7 +11,7 @@
 
 @protocol FinishFacebookLogin <NSObject>
 
-- (void)finishedFBLogin;
+- (void)finishedFBLoginWithAllowAccess:(BOOL)allowAccess;
 @end
 
 @class HomeViewController;

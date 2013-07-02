@@ -33,12 +33,15 @@ NSString *const FBSessionStateChangedNotification =
 {
   switch (state) {
     case FBSessionStateOpen:
-      if ([self.delegate respondsToSelector:@selector(finishedFBLogin)]) {
-        [self.delegate finishedFBLogin];
+      if ([self.delegate respondsToSelector:@selector(finishedFBLoginWithAllowAccess:)]) {
+        [self.delegate finishedFBLoginWithAllowAccess:YES];
       }
       break;
     case FBSessionStateClosed:
     case FBSessionStateClosedLoginFailed:
+      if ([self.delegate respondsToSelector:@selector(finishedFBLoginWithAllowAccess:)]) {
+        [self.delegate finishedFBLoginWithAllowAccess:NO];
+      }
       [FBSession.activeSession closeAndClearTokenInformation];
       break;
     default:

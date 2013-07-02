@@ -63,7 +63,7 @@
   sc.delegate = self;
   
   BasicUserProto *proto = [sc buildSender];
-
+  
   NSTimeInterval time = [self getUsersTimeInSeconds];
   self.startTime = (int64_t)time;
   NSDictionary<FBGraphUser> *chosen = [self.totalArray objectAtIndex:sender.tag];
@@ -80,11 +80,9 @@
 }
 
 - (NSTimeInterval)getUsersTimeInSeconds {
-  NSTimeZone* local = [NSTimeZone localTimeZone];
-  NSInteger secondsOffset = [local secondsFromGMTForDate:[NSDate date]];
   NSDate *date = [[NSDate alloc] init];
   NSTimeInterval time = [date timeIntervalSince1970];
-  return time + secondsOffset;
+  return time;
 }
 
 #pragma mark Protocol Buffer Methods

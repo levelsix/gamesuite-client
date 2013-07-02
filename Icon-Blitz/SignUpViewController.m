@@ -20,6 +20,8 @@
 @interface SignUpViewController () {
   NSMutableArray *friendIds;
   NSString *facebookId;
+  
+  BOOL duplicateFacebookId;
 }
 
 @end
@@ -50,8 +52,13 @@
   }
 }
 
-- (void)finishedFBLogin {
-  [self sendOverFacebookData];
+- (void)finishedFBLoginWithAllowAccess:(BOOL)allowAccess {
+  if (allowAccess) {
+    [self sendOverFacebookData];
+  }
+  else {
+  
+  }
 }
 
 - (void)sendOverFacebookData {
@@ -61,16 +68,16 @@
   [self.spinner startAnimating];
   
   __block NSString *name = @"";
-  __block NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+  self.facebookInfo = [[NSMutableDictionary alloc] init];
   [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
     if (!error) {
       facebookId = user.id;
       name = [NSString stringWithFormat:@"%@ %@",user.first_name, user.last_name];
       NSString *email = [user objectForKey:@"email"];
-      [dict setObject:name forKey:@"name"];
-      [dict setObject:facebookId forKey:@"facebookId"];
-      [dict setObject:email forKey:@"email"];
-      [sc sendCreateAccountViaFacebookMessage:[dict copy]];
+      [self.facebookInfo setObject:name forKey:@"name"];
+      [self.facebookInfo setObject:facebookId forKey:@"facebookId"];
+      [self.facebookInfo setObject:email forKey:@"email"];
+      [sc sendCreateAccountViaFacebookMessage:[self.facebookInfo copy]];
     }
     else {
       [self.spinner stopAnimating];
@@ -192,7 +199,18 @@
 }
 
 - (void)loginWithFacebook:(CreateAccountResponseProto *)proto {
-  BasicUserProto *newProto = [[[[[[[[[BasicUserProto builder] setBadp:proto.recipient.badp] setEmail:proto.recipient.email] setFacebookId:facebookId] setPassword:proto.recipient.password] setNameFriendsSee:proto.recipient.nameFriendsSee] setNameStrangersSee:proto.recipient.nameStrangersSee] setUserId:proto.recipient.userId] build];
+  BasicUserProto *newProto;
+  if (duplicateFacebookId) {
+    UserInfo *ui = [[UserInfo alloc] init];
+    NSString *udid = [ui getUDID];
+    NSString *deviceId = [ui getMacAddress];
+    BasicAuthorizedDeviceProto *deviceProto = [[[[BasicAuthorizedDeviceProto builder] setDeviceId:deviceId] setUdid:udid] build];
+    newProto = [[[[[[BasicUserProto builder] setFacebookId:[self.facebookInfo objectForKey:@"facebookId"]] setEmail:[self.facebookInfo objectForKey:@"email"]] setNameFriendsSee:[self.facebookInfo objectForKey:@"name"]] setBadp:deviceProto ] build];
+  }
+  else {
+    newProto = [[[[[[[[[BasicUserProto builder] setBadp:proto.recipient.badp] setEmail:proto.recipient.email] setFacebookId:facebookId] setPassword:proto.recipient.password] setNameFriendsSee:proto.recipient.nameFriendsSee] setNameStrangersSee:proto.recipient.nameStrangersSee] setUserId:proto.recipient.userId] build];
+  }
+  
   FBRequest *friendsRequest = [FBRequest requestForMyFriends];
   friendIds = [NSMutableArray array];
   [friendsRequest startWithCompletionHandler: ^(FBRequestConnection *connection,
@@ -213,6 +231,7 @@
   switch ((int)proto.status) {
     case CreateAccountResponseProto_CreateAccountStatusFailDuplicateFacebookId:
       protoType = kLoginType;
+      duplicateFacebookId = YES;
       [self loginWithFacebook:proto];
       return;
       break;
