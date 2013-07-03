@@ -18,6 +18,8 @@
 @property (nonatomic, strong) IBOutlet UIImageView *iconImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *iconImage;
 @property (nonatomic, strong) IBOutlet UIView *questionContainerView;
+@property (nonatomic, strong) IBOutlet UILabel *triviaType;
+@property (nonatomic, strong) IBOutlet UIView *triviaContainer;
 
 - (id)initWithGame:(GameViewController *)game;
 - (void)removeOptions;

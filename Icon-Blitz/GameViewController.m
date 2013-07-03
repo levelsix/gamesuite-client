@@ -18,7 +18,7 @@
 #import "FillInViewController.h"
 
 #define Tutorial_Timer 60
-#define Regular_Game_Timer 120
+#define Regular_Game_Timer 60
 
 @interface GameViewController () {
   int freezeCounter;
@@ -28,9 +28,10 @@
   long long int endTime;
   NSTimer *freezeTimer;
   CGRect gameRect;
-  CGRect originalTriviaLabelFrame;
   ProtoType protoType;
   UsedCheatType usedCheatType;
+  int cheatCount;
+  BOOL gameEnded;
 }
 @end
 
@@ -54,7 +55,6 @@
     [self.view addSubview:self.currentController.view];
     self.isTutorial = YES;
     gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
-    self.triviaType.text = [NSString stringWithFormat:@"Multiple Choice Fact"];
     [self startTimer];
   }
   return self;
@@ -155,7 +155,6 @@
   [UIView animateWithDuration:0.4 animations:^{
     self.currentController.view.center = offFrame;
     newController.view.frame = gameRect;
-    self.triviaType.hidden = YES;
   }completion:^(BOOL finished) {
     [weakSelf.currentController.view removeFromSuperview];
     [weakSelf.currentController removeFromParentViewController];
@@ -194,7 +193,6 @@
   [UIView animateWithDuration:0.4 animations:^{
     self.currentController.view.center = offFrame;
     newController.view.frame = gameRect;
-    self.triviaType.hidden = YES;
   }completion:^(BOOL finished) {
     [weakSelf.currentController.view removeFromSuperview];
     [weakSelf.currentController removeFromParentViewController];
@@ -232,7 +230,6 @@
   [UIView animateWithDuration:0.4 animations:^{
     self.currentController.view.center = offFrame;
     newController.view.frame = gameRect;
-    self.triviaType.hidden = YES;
   }completion:^(BOOL finished) {
     [weakSelf.currentController.view removeFromSuperview];
     [weakSelf.currentController removeFromParentViewController];
@@ -261,29 +258,6 @@
 
 #pragma mark Non-Tutorial Stuff
 
-- (id)initWithFillInTest {
-  if ((self = [super init])) {
-    self.currentController = [[FillInViewController alloc] initWithGame:self];
-    self.currentController.view.center = CGPointMake(self.currentController.view.center.x, self.currentController.view.center.y+56);
-    [self.view addSubview:self.currentController.view];
-    gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
-  }
-  return self;
-}
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userData:(UserInfo *)userData {
-  if ((self = [super init])) {
-    self.userData = userData;
-    self.currentController = [[FillInTypeViewController alloc] initWithGame:self];
-    self.currentController.view.center = CGPointMake(self.currentController.view.center.x, self.currentController.view.center.y+56);
-    [self.view addSubview:self.currentController.view];    
-    gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
-    protoType = kProtoTypeNone;
-    usedCheatType = kCheatNone;
-  }
-  return self;
-}
-
 - (id)initWithUserInfo:(UserInfo *)userInfo gameId:(NSString *)gameId recipient:(BasicUserProto *)recipent opponent:(BasicUserProto *)opponent startTime:(long long)startTime roundNumber:(int)roundNumber {
   if (self = [super init]) {
     self.userData = userInfo;
@@ -293,6 +267,7 @@
     self.startTime = startTime;
     self.roundNumber = roundNumber;
     self.questionsAnswered = [[NSMutableArray alloc] init];
+    self.timeLeft = self.userData.defaultMinsPerRound*60;
     [self startTimer];
     
     QuestionProto *firstQuestion = (QuestionProto *)[self.userData.questions objectAtIndex:self.currentQuestion];
@@ -304,7 +279,7 @@
     self.currentController.view.center = CGPointMake(self.currentController.view.center.x, self.currentController.view.center.y+56);
     [self.view addSubview:self.currentController.view];
     gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
-  }
+    }
   return self;
 }
 
@@ -312,14 +287,12 @@
 {
   [super viewDidLoad];
   self.currentQuestion = 0;
+  cheatCount = 0;
   self.points = 0;
   pointsBefore = 0;
   pointsAfter = 0;
   self.freezeCost.font = [UIFont fontWithName:@"Avenir Next Lt Pro" size:13];
   self.optionCost.font = [UIFont fontWithName:@"Avenir Next Lt Pro" size:13];
-  self.triviaType.font = [UIFont fontWithName:@"Avenir Next Lt Pro" size:14];
-  //originalTriviaLabelFrame =  self.triviaContainer.frame;
-  //self.triviaContainer.frame = CGRectMake(self.triviaContainer.center.x, self.triviaContainer.frame.origin.y, 0, self.triviaContainer.frame.size.height);
 }
 
 #pragma mark - Helper Methods
@@ -334,17 +307,8 @@
 
 - (void)startTimer {
   if (self.isTutorial) self.timeLeft = Tutorial_Timer;
-  else self.timeLeft = Regular_Game_Timer;
   self.timeLeftLabel.text = [NSString stringWithFormat:@"%d",self.timeLeft];
   self.gameTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(countDown) userInfo:nil repeats:YES];
-}
-
-- (void)animateTriviaTypeLabel {
-  self.triviaType.hidden = NO;
-  self.triviaContainer.frame = CGRectMake(self.triviaContainer.center.x, self.triviaContainer.frame.origin.y, 0, self.triviaContainer.frame.size.height);
-  [UIView animateWithDuration:1.0f animations:^{
-    self.triviaContainer.frame = originalTriviaLabelFrame;
-  }completion:NULL];
 }
 
 - (QuestionType)getQuestiontype {
@@ -370,8 +334,9 @@
   if (self.timeLeft <= 0) {
     self.timeLeftLabel.text = [NSString stringWithFormat:@"%d",self.timeLeft];
     self.view.userInteractionEnabled = NO;
-    [self.gameTimer invalidate];
     [self completeRound];
+    [self.gameTimer invalidate];
+    gameEnded = YES;
   }
 }
 
@@ -474,11 +439,10 @@
   [self updateTimeLabelWithSkip:YES];
   
   [self fadeInLabelWithAmount:10 add:NO andNumberType:kTimeType];
-  [self transitionWithConclusion:NO skipping:NO andNextQuestionType:kFillIn];
+  [self transitionWithConclusion:NO skipping:NO andNextQuestionType:kFillIn point:0];
 }
 
 - (IBAction)cheatOneClicked:(id)sender {
-  
   if (self.isTutorial) {
     self.currentType = kFillIn;
     if (self.currentType = kFillIn) {
@@ -499,7 +463,11 @@
     [alert show];
     return;
   }
-  
+  if (cheatCount >= 3) {
+    return;
+  }
+  self.removeCheatButon.userInteractionEnabled = NO;
+
   SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
   sc.delegate = self;
   
@@ -532,6 +500,7 @@
     [alert show];
     return;
   }
+  self.freezeButton.userInteractionEnabled = NO;
   protoType = kSpendRubyProto;
   usedCheatType = kFreezeCheat;
   
@@ -544,6 +513,7 @@
 }
 
 - (void)freezeCountDown {
+  if (gameEnded) return;
   freezeCounter--;
   self.freezeCountDownLabel.text = [NSString stringWithFormat:@"%d",freezeCounter];
   if (freezeCounter <= 0) {
@@ -582,7 +552,6 @@
   [UIView animateWithDuration:0.4 animations:^{
     self.currentController.view.center = offFrame;
     newController.view.frame = gameRect;
-    self.triviaType.hidden = YES;
   }completion:^(BOOL finished) {
     [weakSelf.currentController.view removeFromSuperview];
     [weakSelf.currentController removeFromParentViewController];
@@ -593,10 +562,10 @@
   }];
 }
 
-- (void)transitionWithConclusion:(BOOL)conclusion skipping:(BOOL)didSkip andNextQuestionType:(QuestionType)type {
+- (void)transitionWithConclusion:(BOOL)conclusion skipping:(BOOL)didSkip andNextQuestionType:(QuestionType)type point:(int)point {
   self.removeCheatButon.userInteractionEnabled = NO;
   self.view.userInteractionEnabled = NO;
-  
+  self.currentQuestion++;
   QuestionProto *qProto = (QuestionProto *)[self.userData.questions objectAtIndex:self.currentQuestion];
   
   QuestionAnsweredProto_AnswerType answerType;
@@ -610,7 +579,7 @@
   
   if(!didSkip) {
     if (conclusion) {
-      pointsAfter += 10;
+      pointsAfter += point;
       UIImage *right = [UIImage imageNamed:@"correct.png"];
       UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, right.size.width, right.size.height)];
       imageView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
@@ -650,6 +619,9 @@
 #pragma mark - Protocol Buffer Stuff
 
 - (void)cheatOneSucess {
+  cheatCount++;
+  self.freezeButton.userInteractionEnabled = YES;
+  self.removeCheatButon.userInteractionEnabled = YES;
   self.currentType = [self getQuestiontype];
   if (self.currentType = kFillIn) {
     FillInTypeViewController *vc = (FillInTypeViewController *)self.currentController;
@@ -701,7 +673,6 @@
 }
 
 - (void)receivedProtoResponse:(PBGeneratedMessage *)message {
-  NSLog(@"received gameview response");
   if (protoType == kSpendRubyProto) {
     SpendRubiesResponseProto *proto = (SpendRubiesResponseProto *)message;
     if (proto.status == SpendRubiesResponseProto_SpendRubiesStatusSuccess) {
@@ -730,17 +701,19 @@
 
 - (void)completeRound {
   self.view.userInteractionEnabled = NO;
+  self.currentController.view.userInteractionEnabled = NO;
   protoType = kCompleteRoundProto;
   SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
   sc.delegate = self;
   BasicUserProto *user = [sc buildSender];
-  
+
   endTime = (long long)[self getUsersTimeInSeconds];
   
   self.spinnerView.hidden = NO;
   [self.spinner startAnimating];
+  [self.view bringSubviewToFront:self.spinnerView];
   
-  CompleteRoundResultsProto *proto = [[[[[[[CompleteRoundResultsProto builder] setRoundId:NULL] setRoundNumber:self.roundNumber] setStartTime:self.startTime] setEndTime:endTime] addAllAnswers:self.questionsAnswered] build];
+  CompleteRoundResultsProto *proto = [[[[[[[[CompleteRoundResultsProto builder] setRoundId:NULL] setRoundNumber:self.roundNumber] setStartTime:self.startTime] setEndTime:endTime] addAllAnswers:self.questionsAnswered] setScore:pointsAfter ] build];
 
   [sc sendCompleteRoundRequest:user opponent:self.opponent gameId:self.gameId results:proto];
 }

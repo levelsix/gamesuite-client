@@ -35,6 +35,9 @@ typedef enum {
 @property (nonatomic, assign) int64_t lastLogin;
 @property (nonatomic, assign) int32_t signupDate;
 @property (nonatomic, assign) int64_t lastTokenRefillTime;
+@property (nonatomic, assign) int multipleChoicePointCount;
+@property (nonatomic, assign) int fillInPointCount;
+@property (nonatomic, assign) int defaultMinsPerRound;
 
 - (id)initWithCompleteUserProto:(CompleteUserProto *)proto;
 

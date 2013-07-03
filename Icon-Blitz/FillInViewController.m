@@ -9,6 +9,7 @@
 #import "FillInViewController.h"
 #import "GameViewController.h"
 #import "AnswerView.h"
+#import "UserInfo.h"
 
 #define MAX_ONE_LINE_SLOTS 7
 #define WIDTH_DIFFERENCE 40
@@ -47,12 +48,20 @@
   BOOL slotTaken[14];
   
   SelectionView *selectedObject;
-  
+  CGRect originalTriviaLabelFrame;
 }
 
 @end
 
 @implementation FillInViewController
+
+- (void)animateTriviaTypeLabel {
+  self.triviaType.hidden = NO;
+  self.triviaContainer.frame = CGRectMake(self.triviaContainer.center.x, self.triviaContainer.frame.origin.y, 0, self.triviaContainer.frame.size.height);
+  [UIView animateWithDuration:1.0f animations:^{
+    self.triviaContainer.frame = originalTriviaLabelFrame;
+  }completion:NULL];
+}
 
 - (id)initWithGame:(GameViewController *)game {
   if ((self = [super init]) ) {
@@ -110,6 +119,9 @@
   for (int i = 0; i <correctAnswerLetterCount; i++) {
     [cheatCountArray addObject:[NSNumber numberWithInt:ar[i]]];
   }
+  self.triviaType.font = [UIFont fontWithName:@"Avenir Next Lt Pro" size:14];
+  originalTriviaLabelFrame = self.triviaContainer.frame;
+  self.triviaContainer.frame = CGRectMake(self.triviaContainer.center.x, self.triviaContainer.frame.origin.y, 0, self.triviaContainer.frame.size.height);
 }
 
 - (void)fillInCheatArray {
@@ -415,7 +427,7 @@
       }
     }
   }
-  [self.game transitionWithConclusion:YES skipping:NO andNextQuestionType:kFillIn];
+  [self.game transitionWithConclusion:YES skipping:NO andNextQuestionType:kFillIn point:self.game.userData.fillInPointCount];
 }
 
 - (void)showFalseAnimation {
@@ -434,7 +446,7 @@
       }
     }
   }
-  [self.game transitionWithConclusion:NO skipping:NO andNextQuestionType:kFillIn];
+  [self.game transitionWithConclusion:NO skipping:NO andNextQuestionType:kFillIn point:0];
 }
 
 - (void)hideBottomBar {

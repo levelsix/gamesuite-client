@@ -68,8 +68,6 @@ typedef enum {
 @property (nonatomic, strong) NSString *gameId;
 @property (nonatomic, strong) NSTimer *gameTimer;
 
-@property (nonatomic, strong) IBOutlet UILabel *triviaType;
-@property (nonatomic, strong) IBOutlet UIView *triviaContainer;
 @property (nonatomic, strong) IBOutlet UILabel *timeLeftLabel;
 @property (nonatomic, strong) IBOutlet UILabel *pointsLabel;
 @property (nonatomic, strong) IBOutlet UILabel *rubyLabel;
@@ -91,14 +89,10 @@ typedef enum {
 - (IBAction)cheatOneClicked:(id)sender;
 - (IBAction)cheatTwoClicked:(id)sender;
 - (QuestionType)getQuestiontype;
-- (void)animateTriviaTypeLabel;
 
-- (id)initWithFillInTest;
 - (id)initWithTutorial;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userData:(UserInfo *)userData;
 - (id)initWithUserInfo:(UserInfo *)userInfo gameId:(NSString *)gameId recipient:(BasicUserProto *)recipent opponent:(BasicUserProto *)opponent startTime:(long long)startTime roundNumber:(int)roundNumber;
-- (void)transitionWithConclusion:(BOOL)conclusion skipping:(BOOL)didSkip andNextQuestionType:(QuestionType)type;
-
+- (void)transitionWithConclusion:(BOOL)conclusion skipping:(BOOL)didSkip andNextQuestionType:(QuestionType)type point:(int)point;
 //tutorial methods
 - (void)tutorialCorrectionAnimationWithCorrect:(BOOL)isCorrect fromQuestionType:(QuestionType)type;
 - (void)animatePointsLabel;

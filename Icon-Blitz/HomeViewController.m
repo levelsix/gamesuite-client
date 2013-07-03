@@ -37,14 +37,8 @@
   int initialTokens;
   int lastRefillTime;
   
-  int defaultMinsPerRound;
-  int multipleChoicePointAmount;
-  int fillInPointAmount;
-  
   int secondsTillRefill;
-  
-  NSMutableDictionary *roundConstants;
-  
+    
   BOOL myTurnHasNoGames;
   BOOL theirTurnHasNoGames;
   BOOL completedHasNoGames;
@@ -190,11 +184,11 @@
   initialRubies = proto.loginConstants.currencyConstants.defaultInitialRubies;
   initialTokens = proto.loginConstants.currencyConstants.defaultInitialTokens;
   secondsTillRefill = proto.loginConstants.currencyConstants.numSecondsUntilRefill;
-  defaultMinsPerRound = proto.loginConstants.roundConstants.defaultMinutesPerRound;
-  multipleChoicePointAmount = proto.loginConstants.scoreTypes.mcqCorrect;
-  fillInPointAmount = proto.loginConstants.scoreTypes.acqCorrect;
+  self.userInfo.defaultMinsPerRound = proto.loginConstants.roundConstants.defaultMinutesPerRound;
+  self.userInfo.multipleChoicePointCount = proto.loginConstants.scoreTypes.mcqCorrect;
+  self.userInfo.fillInPointCount = proto.loginConstants.scoreTypes.acqCorrect;
   lastRefillTime = proto.recipient.currency.lastTokenRefillTime/1000;
-    
+  
   NSTimeInterval currentTime = [self getUsersTimeInSeconds];
   int64_t serverTime = currentTime*1000;
   
@@ -239,7 +233,6 @@
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-  roundConstants = [[NSMutableDictionary alloc] init];
   self.imagesToDownload = [[NSArray alloc] init];
   currentProtoType = kProtoTypeNone;
   if ([ADBannerView instancesRespondToSelector:@selector(initWithAdType:)]) {
@@ -393,8 +386,6 @@
 }
 
 - (IBAction)startNewGame:(id)sender {
-  amountOfGoldCoins--;
-  [self coinManagement:NO];
   if(![newCoinTimer isValid]) {
     newCoinTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(coinCountDown) userInfo:nil repeats:YES];    
   }

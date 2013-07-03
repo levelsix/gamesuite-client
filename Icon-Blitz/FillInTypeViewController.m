@@ -820,7 +820,7 @@
   if (self.game.isTutorial)
     [self.game tutorialCorrectionAnimationWithCorrect:YES fromQuestionType:kFillIn];
   else
-    [self.game transitionWithConclusion:YES skipping:NO andNextQuestionType:kFillIn];
+    [self.game transitionWithConclusion:YES skipping:NO andNextQuestionType:kFillIn point:10];
 }
 
 - (void)showError {
@@ -841,7 +841,7 @@
     }
   }
   if (self.game.isTutorial) [self.game tutorialCorrectionAnimationWithCorrect:NO fromQuestionType:kFillIn];
-  else [self.game transitionWithConclusion:NO skipping:NO andNextQuestionType:kFillIn];
+  else [self.game transitionWithConclusion:NO skipping:NO andNextQuestionType:kFillIn point:0];
 }
 
 - (int)checkForOpenslot {

@@ -21,6 +21,7 @@
   BOOL selecteNewAnswer;
   BOOL isTutorialView;
   NSString *answerId;
+  CGRect originalTriviaLabelFrame;
 }
 
 @end
@@ -62,11 +63,23 @@
   }
   else {
     [self implementInfo];
-    
   }
+  
+  self.triviaType.font = [UIFont fontWithName:@"Avenir Next Lt Pro" size:14];
+  originalTriviaLabelFrame = self.triviaContainer.frame;
+  self.triviaContainer.frame = CGRectMake(self.triviaContainer.center.x, self.triviaContainer.frame.origin.y, 0, self.triviaContainer.frame.size.height);
+}
+
+- (void)animateTriviaTypeLabel {
+  self.triviaType.hidden = NO;
+  self.triviaContainer.frame = CGRectMake(self.triviaContainer.center.x, self.triviaContainer.frame.origin.y, 0, self.triviaContainer.frame.size.height);
+  [UIView animateWithDuration:1.0f animations:^{
+    self.triviaContainer.frame = originalTriviaLabelFrame;
+  }completion:NULL];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+  [self animateTriviaTypeLabel];
   self.game.removeCheatButon.userInteractionEnabled = YES;
 }
 
@@ -204,6 +217,7 @@
 
 - (void)checkCorrectAnswer {
   QuestionType type;
+  NSLog(@"%d",self.game.currentQuestion);
   QuestionProto *nextQuestion = (QuestionProto *)[self.game.userData.questions objectAtIndex:self.game.currentQuestion+1];
   if (nextQuestion.multipleChoice) type = kMultipleChoice;
   else type = kFillIn;
@@ -213,7 +227,7 @@
       [self performSelector:@selector(resetAnswer) withObject:nil afterDelay:0.5f];
     }
     else {
-      [self.game transitionWithConclusion:YES skipping:NO andNextQuestionType:type];    
+      [self.game transitionWithConclusion:YES skipping:NO andNextQuestionType:type point:self.game.userData.multipleChoicePointCount];
     }
   }
   else {
@@ -222,7 +236,7 @@
       [self performSelector:@selector(resetAnswer) withObject:nil afterDelay:0.5f];
     }
     else {
-      [self.game transitionWithConclusion:NO skipping:NO andNextQuestionType:type];
+      [self.game transitionWithConclusion:NO skipping:NO andNextQuestionType:type point:0];
     }
   }
 }

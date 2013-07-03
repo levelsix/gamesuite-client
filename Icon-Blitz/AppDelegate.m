@@ -99,6 +99,7 @@ NSString *const FBSessionStateChangedNotification =
   if (isLoggedin) {
     self.viewController = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
     //self.viewController  = [[TutorialViewController alloc] initWithNibName:@"TutorialViewController" bundle:nil];
+    //self.viewController = [[GameViewController alloc] initWithNibName:nil bundle:nil];
   }
   else {
     self.viewController = [[SignUpViewController alloc] initWithNibName:@"SignUpViewController" bundle:nil];

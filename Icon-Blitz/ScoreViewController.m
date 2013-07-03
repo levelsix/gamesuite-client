@@ -319,7 +319,7 @@
 
 - (IBAction)done:(id)sender {
   if (myTurn) {
-    GameViewController *vc = [[GameViewController alloc] initWithNibName:nil bundle:nil userData:self.userInfo];
+    GameViewController *vc = [[GameViewController alloc] initWithNibName:nil bundle:nil];
     [self.navigationController pushViewController:vc animated:YES];
   }
   else {

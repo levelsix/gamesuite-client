@@ -48,6 +48,8 @@ typedef enum {
 @property (nonatomic, strong) IBOutlet UIImageView *answerCBottom;
 @property (nonatomic, strong) IBOutlet UIImageView *answerDBottom;
 @property (nonatomic, strong) IBOutlet UILabel *questionLabel;
+@property (nonatomic, strong) IBOutlet UILabel *triviaType;
+@property (nonatomic, strong) IBOutlet UIView *triviaContainer;
 
 - (void)removeOptions;
 
