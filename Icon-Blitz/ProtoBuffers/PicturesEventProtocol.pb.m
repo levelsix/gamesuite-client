@@ -28,6 +28,7 @@ BOOL PicturesEventProtocolRequestIsValidValue(PicturesEventProtocolRequest value
     case PicturesEventProtocolRequestCSpendRubiesEvent:
     case PicturesEventProtocolRequestCSearchForUserEvent:
     case PicturesEventProtocolRequestCSaveRoundProgressEvent:
+    case PicturesEventProtocolRequestCRetrieveUserGamesEvent:
       return YES;
     default:
       return NO;
@@ -42,6 +43,7 @@ BOOL PicturesEventProtocolResponseIsValidValue(PicturesEventProtocolResponse val
     case PicturesEventProtocolResponseSSpendRubiesEvent:
     case PicturesEventProtocolResponseSSearchForUserEvent:
     case PicturesEventProtocolResponseSSaveRoundProgressEvent:
+    case PicturesEventProtocolResponseSRetrieveUserGamesEvent:
       return YES;
     default:
       return NO;

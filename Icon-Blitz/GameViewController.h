@@ -50,7 +50,7 @@ typedef enum {
 @class HomeViewController;
 @class UserInfo;
 
-@interface GameViewController : UIViewController <ServerCallbackDelegate> 
+@interface GameViewController : UIViewController <ServerCallbackDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, assign) int currentQuestion;
 @property (nonatomic, assign) int timeLeft;

@@ -7,6 +7,7 @@ typedef enum {
   CommonEventProtocolRequestCCreateAccountViaEmailEvent = 2,
   CommonEventProtocolRequestCCreateAccountViaNoCredentialsEvent = 3,
   CommonEventProtocolRequestCLoginEvent = 4,
+  CommonEventProtocolRequestCInAppPurchaseEvent = 5,
   CommonEventProtocolRequestCLogoutEvent = 51,
 } CommonEventProtocolRequest;
 
@@ -17,6 +18,7 @@ typedef enum {
   CommonEventProtocolResponseSCreateAccountViaEmailEvent = 2,
   CommonEventProtocolResponseSCreateAccountViaNoCredentialsEvent = 3,
   CommonEventProtocolResponseSLoginEvent = 4,
+  CommonEventProtocolResponseSInAppPurchaseEvent = 5,
   CommonEventProtocolResponseSForceLogoutEvent = 50,
 } CommonEventProtocolResponse;
 

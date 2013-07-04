@@ -17,6 +17,7 @@ typedef enum {
 }ScoreStates;
 
 @class UserInfo;
+@class ScoreShopMenu;
 
 @interface ScoreViewController : UIViewController
 
@@ -37,6 +38,9 @@ typedef enum {
 @property (nonatomic, strong) IBOutlet UILabel *whosTurn;
 @property (nonatomic, strong) IBOutlet UILabel *doneLabel;
 @property (nonatomic, strong) IBOutlet UILabel *backLabel;
+@property (nonatomic, strong) IBOutlet UIView *buyMoreRubyView;
+@property (nonatomic, strong) IBOutlet UIImageView *glow;
+@property (nonatomic, strong) IBOutlet ScoreShopMenu *shopMenu;
 
 @property (nonatomic, assign) int userScore;
 @property (nonatomic, strong) UIActivityIndicatorView *spinner;
@@ -45,13 +49,19 @@ typedef enum {
 @property (nonatomic, strong) UserInfo *userInfo;
 @property (nonatomic, strong) OngoingGameProto *gameStats;
 @property (nonatomic, strong) GameResultsProto *completedGameStats;
+@property (nonatomic, strong) CompletedRoundResponseProto *completedRoundResponse;
 
 - (id)initWithOngoingGameProto:(OngoingGameProto *)gameStats userInfo:(UserInfo *)userInfo myTurn:(BOOL)isMyTurn;
 - (id)initWithGameResultsProto:(GameResultsProto *)completedGames userInfo:(UserInfo *)userInfo;
-- (id)initWithRoundOneUserInfo:(UserInfo *)userInfo completedRoundResponse:(CompletedRoundResponseProto *)proto;
+- (id)initWithNewGameUserInfo:(UserInfo *)userInfo completedRoundResponse:(CompletedRoundResponseProto *)proto needRubies:(BOOL)needRubies;
 
 - (void)receievedRetrieveScoreResponse:(Class)proto;
 - (IBAction)done:(id)sender;
 - (IBAction)back:(id)sender;
+- (IBAction)closeShopView:(id)sender;
+- (IBAction)goToShop:(id)sender;
+
+- (void)updateGoldCoins:(int)amount;
+- (void)updateRubies:(int)amount;
 
 @end

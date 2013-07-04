@@ -1,0 +1,34 @@
+import "User.proto";
+
+package proto;
+
+option java_package = "com.lvl6.pictures.eventprotos";
+option java_outer_classname = "InAppPurchaseEventProto";
+
+message InAppPurchaseRequestProto {
+	optional BasicUserProto sender = 1;
+	optional string receipt = 2;
+	optional string localcents = 3;
+	optional string localcurrency = 4;
+	optional string locale = 5;
+	optional string ipaddr = 6;
+}
+
+																						//DONE
+message InAppPurchaseResponseProto {
+	optional BasicUserProto sender = 1;
+	optional InAppPurchaseStatus status = 2;
+	optional int32 rubiesGained = 3;
+	optional int32 tokensGained = 7;
+	
+	optional string packageName = 4;
+	optional double packagePrice = 5;
+	
+	optional string receipt = 6;
+	
+	enum InAppPurchaseStatus {
+		SUCCESS = 0;
+		FAIL_OTHER = 1;
+		FAIL_DUPLICATE_RECEIPT = 2;
+	}
+}

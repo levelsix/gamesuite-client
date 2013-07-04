@@ -35,7 +35,7 @@
   //first time they finished sign up set these 2
   int initialRubies;
   int initialTokens;
-  int lastRefillTime;
+  int64_t lastRefillTime;
   
   int secondsTillRefill;
     
@@ -101,6 +101,7 @@
 }
 
 - (void)loginWithToken {
+  [self loadGoldCoins];
   SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
   sc.delegate = self;
   
@@ -181,19 +182,26 @@
 }
 
 - (void)updateUserCurrencyWithLoginResponse:(LoginResponseProto *)proto {
+
   initialRubies = proto.loginConstants.currencyConstants.defaultInitialRubies;
   initialTokens = proto.loginConstants.currencyConstants.defaultInitialTokens;
   secondsTillRefill = proto.loginConstants.currencyConstants.numSecondsUntilRefill;
   self.userInfo.defaultMinsPerRound = proto.loginConstants.roundConstants.defaultMinutesPerRound;
   self.userInfo.multipleChoicePointCount = proto.loginConstants.scoreTypes.mcqCorrect;
   self.userInfo.fillInPointCount = proto.loginConstants.scoreTypes.acqCorrect;
-  lastRefillTime = proto.recipient.currency.lastTokenRefillTime/1000;
+  lastRefillTime = proto.recipient.currency.lastTokenRefillTime;
   
   NSTimeInterval currentTime = [self getUsersTimeInSeconds];
   int64_t serverTime = currentTime*1000;
   
-  if (currentTime >= (lastRefillTime + secondsTillRefill)) {
-    NSLog(@"sending over refill time");
+  NSDate *date = [NSDate dateWithTimeIntervalSince1970:lastRefillTime/1000];
+  NSDate *now = [NSDate dateWithTimeIntervalSince1970:currentTime];
+  NSLog(@"goldcoins = %d",self.userInfo.goldCoins);
+  NSLog(@"last refill = %@",date);
+  NSLog(@"now = %@", now);
+  
+  if (serverTime >= (lastRefillTime + secondsTillRefill*1000)) {
+    NSLog(@"sending over refill token");
     currentProtoType = kRefillProto;
     SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
     BasicUserProto *sender = [sc buildSender];
@@ -201,11 +209,10 @@
     [sc sendRefillTokenByWaiting:sender currentTime:serverTime];
   }
   else {
-    NSLog(@"dont need to refill yet");
-    double difference = currentTime - (lastRefillTime + secondsTillRefill);
-    addNewCoinTime = (int)difference;
+    double difference = (lastRefillTime + secondsTillRefill*1000) - serverTime;
+    addNewCoinTime = (int)(difference/1000);
   }
-  
+      
   amountOfRubies = self.userInfo.rubies;
   amountOfGoldCoins = self.userInfo.goldCoins;
   
@@ -213,8 +220,6 @@
   NSInteger leftOver = addNewCoinTime % 60;
   NSString *timeFormat = [NSString stringWithFormat:@"%0.2d:%0.2d",minute, leftOver];
   self.coinTimeLabel.text = timeFormat;
-
-  [self loadGoldCoins];
   
   self.rubyLabel.text = [NSString stringWithFormat:@"%d",amountOfRubies];
   
@@ -223,11 +228,20 @@
   }
   
   if (amountOfGoldCoins != initialTokens) {
+    [self invalidateTimer];
     newCoinTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(coinCountDown) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:newCoinTimer forMode:NSRunLoopCommonModes];
   }
-  [self coinManagement:YES];
-  
+  [self loadTokenAfterServerWithAmount:self.userInfo.goldCoins];
+}
+
+- (void)loadTokenAfterServerWithAmount:(int)amount {
+  int difference = 15 - amount;
+  for (int i = 100 + difference; i < 115; i++) {
+    UIImage *overlay = [UIImage imageNamed:@"goldcoin.png"];
+    UIImageView *coin = (UIImageView *)[self.view viewWithTag:i];
+    coin.image = overlay;
+  }
 }
 
 - (void)viewDidLoad
@@ -294,6 +308,10 @@
     completedAmt = 1;
     completedHasNoGames = YES;
   }
+}
+
+- (void)updateCellsWithLoginResponse:(LoginResponseProto *)proto {
+  
   [self.tableView reloadData];
 }
 
@@ -331,19 +349,21 @@
   self.coinTimeLabel.text = timeFormat;
   
   if (addNewCoinTime <= 0) {
-    amountOfGoldCoins++;
-    [self coinManagement:YES];
-    if (amountOfGoldCoins >= initialTokens) {
-      amountOfGoldCoins = initialTokens;
-      addNewCoinTime = ADD_NEW_COIN_TIME;
-      NSInteger minute = addNewCoinTime/60;
-      NSInteger leftOver = addNewCoinTime % 60;
-      NSString *timeFormat = [NSString stringWithFormat:@"%0.2d:%0.2d",minute, leftOver];
-      self.coinTimeLabel.text = timeFormat;
-      [self invalidateTimer];
-    }
-    addNewCoinTime = ADD_NEW_COIN_TIME;
+    [self sendOverRefillToken];
+    [self invalidateTimer];
   }
+}
+
+- (void)sendOverRefillToken {
+  NSTimeInterval currentTime = [self getUsersTimeInSeconds];
+  int64_t serverTime = (currentTime+1)*1000;
+
+  currentProtoType = kRefillProto;
+  SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
+  BasicUserProto *sender = [sc buildSender];
+  sc.delegate = self;
+  
+  [sc sendRefillTokenByWaiting:sender currentTime:serverTime];
 }
 
 - (void)invalidateTimer {
@@ -397,11 +417,12 @@
 
 - (IBAction)goToGame:(id)sender {
   UIButton *b = (UIButton *)sender;
-
-  if (b.tag > theirTurnAmt && b.tag <= completedAmt) {
+  
+  if (b.tag == 500) {
+    [self startNewGame:self];
+  }
+  else if (b.tag > theirTurnAmt && b.tag <= completedAmt) {
     //view completed games
-    
-
   }
   else if (b.tag <= yourTurnAmt) {
     //go into my turn
@@ -508,6 +529,7 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
   [self downloadImage];
   [self updateUserCurrencyWithLoginResponse:proto];
   [self addArraysTogether];
+  [self updateCellsWithLoginResponse:proto];
 }
 
 - (void)receivedProtoResponse:(PBGeneratedMessage *)message {
@@ -526,8 +548,52 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
     }
   }
   else if (currentProtoType == kRefillProto) {
-    NSLog(@"received refill message");
+    RefillTokensByWaitingResponseProto *proto = (RefillTokensByWaitingResponseProto *)message;
+    if (proto.status == RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusSuccess) {
+      [self coinManagement:YES];
+      self.userInfo.goldCoins++;
+      if (self.userInfo.goldCoins >= 15) {
+        self.userInfo.goldCoins = 15;
+        [self invalidateTimer];
+      }
+      else {
+        addNewCoinTime = ADD_NEW_COIN_TIME;
+        if (![newCoinTimer isValid]) {
+          newCoinTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(coinCountDown) userInfo:nil repeats:YES];
+          [[NSRunLoop mainRunLoop] addTimer:newCoinTimer forMode:NSRunLoopCommonModes];
+        }
+      }
+    }
+    else {
+      [self refillFailedWithProto:proto];
+    }
   }
+}
+
+- (void)refillFailedWithProto:(RefillTokensByWaitingResponseProto *)proto {
+  UIAlertView *alert;
+  switch ((int)proto.status) {
+    case RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusFailAlreadyMax:
+      alert = [[UIAlertView alloc] initWithTitle:@"Max Token" message:@"Error refilling token, already has max token" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+      break;
+      
+    case RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusFailNotReadyYet:
+      alert = [[UIAlertView alloc] initWithTitle:@"It's not time yet" message:@"Error refilling token, its not ready yet!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+      break;
+      
+    case RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusFailClientTooApartFromServerTime:
+      alert = [[UIAlertView alloc] initWithTitle:@"Your time is different" message:@"Error refilling token, your time is different from server time" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+      break;
+      
+    case RefillTokensByWaitingResponseProto_RefillTokensByWaitingStatusFailOther:
+      alert = [[UIAlertView alloc] initWithTitle:@"An unknown error" message:@"An unknown error has occured" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+      break;
+      
+    default:
+      break;
+  }
+  [alert show];
+  
 }
 
 - (void)getNewQuestions {
@@ -650,6 +716,7 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
           cell.longerLabel.hidden = NO;
           cell.longerLabel.numberOfLines = 0;
           cell.longerLabel.text = [NSString stringWithFormat:@"You have no games right now \nStart a new game >>"];
+          cell.gameButton.tag = 500;
         }
         else {
           tag = [tableView numberOfRowsInSection:kYourTurn];

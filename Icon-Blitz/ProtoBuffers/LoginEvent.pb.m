@@ -381,7 +381,7 @@ BOOL LoginRequestProto_LoginTypeIsValidValue(LoginRequestProto_LoginType value) 
   self.mutableCompletedGamesList = nil;
   self.mutableMyTurnList = nil;
   self.mutableNotMyTurnList = nil;
-  //®self.mutableNewQuestionsList = nil;
+  //self.mutableNewQuestionsList = nil;
   self.mutableFacebookFriendsWithAccountsList = nil;
   self.mutablePictureNamesList = nil;
   self.loginConstants = nil;

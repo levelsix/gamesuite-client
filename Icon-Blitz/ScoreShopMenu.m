@@ -1,19 +1,18 @@
 //
-//  ShopMenu.m
+//  ScoreShopMenu.m
 //  Icon-Blitz
 //
-//  Created by Danny on 4/25/13.
+//  Created by Danny on 7/3/13.
 //
 //
 
-#import "ShopMenu.h"
-#import "ShopItemsCell.h"
+#import "ScoreShopMenu.h"
+#import "ScoreShopItemsCell.h"
 
 #import <StoreKit/StoreKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "TriviaBlitzIAPHelper.h"
 #import "StaticProperties.h"
-#import "HomeViewController.h"
 #import "ScoreViewController.h"
 
 #define Trivia_Silver_Product_1 0
@@ -22,17 +21,16 @@
 #define Trivia_Gold_Product_3 3
 #define Trivia_Gold_Product_4 4
 
-
-@interface ShopMenu () {
+@interface ScoreShopMenu () {
   NSMutableArray *_products;
 }
 
 @end
 
-@implementation ShopMenu
+@implementation ScoreShopMenu
 
-- (void)getDataWithGame:(HomeViewController *)game {
-  self.game = game;
+- (void)getDataWithScore:(ScoreViewController *)scoreView {
+  self.scoreView = scoreView;
   UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
   [self addSubview:spinner];
   spinner.center = CGPointMake(self.frame.size.width/2, self.frame.size.height/2);
@@ -61,37 +59,9 @@
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(productCanceled:) name:IAPHelperProductCanceledNotification object:nil];
 }
 
-
-//- (void)slidingInAnimation:(NSTimer *)timer {
-//  UITableViewCell *cell = (UITableViewCell *)[self.shopTableView viewWithTag:animationCounter];
-//  animationCounter++;
-//  CGPoint originalCenter = cell.center;
-//  
-//  if (animationCounter % 2 != 0) {
-//    cell.hidden = NO;
-//    cell.center = CGPointMake(-originalCenter.x, originalCenter.y);
-//    [UIView animateWithDuration:0.3 animations:^{
-//      cell.center = originalCenter;
-//    }];
-//  }
-//  else {
-//    cell.hidden = NO;
-//    cell.center = CGPointMake(originalCenter.x*2, originalCenter.y);
-//    [UIView animateWithDuration:0.3 animations:^{
-//      cell.center = originalCenter;
-//    }];
-//  }
-//  if (animationCounter == 6) {
-//    self.superview.userInteractionEnabled = YES;
-//    self.userInteractionEnabled = YES;
-//    loaded = YES;
-//    [timer invalidate];
-//  }
-//}
-
 - (void)dealloc {
   [[NSNotificationCenter defaultCenter] removeObserver:self];
-
+  
 }
 
 - (void)animateCells:(NSTimer *)timer {
@@ -110,6 +80,10 @@
     loaded = YES;
     [timer invalidate];
   }
+}
+
+- (IBAction)closeView:(id)sender {
+  [self removeFromSuperview];
 }
 
 - (void) bounceView: (UIView *) view
@@ -164,23 +138,23 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 - (void)afterPurchaseComplete:(int)tag {
   switch (tag) {
     case Trivia_Silver_Product_1:
-      [self.game updateGoldCoin:15];
+      [self.scoreView updateGoldCoins:15];
       break;
       
     case Trivia_Gold_Product_1:
-      [self.game updateRuby:10];
+      [self.scoreView updateRubies:10];
       break;
       
     case Trivia_Gold_Product_2:
-      [self.game updateRuby:25];
+      [self.scoreView updateRubies:25];
       break;
-      
+
     case Trivia_Gold_Product_3:
-      [self.game updateRuby:100];
+      [self.scoreView updateRubies:100];
       break;
       
     case Trivia_Gold_Product_4:
-      [self.game updateRuby:500];
+      [self.scoreView updateRubies:500];
       break;
       
     default:
@@ -224,13 +198,13 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-  static NSString *goldCoinCellId = @"GoldCoin";
-  static NSString *rubyCellId = @"Ruby";
-  static NSString *blankCell = @"Cell";
+  static NSString *goldCoinCellId = @"ShopGoldCoin";
+  static NSString *rubyCellId = @"ShopRuby";
+  static NSString *blankCell = @"ShopCell";
   if (indexPath.row == 0) {
-    GoldCoinCell *cell = [tableView dequeueReusableCellWithIdentifier:goldCoinCellId];
+    ShopGoldCoinCell *cell = [tableView dequeueReusableCellWithIdentifier:goldCoinCellId];
     if (cell == nil) {
-      [[NSBundle mainBundle] loadNibNamed:@"ShopItemsCell" owner:self options:nil];
+      [[NSBundle mainBundle] loadNibNamed:@"ScoreShopItemsCell" owner:self options:nil];
       cell = self.goldCoinCell;
     }
     UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 80, 320, 80)];
@@ -249,7 +223,7 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
     return cell;
   }
   else if(indexPath.row % 2 == 1) {
-      BlankCell*cell = [tableView dequeueReusableCellWithIdentifier:blankCell];
+    ShopBlankCell*cell = [tableView dequeueReusableCellWithIdentifier:blankCell];
     if (cell == nil) {
       cell = self.blankCell;
     }
@@ -257,9 +231,9 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
   }
   
   else {
-    RubyCell *cell = [tableView dequeueReusableCellWithIdentifier:rubyCellId];
+    ShopRubyCell *cell = [tableView dequeueReusableCellWithIdentifier:rubyCellId];
     if (cell == nil) {
-      [[NSBundle mainBundle] loadNibNamed:@"ShopItemsCell" owner:self options:nil];
+      [[NSBundle mainBundle] loadNibNamed:@"ScoreShopItemsCell" owner:self options:nil];
       cell = self.rubyCell;
     }
     UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 80, 320, 80)];

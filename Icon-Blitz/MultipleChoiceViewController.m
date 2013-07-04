@@ -217,7 +217,6 @@
 
 - (void)checkCorrectAnswer {
   QuestionType type;
-  NSLog(@"%d",self.game.currentQuestion);
   QuestionProto *nextQuestion = (QuestionProto *)[self.game.userData.questions objectAtIndex:self.game.currentQuestion+1];
   if (nextQuestion.multipleChoice) type = kMultipleChoice;
   else type = kFillIn;

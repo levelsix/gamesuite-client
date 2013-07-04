@@ -25,6 +25,7 @@ BOOL CommonEventProtocolRequestIsValidValue(CommonEventProtocolRequest value) {
     case CommonEventProtocolRequestCCreateAccountViaEmailEvent:
     case CommonEventProtocolRequestCCreateAccountViaNoCredentialsEvent:
     case CommonEventProtocolRequestCLoginEvent:
+    case CommonEventProtocolRequestCInAppPurchaseEvent:
     case CommonEventProtocolRequestCLogoutEvent:
       return YES;
     default:
@@ -37,6 +38,7 @@ BOOL CommonEventProtocolResponseIsValidValue(CommonEventProtocolResponse value) 
     case CommonEventProtocolResponseSCreateAccountViaEmailEvent:
     case CommonEventProtocolResponseSCreateAccountViaNoCredentialsEvent:
     case CommonEventProtocolResponseSLoginEvent:
+    case CommonEventProtocolResponseSInAppPurchaseEvent:
     case CommonEventProtocolResponseSForceLogoutEvent:
       return YES;
     default:

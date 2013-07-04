@@ -519,6 +519,7 @@ static StartRoundRequestProto* defaultStartRoundRequestProtoInstance = nil;
 @property (retain) BasicUserProto* recipient;
 @property (retain) NSString* gameId;
 @property StartRoundResponseProto_StartRoundStatus status;
+@property (retain) CompleteUserProto* updatedRecipient;
 @end
 
 @implementation StartRoundResponseProto
@@ -544,9 +545,17 @@ static StartRoundRequestProto* defaultStartRoundRequestProtoInstance = nil;
   hasStatus_ = !!value;
 }
 @synthesize status;
+- (BOOL) hasUpdatedRecipient {
+  return !!hasUpdatedRecipient_;
+}
+- (void) setHasUpdatedRecipient:(BOOL) value {
+  hasUpdatedRecipient_ = !!value;
+}
+@synthesize updatedRecipient;
 - (void) dealloc {
   self.recipient = nil;
   self.gameId = nil;
+  self.updatedRecipient = nil;
   [super dealloc];
 }
 - (id) init {
@@ -554,6 +563,7 @@ static StartRoundRequestProto* defaultStartRoundRequestProtoInstance = nil;
     self.recipient = [BasicUserProto defaultInstance];
     self.gameId = @"";
     self.status = StartRoundResponseProto_StartRoundStatusSuccess;
+    self.updatedRecipient = [CompleteUserProto defaultInstance];
   }
   return self;
 }
@@ -582,6 +592,9 @@ static StartRoundResponseProto* defaultStartRoundResponseProtoInstance = nil;
   if (self.hasStatus) {
     [output writeEnum:3 value:self.status];
   }
+  if (self.hasUpdatedRecipient) {
+    [output writeMessage:4 value:self.updatedRecipient];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -599,6 +612,9 @@ static StartRoundResponseProto* defaultStartRoundResponseProtoInstance = nil;
   }
   if (self.hasStatus) {
     size += computeEnumSize(3, self.status);
+  }
+  if (self.hasUpdatedRecipient) {
+    size += computeMessageSize(4, self.updatedRecipient);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -699,6 +715,9 @@ BOOL StartRoundResponseProto_StartRoundStatusIsValidValue(StartRoundResponseProt
   if (other.hasStatus) {
     [self setStatus:other.status];
   }
+  if (other.hasUpdatedRecipient) {
+    [self mergeUpdatedRecipient:other.updatedRecipient];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -740,6 +759,15 @@ BOOL StartRoundResponseProto_StartRoundStatusIsValidValue(StartRoundResponseProt
         } else {
           [unknownFields mergeVarintField:3 value:value];
         }
+        break;
+      }
+      case 34: {
+        CompleteUserProto_Builder* subBuilder = [CompleteUserProto builder];
+        if (self.hasUpdatedRecipient) {
+          [subBuilder mergeFrom:self.updatedRecipient];
+        }
+        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
+        [self setUpdatedRecipient:[subBuilder buildPartial]];
         break;
       }
     }
@@ -805,6 +833,36 @@ BOOL StartRoundResponseProto_StartRoundStatusIsValidValue(StartRoundResponseProt
 - (StartRoundResponseProto_Builder*) clearStatus {
   result.hasStatus = NO;
   result.status = StartRoundResponseProto_StartRoundStatusSuccess;
+  return self;
+}
+- (BOOL) hasUpdatedRecipient {
+  return result.hasUpdatedRecipient;
+}
+- (CompleteUserProto*) updatedRecipient {
+  return result.updatedRecipient;
+}
+- (StartRoundResponseProto_Builder*) setUpdatedRecipient:(CompleteUserProto*) value {
+  result.hasUpdatedRecipient = YES;
+  result.updatedRecipient = value;
+  return self;
+}
+- (StartRoundResponseProto_Builder*) setUpdatedRecipientBuilder:(CompleteUserProto_Builder*) builderForValue {
+  return [self setUpdatedRecipient:[builderForValue build]];
+}
+- (StartRoundResponseProto_Builder*) mergeUpdatedRecipient:(CompleteUserProto*) value {
+  if (result.hasUpdatedRecipient &&
+      result.updatedRecipient != [CompleteUserProto defaultInstance]) {
+    result.updatedRecipient =
+      [[[CompleteUserProto builderWithPrototype:result.updatedRecipient] mergeFrom:value] buildPartial];
+  } else {
+    result.updatedRecipient = value;
+  }
+  result.hasUpdatedRecipient = YES;
+  return self;
+}
+- (StartRoundResponseProto_Builder*) clearUpdatedRecipient {
+  result.hasUpdatedRecipient = NO;
+  result.updatedRecipient = [CompleteUserProto defaultInstance];
   return self;
 }
 @end

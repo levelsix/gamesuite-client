@@ -38,6 +38,9 @@ message StartRoundResponseProto {
 	optional string gameId = 2;
 	optional StartRoundStatus status = 3;
 	
+	//if request was successful, contains the updated currency
+	optional CompleteUserProto updatedRecipient = 4;
+	
 	enum StartRoundStatus {
 		SUCCESS = 1;
 		FAIL_CLIENT_TOO_APART_FROM_SERVER_TIME = 2;

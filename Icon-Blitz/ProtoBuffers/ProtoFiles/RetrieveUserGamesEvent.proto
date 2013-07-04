@@ -1,0 +1,32 @@
+import "TriviaGameFormat.proto";
+import "User.proto";
+
+package proto;
+
+option java_package = "com.lvl6.pictures.eventprotos";
+option java_outer_classname = "RetrieveUserGamesEventProto";
+
+message RetrieveUserGamesRequestProto {
+	optional BasicUserProto sender = 1;
+	
+	//in case you want games completed after a certain time
+	optional int64 timeForCompletedGames = 2;
+}
+
+message RetrieveUserGamesResponseProto {
+	optional BasicUserProto sender = 1;
+	
+	repeated GameResultsProto completedGames = 2;
+	repeated OngoingGameProto myTurn = 3;
+	repeated OngoingGameProto notMyTurn = 4;
+	
+	//the pictures that are in 'myTurn'
+	repeated string pictureNames = 5;
+	
+	optional RetrieveUserGamesStatus status = 6;
+	
+	enum RetrieveUserGamesStatus {
+		SUCCESS = 1;
+		FAIL_OTHER = 2;
+	}
+}

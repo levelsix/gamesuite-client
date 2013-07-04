@@ -111,7 +111,6 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{199, 39}, {55, 21}}</string>
 								<reference key="NSSuperview" ref="686388281"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -245,7 +244,6 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{199, 39}, {55, 21}}</string>
 								<reference key="NSSuperview" ref="653479147"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -327,7 +325,6 @@
 						<int key="NSvFlags">256</int>
 						<string key="NSFrameSize">{266, 9}</string>
 						<reference key="NSSuperview" ref="292487668"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:11</string>
 						<reference key="IBUIBackgroundColor" ref="421861868"/>
 						<bool key="IBUIOpaque">NO</bool>
@@ -352,14 +349,6 @@
 			<array class="NSMutableArray" key="connectionRecords">
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">goldCoinCell</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="63055275"/>
-					</object>
-					<int key="connectionID">63</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">rubyCell</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="581828009"/>
@@ -373,6 +362,14 @@
 						<reference key="destination" ref="292487668"/>
 					</object>
 					<int key="connectionID">65</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">goldCoinCell</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="63055275"/>
+					</object>
+					<int key="connectionID">70</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -592,7 +589,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">69</int>
+			<int key="maxID">70</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

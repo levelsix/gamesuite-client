@@ -16,6 +16,7 @@
 #import "SocketCommunication.h" 
 #import "TutorialMultipleChoiceViewController.h"
 #import "FillInViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 #define Tutorial_Timer 60
 #define Regular_Game_Timer 60
@@ -32,6 +33,8 @@
   UsedCheatType usedCheatType;
   int cheatCount;
   BOOL gameEnded;
+  BOOL notEnoughRubies;
+  int correctCombo;
 }
 @end
 
@@ -264,10 +267,12 @@
     self.gameId = gameId;
     self.recipient = recipent;
     self.opponent = opponent;
+    
     self.startTime = startTime;
     self.roundNumber = roundNumber;
     self.questionsAnswered = [[NSMutableArray alloc] init];
-    self.timeLeft = self.userData.defaultMinsPerRound*60;
+    self.timeLeft = 30;
+    //self.timeLeft = self.userData.defaultMinsPerRound*60;
     [self startTimer];
     
     QuestionProto *firstQuestion = (QuestionProto *)[self.userData.questions objectAtIndex:self.currentQuestion];
@@ -281,6 +286,10 @@
     gameRect = CGRectMake(self.currentController.view.frame.origin.x, self.currentController.view.frame.origin.y, 320, 353);
     }
   return self;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+  self.rubyLabel.text = [NSString stringWithFormat:@"%d", self.userData.rubies];
 }
 
 - (void)viewDidLoad
@@ -298,11 +307,9 @@
 #pragma mark - Helper Methods
 
 - (NSTimeInterval)getUsersTimeInSeconds {
-  NSTimeZone* local = [NSTimeZone localTimeZone];
-  NSInteger secondsOffset = [local secondsFromGMTForDate:[NSDate date]];
   NSDate *date = [[NSDate alloc] init];
   NSTimeInterval time = [date timeIntervalSince1970];
-  return time +secondsOffset;
+  return time;
 }
 
 - (void)startTimer {
@@ -357,6 +364,20 @@
   [self performSelector:@selector(changePoints) withObject:nil afterDelay:.05];
 }
 
+- (void)addTime {
+  static float delay = .01;
+  self.timeLeft += 1;
+  self.timeLeftLabel.text = [NSString stringWithFormat:@"%d",self.timeLeft];
+  
+  if (self.timeLeft < timeAfter) {
+    [self performSelector:@selector(addTime) withObject:nil afterDelay:0.05];
+  }
+  else if (self.timeLeft < timeAfter - 5 && self.timeLeft < timeAfter) {
+    [self performSelector:@selector(addTime) withObject:nil afterDelay:0.05 + delay];
+    delay += 0.01;
+  }
+}
+
 - (void)changeTime {
   static float delay = .01;
   self.timeLeft -= 1;
@@ -372,6 +393,7 @@
 -(void)changePoints {
   static float delay = .01;
   pointsBefore += 1;
+  if (pointsBefore > pointsAfter) pointsBefore = pointsAfter;
   self.pointsLabel.text = [NSString stringWithFormat:@"%d",pointsBefore];
   if (pointsBefore < pointsAfter) {
     [self performSelector:@selector(changePoints) withObject:nil afterDelay:.05];
@@ -439,7 +461,7 @@
   [self updateTimeLabelWithSkip:YES];
   
   [self fadeInLabelWithAmount:10 add:NO andNumberType:kTimeType];
-  [self transitionWithConclusion:NO skipping:NO andNextQuestionType:kFillIn point:0];
+  [self transitionWithConclusion:NO skipping:YES andNextQuestionType:kFillIn point:0];
 }
 
 - (IBAction)cheatOneClicked:(id)sender {
@@ -459,6 +481,8 @@
     return;
   }
   else if (self.userData.rubies < CheatCost) {
+    protoType = kSpendRubyProto;
+    notEnoughRubies = YES;
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not enough rubies" message:@"You don't have enough rubies, you can buy them after this game!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
     [alert show];
     return;
@@ -468,13 +492,13 @@
   }
   self.removeCheatButon.userInteractionEnabled = NO;
 
+  protoType = kSpendRubyProto;
   SocketCommunication *sc = [SocketCommunication sharedSocketCommunication];
   sc.delegate = self;
   
   BasicUserProto *proto = [sc buildSender];
   [sc sendSpendRubies:proto amountSpent:CheatCost];
   
-  protoType = kSpendRubyProto;
   usedCheatType = kRemoveCheat;
 }
 
@@ -496,6 +520,8 @@
   
   //need to check if user has enough rubies
   if (self.userData.rubies < FreezeCost && !self.isTutorial) {
+    protoType = kSpendRubyProto;
+    notEnoughRubies = YES;
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not enough rubies" message:@"You don't have enough rubies, you can buy them after this game!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
     [alert show];
     return;
@@ -566,6 +592,7 @@
   self.removeCheatButon.userInteractionEnabled = NO;
   self.view.userInteractionEnabled = NO;
   self.currentQuestion++;
+  cheatCount = 0;
   QuestionProto *qProto = (QuestionProto *)[self.userData.questions objectAtIndex:self.currentQuestion];
   
   QuestionAnsweredProto_AnswerType answerType;
@@ -580,6 +607,12 @@
   if(!didSkip) {
     if (conclusion) {
       pointsAfter += point;
+      correctCombo++;
+      if (correctCombo == 3) {
+        correctCombo = 0;
+        [self showComboAnimationWithPoint:point andType:type];
+        return;
+      }
       UIImage *right = [UIImage imageNamed:@"correct.png"];
       UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, right.size.width, right.size.height)];
       imageView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
@@ -589,13 +622,14 @@
         imageView.transform = CGAffineTransformMakeScale(2, 2);
         imageView.transform = CGAffineTransformMakeRotation(-5.85);
         [self updatePointsLabel];
-        [self fadeInLabelWithAmount:10 add:YES andNumberType:kPointType];
+        [self fadeInLabelWithAmount:point add:YES andNumberType:kPointType];
       }completion:^(BOOL finished) {
         [self pushNewViewControllersWithType:type];
         [imageView removeFromSuperview];
       }];
     }
     else {
+      correctCombo = 0;
       UIImage *wrong = [UIImage imageNamed:@"wrong.png"];
       UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, wrong.size.width, wrong.size.height)];
       imageView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
@@ -607,12 +641,91 @@
         imageView.transform = CGAffineTransformMakeRotation(-5.85);
       }completion:^(BOOL finished) {
         [self pushNewViewControllersWithType:type];
+        timeAfter = self.timeLeft - 5;
+        [self fadeInLabelWithAmount:5 add:NO andNumberType:kTimeType];
+        [self updateTimeLabelWithSkip:YES];
         [imageView removeFromSuperview];
       }];
     }
   }
   else {
+    [self skipAnimationWithType:type];
+  }
+}
+
+- (void)skipAnimationWithType:(QuestionType)type {
+  correctCombo = 0;
+  UIImage *wrong = [UIImage imageNamed:@"wrong.png"];
+  UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, wrong.size.width, wrong.size.height)];
+  imageView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
+  imageView.image = wrong;
+  [self.view addSubview:imageView];
+  [UIView animateWithDuration:0.4 animations:^{
+    imageView.transform = CGAffineTransformMakeScale(2, 2);
+    imageView.transform = CGAffineTransformMakeRotation(-5.85);
+  }completion:^(BOOL finished) {
     [self pushNewViewControllersWithType:type];
+    [imageView removeFromSuperview];
+  }];
+}
+
+- (void)showComboAnimationWithPoint:(int)point andType:(QuestionType)type {
+  UIImage *image = [UIImage imageNamed:@"3xcombo10s.png"];
+  UIImageView *combo = [[UIImageView alloc] initWithImage:image];
+  combo.frame = CGRectMake(0, 0, image.size.width, image.size.height);
+  combo.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
+  combo.alpha = 0.0f;
+  [self.view bringSubviewToFront:combo];
+  [self.view addSubview:combo];
+  
+  [self bounceView:combo withCompletionBlock:nil];  
+  [UIView animateWithDuration:0.3f animations:^{
+    combo.alpha = 1.0f;
+  }completion:^(BOOL finished) {
+    [UIView animateWithDuration:0.5f animations:^{
+      combo.alpha = 0.0f;
+      combo.center = CGPointMake(combo.center.x, combo.center.y - self.view.frame.size.width);
+    }completion:^(BOOL finished) {
+      [self updatePointsLabel];
+      [self fadeInLabelWithAmount:point add:YES andNumberType:kPointType];
+      timeAfter = self.timeLeft + 10;
+      [self fadeInLabelWithAmount:10 add:YES andNumberType:kTimeType];
+      [self addTime];
+      [self pushNewViewControllersWithType:type];
+    }];
+  }];
+}
+
+- (void) bounceView: (UIView *) view
+withCompletionBlock:(void(^)(BOOL))completionBlock
+{
+  view.layer.transform = CATransform3DMakeScale(0.3, 0.3, 1.0);
+  
+  CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+  bounceAnimation.values = [NSArray arrayWithObjects:
+                            [NSNumber numberWithFloat:0.3],
+                            [NSNumber numberWithFloat:1.1],
+                            [NSNumber numberWithFloat:0.95],
+                            [NSNumber numberWithFloat:1.0], nil];
+  
+  bounceAnimation.keyTimes = [NSArray arrayWithObjects:
+                              [NSNumber numberWithFloat:0],
+                              [NSNumber numberWithFloat:0.4],
+                              [NSNumber numberWithFloat:0.7],
+                              [NSNumber numberWithFloat:0.9],
+                              [NSNumber numberWithFloat:1.0], nil];
+  
+  bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
+                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut], nil];
+  
+  bounceAnimation.duration = 1.3f;
+  [view.layer addAnimation:bounceAnimation forKey:@"bounce"];
+  
+  view.layer.transform = CATransform3DIdentity;
+  if (completionBlock) {
+    [UIView animateWithDuration:0 delay:0.5 options:UIViewAnimationOptionTransitionNone animations:nil completion:completionBlock];
   }
 }
 
@@ -623,6 +736,8 @@
   self.freezeButton.userInteractionEnabled = YES;
   self.removeCheatButon.userInteractionEnabled = YES;
   self.currentType = [self getQuestiontype];
+  self.userData.rubies -= CheatCost;
+  [self updatePointsLabel];
   if (self.currentType = kFillIn) {
     FillInTypeViewController *vc = (FillInTypeViewController *)self.currentController;
     [vc removeOptions];
@@ -641,6 +756,8 @@
   self.freezeButton.alpha = 0.5f;
   freezeCounter = 10;
   self.freezeCountDownLabel.text = [NSString stringWithFormat:@"%d",freezeCounter];
+  self.userData.rubies -= CheatCost;
+  [self updatePointsLabel];
   if ([self.gameTimer isValid]) {
     [self.gameTimer invalidate];
   }
@@ -655,20 +772,46 @@
     alert = [[UIAlertView alloc] initWithTitle:@"Not enough rubies" message:@"You dont have enough rubies, you can buy more after this game" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
   }
   else if (proto.status == SpendRubiesResponseProto_SpendRubiesStatusFailOther) {
-    alert = [[UIAlertView alloc] initWithTitle:@"Error accessing error" message:@"There is an error accessing the server right now, please try again later" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    alert = [[UIAlertView alloc] initWithTitle:@"Error accessing server" message:@"There is an error accessing the server right now, please try again later" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
   }
   [alert show];
 }
 
 - (void)completeRoundFail:(CompletedRoundResponseProto *)proto {
+  UIAlertView *alert;
   if (proto.status == CompletedRoundResponseProto_CompletedRoundStatusFailGameDoesNotExist) {
+    alert = [[UIAlertView alloc] initWithTitle:@"Game does not exist" message:@"An error has occured when completing a round" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     
   }
   else if (proto.status == CompletedRoundResponseProto_CompletedRoundStatusFailGameAlreadyCompleted) {
-    
+        alert = [[UIAlertView alloc] initWithTitle:@"Game already completed" message:@"Error, game was already completed" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
   }
   else if (proto.status == CompletedRoundResponseProto_CompletedRoundStatusFailOther) {
-    
+        alert = [[UIAlertView alloc] initWithTitle:@"Error accessing server" message:@"There is an error accessing the server right now, please try again later" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+  }
+  [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+  switch (buttonIndex) {
+    case 0:
+      if (protoType == kSpendRubyProto)
+        notEnoughRubies = YES;
+      else if (protoType == kCompleteRoundProto) {
+        [self.navigationController popToRootViewControllerAnimated:YES]; 
+      }
+      break;
+      
+    case 1:
+      if (protoType == kCompleteRoundProto) [self.navigationController popToRootViewControllerAnimated:YES];
+      break;
+      
+    case 2:
+      [self.navigationController popToRootViewControllerAnimated:YES];
+      break;
+      
+    default:
+      break;
   }
 }
 
@@ -690,7 +833,7 @@
     self.spinnerView.hidden = YES;
     CompletedRoundResponseProto *proto = (CompletedRoundResponseProto *)message;
     if (proto.status == CompletedRoundResponseProto_CompletedRoundStatusSuccess) {
-      ScoreViewController *vc = [[ScoreViewController alloc] initWithRoundOneUserInfo:self.userData completedRoundResponse:proto];
+      ScoreViewController *vc = [[ScoreViewController alloc] initWithNewGameUserInfo:self.userData completedRoundResponse:proto needRubies:notEnoughRubies];
       [self.navigationController pushViewController:vc animated:YES];
     }
     else {
@@ -713,7 +856,7 @@
   [self.spinner startAnimating];
   [self.view bringSubviewToFront:self.spinnerView];
   
-  CompleteRoundResultsProto *proto = [[[[[[[[CompleteRoundResultsProto builder] setRoundId:NULL] setRoundNumber:self.roundNumber] setStartTime:self.startTime] setEndTime:endTime] addAllAnswers:self.questionsAnswered] setScore:pointsAfter ] build];
+  CompleteRoundResultsProto *proto = [[[[[[[[CompleteRoundResultsProto builder] setRoundId:NULL] setRoundNumber:self.roundNumber] setStartTime:self.startTime] setEndTime:endTime*1000] addAllAnswers:self.questionsAnswered] setScore:pointsAfter ] build];
 
   [sc sendCompleteRoundRequest:user opponent:self.opponent gameId:self.gameId results:proto];
 }

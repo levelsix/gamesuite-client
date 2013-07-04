@@ -165,17 +165,21 @@ BOOL StartRoundResponseProto_StartRoundStatusIsValidValue(StartRoundResponseProt
 @private
   BOOL hasGameId_:1;
   BOOL hasRecipient_:1;
+  BOOL hasUpdatedRecipient_:1;
   BOOL hasStatus_:1;
   NSString* gameId;
   BasicUserProto* recipient;
+  CompleteUserProto* updatedRecipient;
   StartRoundResponseProto_StartRoundStatus status;
 }
 - (BOOL) hasRecipient;
 - (BOOL) hasGameId;
 - (BOOL) hasStatus;
+- (BOOL) hasUpdatedRecipient;
 @property (readonly, retain) BasicUserProto* recipient;
 @property (readonly, retain) NSString* gameId;
 @property (readonly) StartRoundResponseProto_StartRoundStatus status;
+@property (readonly, retain) CompleteUserProto* updatedRecipient;
 
 + (StartRoundResponseProto*) defaultInstance;
 - (StartRoundResponseProto*) defaultInstance;
@@ -227,5 +231,12 @@ BOOL StartRoundResponseProto_StartRoundStatusIsValidValue(StartRoundResponseProt
 - (StartRoundResponseProto_StartRoundStatus) status;
 - (StartRoundResponseProto_Builder*) setStatus:(StartRoundResponseProto_StartRoundStatus) value;
 - (StartRoundResponseProto_Builder*) clearStatus;
+
+- (BOOL) hasUpdatedRecipient;
+- (CompleteUserProto*) updatedRecipient;
+- (StartRoundResponseProto_Builder*) setUpdatedRecipient:(CompleteUserProto*) value;
+- (StartRoundResponseProto_Builder*) setUpdatedRecipientBuilder:(CompleteUserProto_Builder*) builderForValue;
+- (StartRoundResponseProto_Builder*) mergeUpdatedRecipient:(CompleteUserProto*) value;
+- (StartRoundResponseProto_Builder*) clearUpdatedRecipient;
 @end
 

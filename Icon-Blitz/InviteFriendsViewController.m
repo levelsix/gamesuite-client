@@ -71,6 +71,7 @@
     if ([userInfo.facebookId isEqualToString:chosen.id]) {
       self.spinnerView.hidden = NO;
       [self.spinner startAnimating];
+      self.opponent = userInfo;
       self.view.userInteractionEnabled = NO;
       [sc sendStartRoundRequest:proto isRandomPlayer:NO opponent:userInfo.userId gameId:nil roundNumber:1 isPlayerOne:YES startTime:self.startTime*1000 questions:self.userInfo.questions];
       break;
@@ -93,7 +94,7 @@
   [self.spinner stopAnimating];
   StartRoundResponseProto *proto = (StartRoundResponseProto *)message;
   if (proto.status == StartRoundResponseProto_StartRoundStatusSuccess) {
-    GameViewController *vc = [[GameViewController alloc] initWithUserInfo:self.userInfo gameId:proto.gameId recipient:proto.recipient opponent:nil startTime:self.startTime roundNumber:1];
+    GameViewController *vc = [[GameViewController alloc] initWithUserInfo:self.userInfo gameId:proto.gameId recipient:proto.recipient opponent:self.opponent startTime:self.startTime roundNumber:1];
     [self.navigationController pushViewController:vc rotated:YES];
   }
   else {
@@ -210,9 +211,7 @@
   }
   cell.nameLabel.text = [NSString stringWithFormat:@"%@",friend.name];
   NSString *url = [NSString stringWithFormat:@"http://graph.facebook.com/%d/picture?type=normal",[friend.id intValue]];
-  [cell.profilePic setImageWithURL:[NSURL URLWithString:url]
-                 placeholderImage:cell.profilePic.image options:indexPath.row == 0 ? SDWebImageRefreshCached : 0];
-  
+ 
   [cell.profilePic setImageWithURL:[NSURL URLWithString:url]placeholderImage:cell.profilePic.image options:indexPath.row == 0 ? SDWebImageRefreshCached : 0 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
     CALayer *mask = [CALayer layer];
     mask.contents = (id)[maskImage CGImage];

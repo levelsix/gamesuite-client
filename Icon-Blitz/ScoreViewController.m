@@ -12,6 +12,7 @@
 #import "UINavigationController+PushPopRotated.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "GameViewController.h"
+#import "ScoreShopMenu.h"
 
 #define RoundOne 1
 #define RoundTwo 2
@@ -45,6 +46,9 @@
   BOOL opponentScoreLoaded;
   BOOL spinning;
   BOOL myTurn;
+  BOOL gameFinished;
+  BOOL newGame;
+  BOOL needToBuyRubies;
   ScoreStates currentState;;
 }
 
@@ -54,19 +58,67 @@
 
 #pragma mark - Main Game
 
-
-- (id)initWithRoundOneUserInfo:(UserInfo *)userInfo completedRoundResponse:(CompletedRoundResponseProto *)proto {
+- (id)initWithNewGameUserInfo:(UserInfo *)userInfo completedRoundResponse:(CompletedRoundResponseProto *)proto needRubies:(BOOL)needRubies{
   if ((self = [super init])) {
-  
+    uScoreOne = proto.results.score; uScoreTwo = 0; uScoreThree = 0;
+    oScoreOne = 0; oScoreTwo = 0; oScoreThree = 0;
+    uTotalScore = uScoreOne + uScoreTwo + uScoreThree;
+    oTotalScore = oScoreOne + oScoreTwo + oScoreThree;
+    self.userInfo = userInfo;
+    self.completedRoundResponse = proto;
+    newGame = YES;
+    needToBuyRubies = needRubies;
   }
   return self;
+}
+
+- (void)setUpNewGameStats:(CompletedRoundResponseProto *)proto {
+  if (proto.sender.nameFriendsSee) self.userName.text = proto.sender.nameFriendsSee;
+  else self.userName.text = proto.sender.nameStrangersSee;
+  
+  if (proto.opponent.nameFriendsSee) {
+    self.whosTurn.text = [NSString stringWithFormat:@"It's %@'s turn",proto.opponent.nameFriendsSee];
+    self.opponentName.text = proto.opponent.nameFriendsSee;
+  }
+  else {
+    self.whosTurn.text = [NSString stringWithFormat:@"It's %@ turn", proto.opponent.nameStrangersSee];
+    self.opponentName.text = proto.opponent.nameStrangersSee;
+  }
+  
+  if (proto.sender.facebookId)[self downloadPlayerPic:proto.sender.facebookId];
+  if (proto.opponent.facebookId) [self downloadOpponentPic:proto.opponent.facebookId];
+}
+
+- (void)downloadPlayerPic:(NSString *)fId {
+  UIImage *maskImage = [UIImage imageNamed:@"blackmaskicon.png"];
+
+  int facebookId = [fId integerValue];
+  NSString *url = [NSString stringWithFormat:@"http://graph.facebook.com/%d/picture?type=normal",facebookId];
+  [self.userImage setImageWithURL:[NSURL URLWithString:url] placeholderImage:self.userImage.image options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+    CALayer *mask = [CALayer layer];
+    mask.contents = (id)[maskImage CGImage];
+    mask.frame = CGRectMake(0, 0, maskImage.size.width, maskImage.size.height);
+    self.userImage.layer.mask = mask;
+    self.userImage.contentMode = UIViewContentModeScaleAspectFill;
+  }];
+}
+
+- (void)downloadOpponentPic:(NSString *)fId {
+  UIImage *maskImage = [UIImage imageNamed:@"blackmaskicon.png"];
+  int facebookId = [fId integerValue];
+   NSString *url = [NSString stringWithFormat:@"http://graph.facebook.com/%d/picture?type=normal",facebookId];
+  [self.opponentImage setImageWithURL:[NSURL URLWithString:url] placeholderImage:self.opponentImage.image options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+    CALayer *mask = [CALayer layer];
+    mask.contents = (id)[maskImage CGImage];
+    mask.frame = CGRectMake(0, 0, maskImage.size.width, maskImage.size.height);
+    self.opponentImage.layer.mask = mask;
+    self.opponentImage.contentMode = UIViewContentModeScaleAspectFill;
+  }];
 }
 
 - (id)initWithOngoingGameProto:(OngoingGameProto *)gameStats userInfo:(UserInfo *)userInfo myTurn:(BOOL)isMyTurn {
   if ((self = [super init])) {
     //non-completed games
-    uScoreOne = 0; uScoreTwo = 0; uScoreThree = 0;
-    oScoreOne = 0; oScoreTwo = 0; oScoreThree = 0;
     self.userInfo = userInfo;
     self.gameStats = gameStats;
     myTurn = isMyTurn;
@@ -275,20 +327,22 @@
 {
   [super viewDidLoad];
   animationCounter = 9;
-  uScoreOne = 50;
-  uScoreTwo = 50;
-  uScoreThree = 50;
-  oScoreOne = 60;
-  oScoreTwo = 60;
-  oScoreThree = 60;
-  uTotalScore = 150;
-  oTotalScore = 180;
-  //test data
-  self.userImage.image = [UIImage imageNamed:@"testimage1.jpg"];
-  self.opponentImage.image = [UIImage imageNamed:@"testimage2.jpg"];
-  [self updatePlayerPics];
-  
-  [self startSpin];
+  [SDWebImageManager.sharedManager.imageDownloader setValue:@"PlayerPics" forHTTPHeaderField:@"Pics"];
+  SDWebImageManager.sharedManager.imageDownloader.queueMode = SDWebImageDownloaderLIFOQueueMode;
+  if (newGame){
+    [self setUpNewGameStats:self.completedRoundResponse];
+  }
+}
+
+- (void)showShopView {
+  self.glow.hidden = NO;
+  self.buyMoreRubyView.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
+  self.buyMoreRubyView.alpha = 0.0f;
+  [self.view addSubview:self.buyMoreRubyView];
+  [UIView animateWithDuration:0.3f animations:^{
+    self.buyMoreRubyView.alpha = 1.0f;
+  }];
+  [self bounceView:self.buyMoreRubyView withCompletionBlock:nil];
 }
 
 - (void)updatePlayerPics {
@@ -308,6 +362,9 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+  if (needToBuyRubies) {
+    [self showShopView];
+  }
   [self performSelector:@selector(animateNameSection) withObject:nil afterDelay:0.3f];
 }
 
@@ -329,6 +386,35 @@
 
 - (IBAction)back:(id)sender {
   [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+- (void)closeShopView:(id)sender {
+  [self.buyMoreRubyView removeFromSuperview];
+  self.glow.hidden = YES;
+}
+
+- (void)goToShop:(id)sender {
+  self.glow.hidden = YES;
+  [self.buyMoreRubyView removeFromSuperview];
+  self.shopMenu.alpha = 0.0f;
+  [[NSBundle mainBundle] loadNibNamed:@"ScoreShopMenu" owner:self options:nil];
+
+  [self.shopMenu getDataWithScore:self];
+  [self.view addSubview:self.shopMenu];
+
+  self.shopMenu.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
+  [UIView animateWithDuration:0.3f animations:^{
+    self.shopMenu.alpha = 1.0f;
+  }];
+  [self bounceView:self.shopMenu withCompletionBlock:nil];
+}
+
+- (void)updateGoldCoins:(int)amount {
+  self.userInfo.goldCoins = amount;
+}
+
+- (void)updateRubies:(int)amount {
+  self.userInfo.rubies += amount;
 }
 
 #pragma mark - Animations
@@ -357,7 +443,6 @@
 }
 
 - (void) stopSpin {
-  // set the flag to stop spinning after one last 90 degree increment
   spinning = NO;
 }
 
@@ -481,7 +566,7 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
   animationCounter++;
   UIView *o = [self.view viewWithTag:animationCounter];
   animationCounter++;
-
+  [self startSpin];
   [UIView animateWithDuration:0.3f animations:^{
     u.alpha = 1.0f;
     o.alpha = 1.0f;
@@ -550,8 +635,10 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
       button.alpha = 1.0f;
       doneLabel.alpha =1.0f;
     }completion:^(BOOL finished) {
-      [self pulsingAnimationWithView:self.opponentTotalScore];
-      [self pulsingAnimationWithView:self.whosTurn];
+      if (gameFinished) {
+        [self pulsingAnimationWithView:self.opponentTotalScore];
+        [self pulsingAnimationWithView:self.whosTurn];
+      }
     }];
     [self bounceView:button withCompletionBlock:nil];
     [self bounceView:doneLabel withCompletionBlock:nil];
@@ -613,9 +700,9 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 
 - (void)changeOScoreOne:(NSTimer *)timer {
   oScoreOneBefore += 1;
-  UILabel *label = (UILabel *)[self.view viewWithTag:15];
-  if (oScoreOne == 0) label = [NSString stringWithFormat:@"-"];
-  else label.text= [NSString stringWithFormat:@"%d",oScoreOneBefore];
+  if (oScoreOne == 0) self.opponentRoundOneScore.text = [NSString stringWithFormat:@"-"];
+  else self.opponentRoundOneScore.text= [NSString stringWithFormat:@"%d",oScoreOneBefore];
+  
   if (oScoreOneBefore >= oScoreOne) {
     opponentScoreLoaded = YES;
     if (userScoreLoaded && opponentScoreLoaded) {
@@ -684,7 +771,7 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 - (void)changeTScoreOne:(NSTimer *)timer {
   uTotalScoreBefore += 1;
   UILabel *label = (UILabel *)[self.view viewWithTag:20];
-  if (uTotalScore == 0) label.text = [NSString stringWithFormat:@"-"];
+  if (uTotalScore == 0) label.text = [NSString stringWithFormat:@"0"];
   else label.text= [NSString stringWithFormat:@"%d",uTotalScoreBefore];
   if (uTotalScoreBefore >= uTotalScore) {
     userScoreLoaded = YES;
@@ -698,7 +785,7 @@ withCompletionBlock:(void(^)(BOOL))completionBlock
 - (void)changeTScoreTwo:(NSTimer *)timer {
   oTotalScoreBefore += 1;
   UILabel *label = (UILabel *)[self.view viewWithTag:21];
-  if (oTotalScore == 0) label.text = [NSString stringWithFormat:@"-"];
+  if (oTotalScore == 0) label.text = [NSString stringWithFormat:@"0"];
   else label.text = [NSString stringWithFormat:@"%d",oTotalScoreBefore];
   if (oTotalScoreBefore >= oTotalScore) {
     opponentScoreLoaded = YES;
