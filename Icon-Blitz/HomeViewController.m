@@ -19,7 +19,7 @@
 #import "SocketCommunication.h"
 #import "Downloader.h"
 
-#define ADD_NEW_COIN_TIME 1200
+#define ADD_NEW_COIN_TIME 180
 
 @interface HomeViewController () {
   NSTimer *newCoinTimer;
